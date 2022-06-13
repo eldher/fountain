@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Fetch using MySQL and Node.js</title>
+</head>
+<body>
+    <div class="table-data">
+<h2>Display Data using Node.js & MySQL</h2>
+    <table border="1">
+        <tr>
+            <th>CMS Promedio</th>
+            <th>Energia Generada</th>
+            <th>Compras de Energía en el Mercado Ocasional ($)</th>
+            <th>Ventas de Energía en el Mercado Ocasional ($)</th>
+            <th>Ingresos por Contratos $</th>
+            <th>SAERLP</th>
+            <th>Débito de Energía en Pérdidas de Transmisión ($)</th>
+            <th>Crédito de Energía en Pérdidas de Transmisión($)</th>
+            <th>SASD</th>
+            <th>Generación Obligada ($)</th>
+            <th>Servicios Auxiliares</th>
+            <th>Compensación de Potencia ($)</th>
+            <th>Ingreso Total Neto $</th>            
+        </tr>
+        
+        <%
+        if(userData.length!=0){
+        var i=1;
+        userData.forEach(function(data){
+        %>
+        <tr>
+            <td><%= data.cms_promedio %></td>
+            <td><%= data.energia_generada %></td>
+            <td><%= data.compras_energia_mercado_ocasional %></td>
+            <td><%= data.ventas_energia_mercado_ocasional %></td>
+            <td><%= data.ingreos_por_contratos %></td>
+            <td><%= data.SAERLP %></td>
+            <td><%= data.debito_energia_perdida_transmision %></td>
+            <td><%= data.credito_energia_perdida_transmision %></td>
+            <td><%= data.sasd %></td>
+            <td><%= data.generacion_obligada %></td>
+            <td><%= data.servicios_auxiliares %></td>
+            <td><%= data.compensacion_potencia %></td>
+            <td><%= data.ingreso_total_neto %></td>
+                      
+        </tr>
+        <%  i++; }) %>
+        <% } else{ %>
+            <tr>
+                <td colspan="7">No Data Found</td>
+            </tr>
+        <% } %>
+    </table>
+    </div>
+</body>
+</html>

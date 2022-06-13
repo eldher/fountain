@@ -1,0 +1,381 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title> <%= title %> </title>
+
+<style> 
+
+body{
+    font-family: Arial, Helvetica, sans-serif;
+
+}
+
+#customers {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#customers td, #customers th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#customers tr:nth-child(even){background-color: #f2f2f2;}
+
+#customers tr:hover {background-color: #ddd;}
+
+#customers th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #04AA6D;
+    color: white;
+}
+
+
+
+
+#customers tr:last-child {
+  font-weight: bold;
+}
+
+
+
+
+
+h2 {
+color: #616060;
+font-family: arial, sans-serif;
+font-size: 18px;
+font-weight: bold;
+margin-bottom: 15px;
+}
+</style>
+</head>
+
+<body>
+<div class="table-data">
+
+    <form action="/action_page.php">
+        <label for="cars">Fecha:</label>
+        <select name="cars" id="cars">
+          <option value="volvo">Octubre 2021</option>
+          <option value="saab">Noviembre 2021</option>
+          <option value="opel">Diciembre 2021</option>
+          <option value="audi">Enero 2022</option>
+        </select>
+        <br><br>
+        <input type="submit" value="Actualizar">
+        <input type="submit" value="Descargar">
+      </form>
+
+
+<h2><%= title %> </h2>
+    <table id="customers">
+        <tr>
+            <th>CMS Promedio</th>
+            <th>Energia Generada</th>
+            <th>Compras de Energía en el Mercado Ocasional</th>
+            <th>Ventas de Energía en el Mercado Ocasional</th>
+            <th>Ingresos por Contratos</th>
+            <th>SAERLP</th>
+            <th>Débito de Energía en Pérdidas de Transmisión </th>
+            <th>Crédito de Energía en Pérdidas de Transmisión</th>
+            <th>SASD</th>
+            <th>Generación Obligada</th>
+            <th>Servicios Auxiliares</th>
+            <th>Compensación de Potencia</th>
+            <th>Ingreso Total Neto</th>      
+        </tr>
+        
+        <% if(data.recordset.length!=0){
+            for(var i=0 ; i <data.recordset.length ; i++) { %>
+                <tr>
+                    <td><%= data.recordset[i].cms_promedio.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                    <td><%= data.recordset[i].energia_generada.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                    <td><%= data.recordset[i].compras_energia_mercado_ocasional.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                    <td><%= data.recordset[i].ventas_energia_mercado_ocasional.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                    <td><%= data.recordset[i].ingresos_por_contratos.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                    <td><%= data.recordset[i].SAERLP.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')  %></td>
+                    <td><%= data.recordset[i].debito_energia_perdida_transmision.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')  %></td>
+                    <td><%= data.recordset[i].credito_energia_perdida_transmision.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')  %></td>
+                    <td><%= data.recordset[i].sasd.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')  %></td>
+                    <td><%= data.recordset[i].generacion_obligada.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')  %></td>
+                    <td><%= data.recordset[i].servicios_auxiliares.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')  %></td>
+                    <td><%= data.recordset[i].compensacion_potencia.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')  %></td>
+                    <td><%= data.recordset[i].ingreso_total_neto.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')  %></td>                    
+                </tr>
+            <% }
+        } else { %>
+            <tr>
+                <td colspan="3">No Data</td>
+            </tr>
+            <%  }%>
+    </table>
+
+
+    <h2><%= title3 %> </h2>
+
+    <table id="customers">
+        <tr>
+            <th>Nombre Contrato</th>
+            <th>Empresa Distribuidora</th>
+            <th>POTENCIA EQUIVALENTE COMPROMETIDA PE (MW)</th>
+            <th>DMG-RC (MW)</th>
+            <th>E (MWh)</th>
+            <th>EAR</th>
+            <th>Ingreso a Precio de Contado</th>             
+        </tr>     
+    
+        <% if(data.recordset.length!=0){
+            for(var i=0 ; i <data3.recordset.length ; i++) { %>
+                <tr>
+                    <td><%= data3.recordset[i].nombre_contrato %></td>
+                    <td><%= data3.recordset[i].empresa %></td>
+                    <td><%= data3.recordset[i].potencia_contratada.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                    <td><%= data3.recordset[i].dmm_s.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                    <td><%= data3.recordset[i].E_TOTAL.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                    <td><%= data3.recordset[i].EAR.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                    <td><%= data3.recordset[i].Ingreso_Precio_Contado.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                </tr>
+                <% }
+            } else { %>
+                <tr>
+                    <td colspan="3">No Data</td>
+                </tr>
+                <%  }%>
+        </table>
+        
+
+
+        <h2><%= title4 %> </h2>
+
+        <table id="customers">
+            <tr>
+                <th>Nombre Contrato</th>
+                <th>Empresa Distribuidora</th>
+                <th>POTENCIA EQUIVALENTE COMPROMETIDA PE (MW)</th>
+                <th>DMG-RC (MW)</th>
+                <th>E (MWh)</th>
+                <th>EAR</th>
+                <th>Ingreso a Precio de Contado</th>            
+            </tr>     
+        
+            <% if(data.recordset.length!=0){
+                for(var i=0 ; i <data4.recordset.length ; i++) { %>
+                    <tr>
+                        <td><%= data4.recordset[i].nombre_contrato %></td>
+                        <td><%= data4.recordset[i].empresa %></td>
+                        <td><%= data4.recordset[i].potencia_contratada.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                        <td><%= data4.recordset[i].dmm_s.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                        <td><%= data4.recordset[i].E_TOTAL.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                        <td><%= data4.recordset[i].EAR.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                        <td><%= data4.recordset[i].Ingreso_Precio_Contado.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                    </tr>
+                    <% }
+                } else { %>
+                    <tr>
+                        <td colspan="3">No Data</td>
+                    </tr>
+                    <%  }%>
+        </table>
+            
+
+
+
+
+        <h2><%= title5 %> </h2>
+
+        <table id="customers">
+            <tr>
+                <th>Nombre Contrato</th>
+                <th>Empresa Distribuidora</th>
+                <th>POTENCIA EQUIVALENTE COMPROMETIDA PE (MW)</th>
+                <th>Ingreso a Precio de Contado</th>            
+            </tr>     
+        
+            <% if(data.recordset.length!=0){
+                for(var i=0 ; i <data5.recordset.length ; i++) { %>
+                    <tr>
+                        <td><%= data5.recordset[i].nombre_contrato %></td>
+                        <td><%= data5.recordset[i].empresa %></td>
+                        <td><%= data5.recordset[i].potencia_contratada.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                        <td><%= data5.recordset[i].Ingreso_Precio_Contado.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                    </tr>
+                    <% }
+                } else { %>
+                    <tr>
+                        <td colspan="3">No Data</td>
+                    </tr>
+                    <%  }%>
+        </table>
+  
+
+
+
+        
+        <h2><%= title6 %> </h2>
+
+        <table id="customers">
+            <tr>
+                <th>Nombre Contrato</th>
+                <th>Empresa Distribuidora</th>
+                <th>POTENCIA EQUIVALENTE COMPROMETIDA PE (MW)</th>
+                <th>Ingreso a Precio de Contado</th>            
+            </tr>     
+        
+            <% if(data.recordset.length!=0){
+                for(var i=0 ; i <data6.recordset.length ; i++) { %>
+                    <tr>
+                        <td><%= data6.recordset[i].nombre_contrato %></td>
+                        <td><%= data6.recordset[i].empresa %></td>
+                        <td><%= data6.recordset[i].potencia_contratada.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                        <td><%= data6.recordset[i].Ingreso_Precio_Contado.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                    </tr>
+                    <% }
+                } else { %>
+                    <tr>
+                        <td colspan="3">No Data</td>
+                    </tr>
+                    <%  }%>
+        </table>
+
+
+
+
+
+
+
+
+
+
+
+
+<h2><%= title2 %> </h2>
+
+<table id="customers">
+    <tr>
+        <th>fecha</th>
+        <th>subsistema</th>
+        <th>cms</th>
+        <th>fountain_a_bai230_27_e</th>
+        <th>fountain_a_bai230_27_s</th>
+        <th>fountain_a_bai230_28b_e</th>
+        <th>fountain_a_bai230_28b_s</th>
+        <th>fountain_a_bfrio230_28_e</th>
+        <th>fountain_a_bfrio230_28_s</th>
+        <th>fountain_a_bfrio230_36_e</th>
+        <th>fountain_a_bfrio230_36_s</th>
+        <th>fountain_a_compra_mer_con</th>
+        <th>fountain_a_cons_exp</th>
+        <th>fountain_a_entrando</th>
+        <th>fountain_a_saliendo</th>
+        <th>fountain_a_vta_mer_con</th>
+        <th>fountain_a_vta_mer_opo</th>
+        <th>fountain_a_perdida_real</th>
+        <th>fountain_a_perdida_teorica</th>
+        <th>fountain_a_perdida_total</th>
+        <th>fountain_a_saliendo_bruto</th>
+        <th>fountain_a_supl_loc</th>
+        <th>perdida_consumo</th>
+        <th>energia_asignada</th>
+        <th>suplido_pos_contratos</th>
+        <th>suplido_mo</th>
+        <th>suplido_mo_imp</th>
+        <th>consumo</th>
+        <th>ocasional_compra</th>
+        <th>ocasional_venta</th>
+        <th>ocasional_debito</th>
+        <th>ocasional_credito</th>
+        <th>ensa</th>
+        <th>edemet</th>
+        <th>edechi</th>
+        <th>prog_exp</th>
+        <th>total_gen_compras</th>
+        <th>ventas_totales</th>
+        <th>energy_balance_check</th>
+
+    </tr>
+    
+    <% if(data.recordset.length!=0){
+        for(var i=0 ; i <data2.recordset.length ; i++) { %>
+            <tr>
+                <td><%= data2.recordset[i].fecha %></td>
+                <td><%= data2.recordset[i].subsistema %></td>
+                <td><%= data2.recordset[i].cms.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].fountain_a_bai230_27_e.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].fountain_a_bai230_27_s.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].fountain_a_bai230_28b_e.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].fountain_a_bai230_28b_s.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].fountain_a_bfrio230_28_e.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].fountain_a_bfrio230_28_s.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].fountain_a_bfrio230_36_e.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].fountain_a_bfrio230_36_s.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].fountain_a_compra_mer_con.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].fountain_a_cons_exp.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].fountain_a_entrando.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].fountain_a_saliendo.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].fountain_a_vta_mer_con.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].fountain_a_vta_mer_opo.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].fountain_a_perdida_real.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].fountain_a_perdida_teorica.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].fountain_a_perdida_total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].fountain_a_saliendo_bruto.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].fountain_a_supl_loc.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].perdida_consumo.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].energia_asignada.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].suplido_pos_contratos.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].suplido_mo.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].suplido_mo_imp.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].consumo.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].ocasional_compra.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].ocasional_venta.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].ocasional_debito.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].ocasional_credito.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].ensa.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].edemet.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].edechi.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].prog_exp.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].total_gen_compras.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].ventas_totales.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                <td><%= data2.recordset[i].energy_balance_check.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            </tr>
+        <% }
+    } else { %>
+        <tr>
+            <td colspan="3">No Data</td>
+        </tr>
+        <%  }%>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+</body>
+</html>
