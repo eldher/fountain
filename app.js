@@ -32,47 +32,33 @@ router.get('/preliminar_liquidacion',function(req,res){
 
 router.get('/test',function(req,res){
    
+
+    let string = ""
     var sql = require("mssql");
-
     // connect to your database
-    sql.connect(dbConfig, function (err) {
-    
+    sql.connect(dbConfig_localhost, function (err) {
         if (err) console.log(err);
-
-        // create Request object
         var request = new sql.Request();
             
-        // query to the database and get the records
-        request.query('select top 100 * from DATA_CONTRATOS', function (err, recordset) {
-            
+        
+        request.query('select top 100 * from INGRESOS_CONTRATOS', function (err, recordset) {            
             if (err) console.log(err)
+            console.log(recordset);            
+            for (var i = 0; i < recordset.recordsets[0].length; i++) { 
 
-            // send records as a response
-            //res.send(recordset);
-            //res.send
-            console.log(recordset.recordsets[0].length);
-            
-            for (var i = 0; i < recordset.recordsets[0].length; i++) 
-               {
-                  //  res.send(recordset.recordsets[0][i]["EMPRESA_DISTRIBUIDORA"]);
-                    console.log(recordset.recordsets[0][i]["EMPRESA_DISTRIBUIDORA"]);
-               }
-            
+                string =+ recordset.recordsets[0][i]["empresa"];
+                console.log(recordset.recordsets[0][i]["empresa"]);
+            };        
         });
     });
+ // error render before querys
+    console.log(string);
+    render(string);
 });
 
 
-// router.get('/test2', function(req, res, next){
-//     var sql = require("mssql");
-//      sql.connect(dbConfig, function(err){
-//         var request = new sql.Request();
-//         request.query('select top 100 * from DATA_CONTRATOS', function(err, contractData){
-//             if(err) console.log(err);
-//             res.render('prueba', {title: 'Prueba EJS', data: contractData});
-//         });
-//      });
-// });
+
+
 
 
 
@@ -93,6 +79,30 @@ function GetMonthly(){
     
         });
 };
+
+
+
+
+
+async function getContracts() {
+    try{
+        //let pool = await sql.connect(dbConfig);
+        //let contracts = pool.request().query("SELECT 1500 as resultado");
+        await sql.connect(dbConfig);
+        //const result = await sql.query`select 1500 as resultado`
+        //const result = await sql.query`select top 100 Contrato from FOUNTAIN3.dbo.DATA_CONTRATOS`
+        const result = await sql.query`select top 100 * from DATA_CONTRATOS`   
+
+        return result.recordsets;
+        //pool.request().query("SELECT * FROM DATOS_CONTRATOS")
+    }
+    catch(error){
+        console.log(error);
+
+    }
+}
+
+
 
 
 
@@ -169,7 +179,7 @@ router.get('/diciembre', function(req, res, next){
     (async function () 
     {
         try {
-            let pool = await sql.connect(dbConfig)
+            let pool = await sql.connect(dbConfig_localhost)
 
             let result1 = await pool.request()                
             .query('select * from resumen_diciembre')
@@ -209,10 +219,13 @@ router.get('/diciembre', function(req, res, next){
     })().then(() => res.render('diciembre', {
         title: 'Prueba Fountain', 
         data: firstQuery, 
+
         title2: 'Tabla Diaria',
         data2: secondQuery,
+
         title3: 'Contratos Energia -13',
         data3: thirdQuery,
+        
         title4: 'Contratos Energia -20',
         data4: fourthQuery,        
 
@@ -229,11 +242,6 @@ router.get('/diciembre', function(req, res, next){
         // ... error handler
     })   
 });
-
-
-
-
-
 
 
 
@@ -301,8 +309,7 @@ router.get('/noviembre', function(req, res, next){
 
 
 
-
-
+// this works !!
 router.get('/localtest_db', function(req, res){
     console.log("executiing local db test");
     const sql = require('mssql');
@@ -319,7 +326,7 @@ router.get('/localtest_db', function(req, res){
 );
 
 
-
+// this also works !!
 app.get('/localtest', function (req, res) {
    
     var sql = require("mssql");
@@ -345,7 +352,7 @@ app.get('/localtest', function (req, res) {
         var request = new sql.Request();
            
         // query to the database and get the records
-        request.query('select top 100 * from TotalesContratos2', function (err, recordset) {
+        request.query('select top 10 * from TotalesContratos2', function (err, recordset) {
             
             if (err) console.log(err)
 
@@ -374,107 +381,8 @@ app.get('/localtest', function (req, res) {
 
 
 
-router.get('/test3', function(req, res, next){
-    console.log("executiing");
-    //var sql = require("mssql");
-    //  sql.connect(dbConfig, function(err){
-    //     var request = new sql.Request();
-     
-
-
-    //      request.query('select * from resumen_mes', function(err, contractData){
-    //       //  console.log(contractData.recordsets[0].length);
-    //       //  console.dir(contractData)
-
-    //         firstQuery = contractData;
-    //       //  console.dir(firstQuery);
-    //         if(err) console.log(err);
-    //      });
-    //     });
-       
-    //    console.dir(firstQuery);
-    GetMonthly().then(() =>
-   
-    res.render('prueba', {title: 'Prueba Fountain', data: firstQuery}));   
-        
-        //     if(err) console.log(err);
-        //     res.render('prueba', {title: 'Prueba Fountain', data: contractData});
-    
-});
-
-
-
-
-
 app.use('/', router);
 app.set("view engine", "ejs")
-
 app.listen(process.env.port || 3010 , function(){
     console.log("Server is running on localhost 3010");
 });
-
-/*
-app.listen(3000, function(){
-});
-*/
-
-
-async function getContracts() {
-    try{
-        //let pool = await sql.connect(dbConfig);
-        //let contracts = pool.request().query("SELECT 1500 as resultado");
-        await sql.connect(dbConfig);
-        //const result = await sql.query`select 1500 as resultado`
-        //const result = await sql.query`select top 100 Contrato from FOUNTAIN3.dbo.DATA_CONTRATOS`
-        const result = await sql.query`select top 100 * from DATA_CONTRATOS`   
-
-        return result.recordsets;
-        //pool.request().query("SELECT * FROM DATOS_CONTRATOS")
-    }
-    catch(error){
-        console.log(error);
-
-    }
-}
-
-
-/*
-getContracts().then(result => {
-    console.log(result)
-})
-
-*/
-
-
-
-
-/*
-
-    var conn = new sql.ConnectionPool(dbConfig);//Connection(dbConfig);
-
-    conn.connect()
-    .then(function () {
-        var req = new sql.Request(conn);//Request(conn);
-
-        req.query("select * from DATOS_CONTRATOS")
-        .then( function(recordeset) {
-            console.log(recordeset);
-            conn.close();
-        })
-        .catch(function(err) {
-            console.log(err);
-            conn.close();
-    })
-    .catch(function(err){
-        console.log(err);
-        conn.close();
-    })
-});
-}
-
-*/
-//getContracts();
-//let res  = getContracts();
-//console.log("Resultados")
-//console.dir(getContracts());
-

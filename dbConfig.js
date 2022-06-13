@@ -2,9 +2,9 @@
 var sql = require('mssql');
 
 var dbConfig ={
-    user: 'admin_fountain',
-    password: 'Panama04',
-    server: 'fountaincorp00.database.windows.net',
+    user: 'admin_******',
+    password: '**********',
+    server: '************',
     database: 'FOUNTAIN4',
     port : 1433,
     pool: {
