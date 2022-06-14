@@ -151,12 +151,186 @@ margin-bottom: 15px;
                     <td colspan="3">No Data</td>
                 </tr>
                 <%  }%>
-        </table>
+    </table>
 
 
 
 
+<!-- Corto Plazo II  -->
 
+
+<% console.log(cortoPlazoII.length) %>
+
+    <table id="customers">
+        <tr>
+            <th>Fecha</th>
+            <th>Empresa Distribuidora</th>
+            <th>Nombre Contrato</th>            
+            <th>Categoria Precio</th>    
+            <th>POTENCIA EQUIVALENTE COMPROMETIDA PE (MW)</th>
+            <th>DMG-RC (MW)</th>
+            <th>E (MWh)</th>
+            <th>EAR</th>
+            <th>Ingreso a Precio de Contado</th>             
+        </tr>     
+    
+
+        <% console.log(cortoPlazoII) %> 
+
+        <% 
+        if(cortoPlazoII.length!=0){
+            for(var i=0 ; i < cortoPlazoII.length ; i++) { %>
+                <tr>
+                    <td><%= cortoPlazoII[i].fecha %></td>
+                    <td><%= cortoPlazoII[i].EMPRESA %></td>
+                    <td><%= cortoPlazoII[i].nombre_contrato %></td>
+                    <td><%= cortoPlazoII[i].categoria_precio %></td>                       
+                    <td><%= cortoPlazoII[i].potencia_contratada.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                    <td><%= cortoPlazoII[i].dmm_s.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                    <td><%= cortoPlazoII[i].energia.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                    <td><%= cortoPlazoII[i].EAR.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                    <td><%= cortoPlazoII[i].ingreso_precio_contado.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                </tr>
+                <% }
+            } else { %>
+                <tr>
+                    <td colspan="3">No Data</td>
+                </tr>
+                <%  }%>
+    </table>
+
+
+<!-- Largo Plazo   -->
+
+
+<% console.log(largoPlazo.length) %>
+
+    <table id="customers">
+        <tr>
+            <th>Fecha</th>
+            <th>Empresa Distribuidora</th>
+            <th>Nombre Contrato</th>            
+            <th>Categoria Precio</th>    
+            <th>POTENCIA EQUIVALENTE COMPROMETIDA PE (MW)</th>
+            <th>DMG-RC (MW)</th>
+            <th>E (MWh)</th>
+            <th>EAR</th>
+            <th>Ingreso a Precio de Contado</th>             
+        </tr>     
+    
+
+        <% console.log(largoPlazo) %> 
+
+        <% 
+        if(largoPlazo.length!=0){
+            for(var i=0 ; i < largoPlazo.length ; i++) { %>
+                <tr>
+                    <td><%= largoPlazo[i].fecha %></td>
+                    <td><%= largoPlazo[i].EMPRESA %></td>
+                    <td><%= largoPlazo[i].nombre_contrato %></td>
+                    <td><%= largoPlazo[i].categoria_precio %></td>                       
+                    <td><%= largoPlazo[i].potencia_contratada.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                    <td><%= largoPlazo[i].dmm_s.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                    <td><%= largoPlazo[i].energia.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                    <td><%= largoPlazo[i].EAR.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                    <td><%= largoPlazo[i].ingreso_precio_contado.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                </tr>
+                <% }
+            } else { %>
+                <tr>
+                    <td colspan="3">No Data</td>
+                </tr>
+                <%  }%>
+    </table>
+
+
+
+
+<!-- Potencia I   -->
+
+
+<% console.log(potenciaI.length) %>
+
+    <table id="customers">
+        <tr>
+            <th>Fecha</th>
+            <th>Empresa Distribuidora</th>
+            <th>Nombre Contrato</th>            
+            <th>Categoria Precio</th>    
+            <th>POTENCIA EQUIVALENTE COMPROMETIDA PE (MW)</th>
+            <th>DMG-RC (MW)</th>
+            <th>E (MWh)</th>
+            <th>EAR</th>
+            <th>Ingreso a Precio de Contado</th>             
+        </tr>     
+    
+
+        <% console.log(potenciaI) %> 
+
+        <% 
+        if(potenciaI.length!=0){
+            for(var i=0 ; i < potenciaI.length ; i++) { %>
+                <tr>
+                    <td><%= potenciaI[i].fecha %></td>
+                    <td><%= potenciaI[i].EMPRESA %></td>
+                    <td><%= potenciaI[i].nombre_contrato %></td>
+                    <td><%= potenciaI[i].categoria_precio %></td>                       
+                    <td><%= potenciaI[i].potencia_contratada.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                    <td><%= potenciaI[i].dmm_s.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                    <td><%= potenciaI[i].energia.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                    <td><%= potenciaI[i].EAR.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                    <td><%= potenciaI[i].ingreso_precio_contado.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                </tr>
+                <% }
+            } else { %>
+                <tr>
+                    <td colspan="3">No Data</td>
+                </tr>
+                <%  }%>
+    </table>
+
+
+<!-- Potencia II   -->
+
+<% console.log(potenciaII.length) %>
+
+    <table id="customers">
+        <tr>
+            <th>Fecha</th>
+            <th>Empresa Distribuidora</th>
+            <th>Nombre Contrato</th>            
+            <th>Categoria Precio</th>    
+            <th>POTENCIA EQUIVALENTE COMPROMETIDA PE (MW)</th>
+            <th>DMG-RC (MW)</th>
+            <th>E (MWh)</th>
+            <th>EAR</th>
+            <th>Ingreso a Precio de Contado</th>             
+        </tr>     
+    
+
+        <% console.log(potenciaII) %> 
+
+        <% 
+        if(potenciaII.length!=0){
+            for(var i=0 ; i < potenciaII.length ; i++) { %>
+                <tr>
+                    <td><%= potenciaII[i].fecha %></td>
+                    <td><%= potenciaII[i].EMPRESA %></td>
+                    <td><%= potenciaII[i].nombre_contrato %></td>
+                    <td><%= potenciaII[i].categoria_precio %></td>                       
+                    <td><%= potenciaII[i].potencia_contratada.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                    <td><%= potenciaII[i].dmm_s.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                    <td><%= potenciaII[i].energia.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                    <td><%= potenciaII[i].EAR.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                    <td><%= potenciaII[i].ingreso_precio_contado.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                </tr>
+                <% }
+            } else { %>
+                <tr>
+                    <td colspan="3">No Data</td>
+                </tr>
+                <%  }%>
+    </table>
 
 
 
