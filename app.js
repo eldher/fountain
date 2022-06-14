@@ -6,7 +6,7 @@ const router = express.Router();
 const ejs = require("ejs");
 const dbConfig_localhost = require("./dbConfig_localhost");
 const dbConfig = require("./dbConfig");
-var sql = require('mssql');
+const sql = require('mssql');
 const { render } = require("express/lib/response");
 
 
@@ -34,7 +34,7 @@ router.get('/test',function(req,res){
    
 
     let string = ""
-    var sql = require("mssql");
+
     // connect to your database
     sql.connect(dbConfig_localhost, function (err) {
         if (err) console.log(err);
@@ -118,8 +118,6 @@ var sixthQuery;
 
 router.get('/test2', function(req, res, next){
     console.log("executiing");
-    const sql = require('mssql');
-
     (async function () 
     {
         try {
@@ -174,7 +172,6 @@ router.get('/test2', function(req, res, next){
 
 router.get('/diciembre', function(req, res, next){
     console.log("executiing");
-    const sql = require('mssql');
 
     (async function () 
     {
@@ -225,7 +222,7 @@ router.get('/diciembre', function(req, res, next){
 
         title3: 'Contratos Energia -13',
         data3: thirdQuery,
-        
+
         title4: 'Contratos Energia -20',
         data4: fourthQuery,        
 
@@ -249,12 +246,12 @@ router.get('/diciembre', function(req, res, next){
 
 router.get('/noviembre', function(req, res, next){
     console.log("executiing");
-    const sql = require('mssql');
+
 
     (async function () 
     {
         try {
-            let pool = await sql.connect(dbConfig)
+            let pool = await sql.connect(dbConfig_localhost)
 
             let result1 = await pool.request()                
             .query('select * from resumen_noviembre')
@@ -329,8 +326,6 @@ router.get('/localtest_db', function(req, res){
 // this also works !!
 app.get('/localtest', function (req, res) {
    
-    var sql = require("mssql");
-
     // config for your database
     var config = {
         user: 'admin_fountain',
@@ -362,6 +357,170 @@ app.get('/localtest', function (req, res) {
         });
     });
 });
+
+
+
+router.get('/localtest_db', function(req, res){
+    console.log("executiing local db test");
+
+      sql.connect(dbConfig_localhost, function(err){
+         var request = new sql.Request();
+         request.query('select top 100 * from TotalesContratos2', function(err, recordset){
+             if(err) console.log(err);
+             //console.log("Success!!");
+             //console.dir(recordset);
+             res.send(recordset)
+         });
+      });
+    }
+);
+
+
+
+
+
+
+
+
+
+var ingresoMensual;
+var cortoPlazoI;
+var cortoPlazoII;
+var largoPlazo;
+var potenciaI;  
+var potenciaII;  
+
+
+
+
+
+
+router.get('/cierre_noasync', function(req, res){
+    console.log("executiing local db test");
+    
+    sql.connect(dbConfig_localhost, function(err){
+         
+
+        // query total ingresos del mes
+        var request = new sql.Request();
+         request.input('fecha_cierre', sql.Date, '2021-12-31' );
+         request.input('fecha_mes', sql.Date, '2021-12' );
+         request.execute('sp_EjecutarCierre', function(err, result){
+             if(err) console.log(err);
+             console.log("IngresoMensual");
+             ingresoMensual = result.recordset[0];             
+             //res.send(recordset)
+        });
+
+
+        var rq = new sql.Request();
+         rq.input('fecha', sql.Date, '2021-12-31' );
+         rq.execute('sp_ObtenerContratoCategoria', function(err, recordsets){
+            if(err) console.log(err);
+            console.log("prueba");
+
+            cortoPlazoI     = recordsets.recordset[0];
+            cortoPlazoII    = recordsets.recordset[1];
+            largoPlazo      = recordsets.recordset[2];
+            potenciaI       = recordsets.recordset[3];
+            potenciaII      = recordsets.recordset[4];
+            
+             //res.json(categorias);
+             //res.send(recordset)
+             res.render('cierre', {
+                title: 'Prueba Fountain',
+                ingresoMensual,
+                cortoPlazoI, 
+                cortoPlazoII, 
+                largoPlazo,   
+                potenciaI,    
+                potenciaII   
+             });
+        });
+        
+    });   
+});
+
+
+
+
+
+router.get('/cierre', function(req, res, next){
+    console.log("executiing");
+
+
+    (async function () 
+    {
+        try {
+            let pool = await sql.connect(dbConfig_localhost)
+
+            let result1 = await pool.request()                
+            .input('fecha_cierre', sql.Date, '2021-12-31' )
+            .input('fecha_mes', sql.Date, '2021-12' )
+            .execute('sp_EjecutarCierre')
+            firstQuery = result1;    
+            console.dir(result1);
+
+
+
+            let result2 = await pool.request()                
+            .input('fecha', sql.Date, '2021-12-31' )            
+            .execute('sp_ObtenerContratoCategoria')
+            //firstQuery = result1;    
+            console.dir(result2);
+            cortoPlazoI     = result2.recordsets[0];
+            cortoPlazoII    = result2.recordsets[1];
+            largoPlazo      = result2.recordsets[2];
+            potenciaI       = result2.recordsets[3];
+            potenciaII      = result2.recordsets[4];
+
+            
+
+
+
+
+
+
+
+
+
+        
+        } catch (err) {
+            // ... error checks
+        }
+
+       // cambiar el render 
+    })().then(() => res.render('cierre', {
+        title: 'Prueba Fountain', 
+        data: firstQuery, 
+        cortoPlazoI, 
+        cortoPlazoII,
+        largoPlazo,  
+        potenciaI,   
+        potenciaII  
+    }))
+    
+    sql.on('error', err => {
+        console.log(err);
+        // ... error handler
+    })   
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
