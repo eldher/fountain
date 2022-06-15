@@ -473,18 +473,6 @@ router.get('/cierre', function(req, res, next){
             largoPlazo      = result2.recordsets[2];
             potenciaI       = result2.recordsets[3];
             potenciaII      = result2.recordsets[4];
-
-            
-
-
-
-
-
-
-
-
-
-        
         } catch (err) {
             // ... error checks
         }
@@ -505,39 +493,6 @@ router.get('/cierre', function(req, res, next){
         // ... error handler
     })   
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 app.use('/', router);
