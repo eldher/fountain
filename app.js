@@ -465,7 +465,7 @@ router.get('/cierre', function(req, res, next){
 
             let result2 = await pool.request()                
             .input('fecha', sql.Date, '2021-12-31' )            
-            .execute('sp_ObtenerContratoCategoria')
+            .execute('sp_ObtenerContratoCategoriaConTotal')
             //firstQuery = result1;    
             console.dir(result2);
             cortoPlazoI     = result2.recordsets[0];
