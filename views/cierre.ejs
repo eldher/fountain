@@ -8,6 +8,27 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
+
+<script>
+
+window.onload = function(){
+    var select = document.getElementById('fecha');
+    var value = select.options[select.selectedIndex].value;
+    console.log(value);
+    var text = select.options[select.selectedIndex].text;
+    console.log(text); // English
+
+    document.getElementById('fecha').text ='<%= fecha %>';
+}
+</script>
+
+
+
+
+<meta http-equiv='cache-control' content='no-cache'>
+<meta http-equiv='expires' content='0'>
+<meta http-equiv='pragma' content='no-cache'>
+
 <style> 
 
 body{
@@ -19,7 +40,8 @@ body{
 #customers {
     font-family: 'Open Sans', 'Helvetica Neue', sans-serif;
     border-collapse: collapse;
-    margin-bottom:  50px;
+    margin-top: 10px;
+    margin-bottom:  25px;
     /*width: 100%; */
 }
 
@@ -49,23 +71,24 @@ color: #616060;
 font-family: arial, sans-serif;
 font-size: 18px;
 font-weight: bold;
-margin-bottom: 15px;
+
 }
 </style>
 </head>
 
 
 <body>
+    <!-- <% console.log(fecha) %>  -->
     <div class="navbar navbar-inverse navbar-static-top">
         <div class="container">
           <a class="navbar-brand" href="/">Fountain</a>
           <ul class="nav navbar-nav">            
-            <li><a href="cierre">Cierre Diciembre 2022</a></li>
+            <li><a href="/">Cierre </a></li>
             <li><a href="dashboard">Dashboards</a></li>
-            <li><a href="noviembre">Ingresos - Noviembre 2021</a></li>
+            <!-- <li><a href="noviembre">Ingresos - Noviembre 2021</a></li>
             <li><a href="diciembre">Ingresos - Diciembre 2021</a></li>
             <li><a href="enero">Ingresos - Enero 2022</a></li>
-            <li><a href="febrero">Ingresos - Febrero 2022</a></li>
+            <li><a href="febrero">Ingresos - Febrero 2022</a></li> -->
           </ul>
         </div>
       </nav>
@@ -75,19 +98,26 @@ margin-bottom: 15px;
 
     <form action="/action_page.php">
         <label for="cars">Fecha:</label>
-        <select name="cars" id="cars">
-          <option value="volvo">Octubre 2021</option>
-          <option value="saab">Noviembre 2021</option>
-          <option value="opel">Diciembre 2021</option>
-          <option value="audi">Enero 2022</option>
+
+        <select name="cars" id="fecha">
+          <option value="2021-10-31">Octubre 2021</option>
+          <option value="2021-11-30">Noviembre 2021</option>
+          <option value="2021-12-31">Diciembre 2021</option>
+          <option value="2022-01-31">Enero 2022</option>
+          <option value="2022-02-28">Febrero 2022</option>
+          <option value="2022-03-31">Marzo 2022</option>
         </select>
         
-        <button type="button" class="btn btn-xs btn-success">Actualizar</button>
+
+       
+
+        <button type="button" class="btn btn-xs btn-success" onclick= " window.location='../cierre/' + getElementById('fecha').value ">Actualizar</button>
+        <!-- <button type="button" class="btn btn-xs btn-success" onclick="console.log(getElementById('cars').value)  ">Actualizar</button> -->
         <button type="button" class="btn btn-xs btn-success">Descargar</button>
       </form>
 
 
-    <h2><%= title %> </h2>
+   <!--<h2><%= title %> </h2>  --> 
     <table id="customers">
         <tr>
             <th>CMS Promedio</th>
@@ -135,7 +165,8 @@ margin-bottom: 15px;
 <!-- Corto Plazo I  -->
 
     <% if(cortoPlazoI.length!=0) { %>
-
+    
+    <h2>Corto Plazo I</h2>
     <table id="customers">
         <tr>
             <th>Fecha</th>
@@ -149,7 +180,7 @@ margin-bottom: 15px;
             <th>Ingreso a Precio de Contado</th>             
         </tr>     
     
-        <% console.log(cortoPlazoI) %> 
+        <!-- <% console.log(cortoPlazoI) %>  -->
         <% for(var i=0 ; i < cortoPlazoI.length ; i++) { %>
 
         <tr>
@@ -173,7 +204,7 @@ margin-bottom: 15px;
 <!-- Corto Plazo II  -->
 
     <% if(cortoPlazoII.length!=0) { %>
-
+    <h2>Corto Plazo II</h2>
     <table id="customers">
         <tr>
             <th>Fecha</th>
@@ -187,7 +218,7 @@ margin-bottom: 15px;
             <th>Ingreso a Precio de Contado</th>             
         </tr>     
     
-        <% console.log(cortoPlazoII) %> 
+        <!-- <% console.log(cortoPlazoII) %>  -->
         <% for(var i=0 ; i < cortoPlazoII.length ; i++) { %>
 
         <tr>
@@ -209,7 +240,7 @@ margin-bottom: 15px;
 
 <!-- Largo Plazo   -->
     <% if(largoPlazo.length!=0) { %>
-
+    <h2>Largo Plazo </h2>
     <table id="customers">
         <tr>
             <th>Fecha</th>
@@ -223,7 +254,7 @@ margin-bottom: 15px;
             <th>Ingreso a Precio de Contado</th>             
         </tr>     
     
-        <% console.log(largoPlazo) %> 
+        <!-- <% console.log(largoPlazo) %>  -->
         <% for(var i=0 ; i < largoPlazo.length ; i++) { %>
 
         <tr>
@@ -245,7 +276,7 @@ margin-bottom: 15px;
 
 <!-- Potencia I   -->
     <% if(potenciaI.length!=0) { %>
-
+    <h2>Potencia I</h2>
     <table id="customers">
         <tr>
             <th>Fecha</th>
@@ -259,7 +290,7 @@ margin-bottom: 15px;
             <th>Ingreso a Precio de Contado</th>             
         </tr>     
     
-        <% console.log(potenciaI) %> 
+        <!-- <% console.log(potenciaI) %>  -->
         <% for(var i=0 ; i < potenciaI.length ; i++) { %>
 
         <tr>
@@ -280,8 +311,8 @@ margin-bottom: 15px;
 
 
 <!-- Potencia II   -->
-<% if(potenciaII.length!=0) { %>
-
+    <% if(potenciaII.length!=0) { %>
+    <h2>Potencia II</h2>
     <table id="customers">
         <tr>
             <th>Fecha</th>
@@ -295,7 +326,7 @@ margin-bottom: 15px;
             <th>Ingreso a Precio de Contado</th>             
         </tr>     
     
-        <% console.log(potenciaII) %> 
+        <!-- <% console.log(potenciaII) %>  -->
         <% for(var i=0 ; i < potenciaII.length ; i++) { %>
 
         <tr>

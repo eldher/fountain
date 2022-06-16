@@ -198,11 +198,11 @@ END
 
 
 
-select * from #corto_plazo_1 order by ingreso_precio_contado asc ;
-select * from #corto_plazo_2 order by ingreso_precio_contado asc ;
-select * from #largo_plazo order by ingreso_precio_contado asc ;
-select * from #potencia_1 order by ingreso_precio_contado asc ;
-select * from #potencia_2 order by ingreso_precio_contado asc ;
+select * from #corto_plazo_1 order by empresa desc ;
+select * from #corto_plazo_2 order by empresa desc ;
+select * from #largo_plazo order by empresa desc ;
+select * from #potencia_1 order by empresa desc ;
+select * from #potencia_2 order by empresa desc ;
 
 
 drop table #corto_plazo_1;

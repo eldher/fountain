@@ -444,10 +444,21 @@ router.get('/cierre_noasync', function(req, res){
 
 
 
+// app.get('/cierre', function(req, res) {
+//     res.redirect('cierre/2021-12-31');
+//   });
 
-router.get('/cierre', function(req, res, next){
+
+app.get("/cierre", (req, res) => {
+
+    res.status(301).redirect("localhost:3010")
+
+})
+
+
+router.get('/cierre/:fecha', function(req, res, next){
     console.log("executiing");
-
+    console.log(req.params.fecha);
 
     (async function () 
     {
@@ -455,19 +466,19 @@ router.get('/cierre', function(req, res, next){
             let pool = await sql.connect(dbConfig_localhost)
 
             let result1 = await pool.request()                
-            .input('fecha_cierre', sql.Date, '2021-12-31' )
-            .input('fecha_mes', sql.Date, '2021-12' )
+            .input('fecha_cierre', sql.Date, req.params.fecha )
+            .input('fecha_mes', sql.Date, req.params.fecha )
             .execute('sp_EjecutarCierre')
             firstQuery = result1;    
-            console.dir(result1);
+            //console.dir(result1);
 
 
 
             let result2 = await pool.request()                
-            .input('fecha', sql.Date, '2021-12-31' )            
+            .input('fecha', sql.Date, req.params.fecha )             // 2021-12-31
             .execute('sp_ObtenerContratoCategoriaConTotal')
             //firstQuery = result1;    
-            console.dir(result2);
+            //console.dir(result2);
             cortoPlazoI     = result2.recordsets[0];
             cortoPlazoII    = result2.recordsets[1];
             largoPlazo      = result2.recordsets[2];
@@ -479,7 +490,8 @@ router.get('/cierre', function(req, res, next){
 
        // cambiar el render 
     })().then(() => res.render('cierre', {
-        title: 'Prueba Fountain', 
+        title: 'Prueba Fountain',
+        fecha:  req.params.fecha,
         data: firstQuery, 
         cortoPlazoI, 
         cortoPlazoII,
@@ -493,6 +505,10 @@ router.get('/cierre', function(req, res, next){
         // ... error handler
     })   
 });
+
+
+
+
 
 
 app.use('/', router);

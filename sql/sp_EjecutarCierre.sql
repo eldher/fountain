@@ -81,18 +81,19 @@ EXEC ('USE [FOUNTAIN4];')
 --                       CREACION TABLA DE ENERGIA
 --------------------------------------------------------------------------
 
---drop table if exists TotalEnergia
---select fecha, empresa , energia
---into TotalEnergia
---from
---(
---	select
---	EOMONTH(fecha) as fecha , sum(EDEMET) as EDEMET, sum(ENSA) as ENSA, SUM(EDECHI) as EDECHI
---	from [preliminar_fountain_dia]
---	group by EOMONTH(fecha)
---) P
---UNPIVOT 
---	(energia  FOR empresa IN ([EDEMET],[ENSA],[EDECHI]))AS UNPVT;
+
+drop table if exists TotalEnergia
+select fecha, empresa , energia
+into TotalEnergia
+from
+(
+	select
+	EOMONTH(fecha) as fecha , sum(EDEMET) as EDEMET, sum(ENSA) as ENSA, SUM(EDECHI) as EDECHI
+	from [preliminar_fountain_dia]
+	group by EOMONTH(fecha)
+) P
+UNPIVOT 
+	(energia  FOR empresa IN ([EDEMET],[ENSA],[EDECHI]))AS UNPVT;
 
 	   	  
 
@@ -213,7 +214,14 @@ from (select distinct * from LiquidacionFountain) a
 where a.version = 'Oficial'
 group by a.fecha, a.version
 
-
+-- Validacion data de liquidacion
+--select EOMONTH(fecha) , version
+--,sum(ensa						 ) as ensa						
+--,sum(edemet						 ) as edemet						
+--,sum(edechi						 ) as edechi
+--from LiquidacionFountain
+--group by EOMONTH(fecha), version
+--order by 1,2
 
 
 --------------------------------------------------------------------------
