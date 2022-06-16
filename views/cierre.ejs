@@ -284,9 +284,9 @@ font-weight: bold;
             <th>Nombre Contrato</th>            
             <th>Categoria Precio</th>    
             <th>Potencia Equivalente Comprometida (MW)</th>
-            <th>DMG-RC (MW)</th>
+            <!-- <th>DMG-RC (MW)</th>
             <th>E (MWh)</th>
-            <th>EAR</th>
+            <th>EAR</th> -->
             <th>Ingreso a Precio de Contado</th>             
         </tr>     
     
@@ -299,9 +299,9 @@ font-weight: bold;
             <td><%= potenciaI[i].nombre_contrato %></td>
             <td><%= potenciaI[i].categoria_precio %></td>                       
             <td><%= potenciaI[i].potencia_contratada.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
-            <td><%= potenciaI[i].dmm_s.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <!-- <td><%= potenciaI[i].dmm_s.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
             <td><%= potenciaI[i].energia.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
-            <td><%= potenciaI[i].EAR.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td><%= potenciaI[i].EAR.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td> -->
             <td><%= potenciaI[i].ingreso_precio_contado.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
         </tr>
         <% } %>
@@ -320,9 +320,9 @@ font-weight: bold;
             <th>Nombre Contrato</th>            
             <th>Categoria Precio</th>    
             <th>Potencia Equivalente Comprometida (MW)</th>
-            <th>DMG-RC (MW)</th>
+            <!-- <th>DMG-RC (MW)</th>
             <th>E (MWh)</th>
-            <th>EAR</th>
+            <th>EAR</th> -->
             <th>Ingreso a Precio de Contado</th>             
         </tr>     
     
@@ -335,9 +335,9 @@ font-weight: bold;
             <td><%= potenciaII[i].nombre_contrato %></td>
             <td><%= potenciaII[i].categoria_precio %></td>                       
             <td><%= potenciaII[i].potencia_contratada.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
-            <td><%= potenciaII[i].dmm_s.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <!-- <td><%= potenciaII[i].dmm_s.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
             <td><%= potenciaII[i].energia.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
-            <td><%= potenciaII[i].EAR.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td><%= potenciaII[i].EAR.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td> -->
             <td><%= potenciaII[i].ingreso_precio_contado.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
         </tr>
         <% } %>

@@ -27,11 +27,12 @@ drop table if exists #corto_plazo_1;
 
 select  
 cast(fecha as nvarchar) as fecha, 
-EMPRESA, nombre_contrato, categoria_precio, potencia_contratada , dmm_s, energia, EAR, 
-iif(categoria_precio like '%Potencia%', ingreso_precio_contado*1000, ingreso_precio_contado) as ingreso_precio_contado
+EMPRESA, nombre_contrato, categoria_precio, precio, potencia_contratada , dmm_s, energia, EAR, 
+ingreso_precio_contado
 into #corto_plazo_1
 from INGRESOS_CONTRATOS
 where categoria_precio = 'Energia Corto Plazo I'
+and ingreso_precio_contado IS NOT NULL
 and fecha = @fecha;
 
 
@@ -46,6 +47,7 @@ IF @CONT > 0
 		,empresa = ''
 		,nombre_contrato = ''
 		,categoria_precio = ''
+		,precio = max(precio)
 		,potencia_contratada = SUM(potencia_contratada)
 		,dmm_s = SUM(dmm_s)
 		,energia = SUM(energia)
@@ -60,12 +62,13 @@ IF @CONT > 0
 select @CONT = 0;
 
 drop table if exists #corto_plazo_2
-select cast(fecha as nvarchar) as fecha, EMPRESA, nombre_contrato, categoria_precio, potencia_contratada , dmm_s, energia, EAR, 
-iif(categoria_precio like '%Potencia%', ingreso_precio_contado*1000, ingreso_precio_contado) as ingreso_precio_contado
+select cast(fecha as nvarchar) as fecha, EMPRESA, nombre_contrato, categoria_precio, precio, potencia_contratada , dmm_s, energia, EAR, 
+ingreso_precio_contado
 into #corto_plazo_2
 from INGRESOS_CONTRATOS
 where categoria_precio = 'Energia Corto Plazo II'
-and fecha = @fecha
+and ingreso_precio_contado IS NOT NULL
+and fecha = @fecha;
 
 
 select @CONT = count(*) from #corto_plazo_2;
@@ -79,6 +82,7 @@ BEGIN
 	,empresa = ''
 	,nombre_contrato = ''
 	,categoria_precio = ''
+	,precio = max(precio)
 	,potencia_contratada = SUM(potencia_contratada)
 	,dmm_s = SUM(dmm_s)
 	,energia = SUM(energia)
@@ -95,12 +99,13 @@ END
 select @CONT = 0;
 
 drop table if exists #largo_plazo;
-select cast(fecha as nvarchar) as fecha, EMPRESA, nombre_contrato, categoria_precio, potencia_contratada , dmm_s, energia, EAR, 
-iif(categoria_precio like '%Potencia%', ingreso_precio_contado*1000, ingreso_precio_contado) as ingreso_precio_contado
+select cast(fecha as nvarchar) as fecha, EMPRESA, nombre_contrato, categoria_precio, precio, potencia_contratada , dmm_s, energia, EAR, 
+ingreso_precio_contado
 into #largo_plazo
 from INGRESOS_CONTRATOS
 where categoria_precio = 'Energia Largo Plazo'
-and fecha = @fecha
+and ingreso_precio_contado IS NOT NULL
+and fecha = @fecha;
 
 
 select @CONT = count(*) from #largo_plazo;
@@ -114,6 +119,7 @@ BEGIN
 	,empresa = ''
 	,nombre_contrato = ''
 	,categoria_precio = ''
+	,precio = max(precio)
 	,potencia_contratada = SUM(potencia_contratada)
 	,dmm_s = SUM(dmm_s)
 	,energia = SUM(energia)
@@ -128,12 +134,13 @@ select @CONT = 0;
 
 drop table if exists #potencia_1;
 
-select cast(fecha as nvarchar) as fecha, EMPRESA, nombre_contrato, categoria_precio, potencia_contratada , dmm_s, energia, EAR, 
-iif(categoria_precio like '%Potencia%', ingreso_precio_contado*1000, ingreso_precio_contado) as ingreso_precio_contado
+select cast(fecha as nvarchar) as fecha, EMPRESA, nombre_contrato, categoria_precio, precio, potencia_contratada,
+ingreso_precio_contado
 into #potencia_1
 from INGRESOS_CONTRATOS
 where categoria_precio = 'Potencia I'
-and fecha = @fecha
+and ingreso_precio_contado IS NOT NULL
+and fecha = @fecha;
 
 
 select @CONT = count(*) from #potencia_1;
@@ -147,10 +154,8 @@ BEGIN
 	,empresa = ''
 	,nombre_contrato = ''
 	,categoria_precio = ''
+	,precio = max(precio)
 	,potencia_contratada = SUM(potencia_contratada)
-	,dmm_s = SUM(dmm_s)
-	,energia = SUM(energia)
-	,EAR = SUM(EAR)
 	,ingreso_precio_contado = SUM(ingreso_precio_contado)
 	from #potencia_1;
 END
@@ -165,11 +170,12 @@ select @CONT = 0;
 
 drop table if exists #potencia_2;
 
-select cast(fecha as nvarchar) as fecha, EMPRESA, nombre_contrato, categoria_precio, potencia_contratada , dmm_s, energia, EAR, 
-iif(categoria_precio like '%Potencia%', ingreso_precio_contado*1000, ingreso_precio_contado) as ingreso_precio_contado
+select cast(fecha as nvarchar) as fecha, EMPRESA, nombre_contrato, categoria_precio, precio, potencia_contratada , 
+ingreso_precio_contado
 into #potencia_2
 from INGRESOS_CONTRATOS
 where categoria_precio = 'Potencia II'
+and ingreso_precio_contado IS NOT NULL
 and fecha = @fecha;
 
 
@@ -184,14 +190,12 @@ BEGIN
 	,empresa = ''
 	,nombre_contrato = ''
 	,categoria_precio = ''
+	,precio = max(precio)
 	,potencia_contratada = SUM(potencia_contratada)
-	,dmm_s = SUM(dmm_s)
-	,energia = SUM(energia)
-	,EAR = SUM(EAR)
 	,ingreso_precio_contado = SUM(ingreso_precio_contado)
 	from #potencia_2;
 END
-
+	
 
 
 

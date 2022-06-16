@@ -6,7 +6,7 @@ GO
 -- =============================================
 -- Author:		Eldher
 -- =============================================
-CREATE PROCEDURE [dbo].[sp_EjecutarCierre]
+ALTER PROCEDURE [dbo].[sp_EjecutarCierre]
 	@fecha_cierre date,
 	@fecha_mes varchar
 AS
@@ -29,6 +29,8 @@ EXEC ('USE [FOUNTAIN4];')
 
 --ALTER TABLE TotalesContratos2 ADD empresa varchar(20);
 
+
+--ALTER TABLE TotalesContratos2 DROP COLUMN empresa 
 
 --update TotalesContratos2
 --set empresa =  
@@ -108,56 +110,48 @@ into #precios
 from contratos_fecha a
 left join tipo_precio b on a.fecha_cierre = b.fecha_cierre and a.categoria_precio = b.categoria_precio
 
+
 --select * from #precios
+
+--ALTER TABLE #precios ADD empresa varchar(20);
+
+--update #precios
+--set empresa =  
+--case 
+--when nombre_contrato LIKE '%ELEKTRA%' then 'ENSA'
+--when nombre_contrato LIKE '%ENSA%' then 'ENSA'
+--when nombre_contrato LIKE '%EDEMET%' then 'EDEMET'
+--when nombre_contrato LIKE '%EDECHI%' then 'EDECHI'
+--end
+
+
+
 
 drop table if exists INGRESOS_CONTRATOS
 
 select distinct 
-EOMONTH(a.fecha) as fecha
-,a.empresa
-,trim(a.nombre_contrato) as nombre_contrato
+coalesce(EOMONTH(a.fecha), b.fecha_cierre) as fecha
+,coalesce(trim(a.nombre_contrato), trim(b.nombre_contrato)) as  nombre_contrato
+,coalesce(trim(a.empresa), trim(b.empresa)) as  empresa
+--,trim(a.nombre_contrato) as nombre_contrato
 ,a.potencia_contratada
-,EOMONTH(b.fecha_cierre) as fecha
-,trim(b.nombre_contrato) as nombre_contrato
+--,EOMONTH(b.fecha_cierre) as fecha
+--,trim(b.nombre_contrato) as nombre_contrato
 ,b.categoria_precio
 ,b.precio
 ,c.dmg
 ,c.dmg_s
 ,c.dmm_s
 ,d.energia
-,(potencia_contratada/dmm_s)*energia as EAR
-,(potencia_contratada/dmm_s)*energia*precio as ingreso_precio_contado
---into INGRESOS_CONTRATOS
+,IIF(b.categoria_precio LIKE '%Energia%' , (potencia_contratada/dmm_s)*energia , 0 ) as EAR
+,IIF(b.categoria_precio LIKE '%Energia%' , (potencia_contratada/dmm_s)*energia*precio , potencia_contratada*precio*1000  ) as ingreso_precio_contado
+
+into INGRESOS_CONTRATOS
 from TotalesContratos2 a 
 full join #precios b on ( EOMONTH(a.fecha)= b.fecha_cierre  ) and (trim(a.nombre_contrato) = trim(b.nombre_contrato) )
 left join TotalesContratos c on EOMONTH(a.fecha) = EOMONTH(c.fecha) and a.empresa = c.Distribuidores
 left join TotalEnergia d on EOMONTH(a.fecha) = d.fecha and a.empresa = d.empresa
-
-
-
-
-
---select fecha , categoria_precio , sum(ingreso_precio_contado) as ingresos 
---from  INGRESOS_CONTRATOS
---group by fecha, categoria_precio
---order by 1
-
-
-
---select *
---from  INGRESOS_CONTRATOS
---where categoria_precio = 'Energia Corto Plazo I'
---and fecha = '2021-12-31'
-
---select *
---from  INGRESOS_CONTRATOS
---where categoria_precio = 'Energia Largo Plazo'
---and fecha = '2021-12-31'
-
---select *
---from  INGRESOS_CONTRATOS
---where categoria_precio = 'Potencia II'
---and fecha = '2021-12-31'
+order by 1,2
 
 
 
