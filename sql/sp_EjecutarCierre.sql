@@ -27,23 +27,20 @@ EXEC ('USE [FOUNTAIN4];')
 --------------------------------------------------------------------------
 
 
---alter table TotalesContratos2
---add empresa varchar(50); 
+--ALTER TABLE TotalesContratos2 ADD empresa varchar(20);
 
 
 --update TotalesContratos2
 --set empresa =  
 --case 
---when nombre_contrato = '004_13 FOUNTAIN-ELEKTRA' then 'ENSA'
---when nombre_contrato = '05_13 FOUNTAIN-EDEMET' then 'EDEMET'
---when nombre_contrato = '13_13 FOUNTAIN-EDECHI' then 'EDECHI'
---when nombre_contrato = '09-20 FOUNTAIN - EDEMET' then 'EDEMET'
---when nombre_contrato = '017-20 FOUNTAIN - ENSA' then 'ENSA'
---when nombre_contrato = '29-20 FOUNTAIN - EDECHI' then 'EDECHI'
---end 
---where 
---nombre_contrato in ('004_13 FOUNTAIN-ELEKTRA', '05_13 FOUNTAIN-EDEMET' , '13_13 FOUNTAIN-EDECHI', '09-20 FOUNTAIN - EDEMET', '017-20 FOUNTAIN - ENSA', '29-20 FOUNTAIN - EDECHI' )
+--when nombre_contrato LIKE '%ELEKTRA%' then 'ENSA'
+--when nombre_contrato LIKE '%ENSA%' then 'ENSA'
+--when nombre_contrato LIKE '%EDEMET%' then 'EDEMET'
+--when nombre_contrato LIKE '%EDECHI%' then 'EDECHI'
+--end
 
+
+--select * from TotalesContratos2
 
 
 --------------------------------------------------------------------------
@@ -60,9 +57,6 @@ EXEC ('USE [FOUNTAIN4];')
 
 --INSERT INTO TotalesContratos2(fecha, hora, nombre_contrato, tipo_contrato, consumo, suplido, potencia_contratada, mwh_contrato, empresa)
 --VALUES ('2021-11-30', 23, '37-21', 'S', 0, 0, 1.056, 0, 'EDECHI');
-
-
-
 
 
 --- para diciembre 2021
@@ -82,20 +76,20 @@ EXEC ('USE [FOUNTAIN4];')
 --------------------------------------------------------------------------
 
 
-drop table if exists TotalEnergia
-select fecha, empresa , energia
-into TotalEnergia
-from
-(
-	select
-	EOMONTH(fecha) as fecha , sum(EDEMET) as EDEMET, sum(ENSA) as ENSA, SUM(EDECHI) as EDECHI
-	from [preliminar_fountain_dia]
-	group by EOMONTH(fecha)
-) P
-UNPIVOT 
-	(energia  FOR empresa IN ([EDEMET],[ENSA],[EDECHI]))AS UNPVT;
+--drop table if exists TotalEnergia
+--select fecha, empresa , energia
+--into TotalEnergia
+--from
+--(
+--	select
+--	EOMONTH(fecha) as fecha , sum(EDEMET) as EDEMET, sum(ENSA) as ENSA, SUM(EDECHI) as EDECHI
+--	from [preliminar_fountain_dia]
+--	group by EOMONTH(fecha)
+--) P
+--UNPIVOT 
+--	(energia  FOR empresa IN ([EDEMET],[ENSA],[EDECHI]))AS UNPVT;
 
-	   	  
+
 
 
 --------------------------------------------------------------------------
@@ -108,35 +102,38 @@ UNPIVOT
 --update tipo_precio set fecha_cierre = '2021-12-31' where fecha_cierre = '2022-12-31'
 
 
---drop table if exists #precios
---select a.* , b.precio_base_usd_mwh*b.cargo_transmicion_seguimiento_electrico as precio
---into #precios
---from contratos_fecha a
---left join tipo_precio b on a.fecha_cierre = b.fecha_cierre and a.categoria_precio = b.categoria_precio
+drop table if exists #precios
+select a.* , b.precio_base_usd_mwh*b.cargo_transmicion_seguimiento_electrico as precio
+into #precios
+from contratos_fecha a
+left join tipo_precio b on a.fecha_cierre = b.fecha_cierre and a.categoria_precio = b.categoria_precio
 
+--select * from #precios
 
+drop table if exists INGRESOS_CONTRATOS
 
-
-
---drop table if exists INGRESOS_CONTRATOS
---select distinct 
---EOMONTH(a.fecha) as fecha
---,a.empresa
---,trim(a.nombre_contrato) as nombre_contrato
---,potencia_contratada
---,b.categoria_precio
---,b.precio
---,c.dmg
---,c.dmg_s
---,c.dmm_s
---,d.energia
---,(potencia_contratada/dmm_s)*energia as EAR
---,(potencia_contratada/dmm_s)*energia*precio as ingreso_precio_contado
+select distinct 
+EOMONTH(a.fecha) as fecha
+,a.empresa
+,trim(a.nombre_contrato) as nombre_contrato
+,a.potencia_contratada
+,EOMONTH(b.fecha_cierre) as fecha
+,trim(b.nombre_contrato) as nombre_contrato
+,b.categoria_precio
+,b.precio
+,c.dmg
+,c.dmg_s
+,c.dmm_s
+,d.energia
+,(potencia_contratada/dmm_s)*energia as EAR
+,(potencia_contratada/dmm_s)*energia*precio as ingreso_precio_contado
 --into INGRESOS_CONTRATOS
---from TotalesContratos2 a 
---left join #precios b on ( EOMONTH(a.fecha)= b.fecha_cierre  ) and (trim(a.nombre_contrato) = trim(b.nombre_contrato) )
---left join TotalesContratos c on EOMONTH(a.fecha) = EOMONTH(c.fecha) and a.empresa = c.Distribuidores
---left join TotalEnergia d on EOMONTH(a.fecha) = d.fecha and a.empresa = d.empresa
+from TotalesContratos2 a 
+full join #precios b on ( EOMONTH(a.fecha)= b.fecha_cierre  ) and (trim(a.nombre_contrato) = trim(b.nombre_contrato) )
+left join TotalesContratos c on EOMONTH(a.fecha) = EOMONTH(c.fecha) and a.empresa = c.Distribuidores
+left join TotalEnergia d on EOMONTH(a.fecha) = d.fecha and a.empresa = d.empresa
+
+
 
 
 
@@ -324,7 +321,8 @@ drop table if exists resumen
 select 
 *,
 ingreso_total_neto = ventas_energia_mercado_ocasional + ingresos_por_contratos + credito_energia_perdida_transmision
-+ sasd + generacion_obligada + servicios_auxiliares + compensacion_potencia + SAERLP - compras_energia_mercado_ocasional - debito_energia_perdida_transmision
++ sasd + generacion_obligada + servicios_auxiliares + compensacion_potencia + SAERLP
+- compras_energia_mercado_ocasional - debito_energia_perdida_transmision
 into resumen
 from
 #prev

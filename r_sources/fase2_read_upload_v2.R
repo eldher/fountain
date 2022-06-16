@@ -313,8 +313,10 @@ for (filename in archivos) {
 
 
 
+###################################################
+############ TOTALES POR CONTRATOS ################
+###################################################
 
-#### TOTALES POR CONTRATOS ####
 setwd("C:/Users/eld02/Documents/FOUNTAIN CORP/Fase 2")
 name <- "totales_por_contratos" 
 archivos <- list.files(pattern = name, recursive = TRUE)
@@ -341,18 +343,18 @@ for (filename in archivos) {
   
   z <- obj$mes 
   obj$mes <- case_when(
-  z == "enero" ~ 1,
-  z == "febrero" ~ 2,
-  z == "marzo" ~ 3,
-  z == "abril" ~ 4,
-  z == "mayo" ~ 5,
-  z == "junio" ~ 6,
-  z == "julio" ~ 7,
-  z == "agosto" ~ 8,
-  z == "septiembre" ~ 9,
-  z == "octubre" ~ 10,
-  z == "noviembre" ~ 11,
-  z == "diciembre" ~ 12
+    z == "enero" ~ 1,
+    z == "febrero" ~ 2,
+    z == "marzo" ~ 3,
+    z == "abril" ~ 4,
+    z == "mayo" ~ 5,
+    z == "junio" ~ 6,
+    z == "julio" ~ 7,
+    z == "agosto" ~ 8,
+    z == "septiembre" ~ 9,
+    z == "octubre" ~ 10,
+    z == "noviembre" ~ 11,
+    z == "diciembre" ~ 12
   )
   
   
