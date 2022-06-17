@@ -104,9 +104,11 @@ EXEC ('USE [FOUNTAIN4];')
 --update tipo_precio set fecha_cierre = '2021-12-31' where fecha_cierre = '2022-12-31'
 
 
+select * from tipo_precio
+
 drop table if exists #precios
-select a.* , b.precio_base_usd_mwh*b.cargo_transmicion_seguimiento_electrico as precio
-into #precios
+select a.* , b.precio_base_usd_mwh + b.cargo_transmicion_seguimiento_electrico as precio
+--into #precios
 from contratos_fecha a
 left join tipo_precio b on a.fecha_cierre = b.fecha_cierre and a.categoria_precio = b.categoria_precio
 

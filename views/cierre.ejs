@@ -84,7 +84,7 @@ font-weight: bold;
           <a class="navbar-brand" href="/">Fountain</a>
           <ul class="nav navbar-nav">            
             <li><a href="/">Cierre </a></li>
-            <li><a href="dashboard">Dashboards</a></li>
+            <li><a href="contratos">Contratos</a></li>
             <!-- <li><a href="noviembre">Ingresos - Noviembre 2021</a></li>
             <li><a href="diciembre">Ingresos - Diciembre 2021</a></li>
             <li><a href="enero">Ingresos - Enero 2022</a></li>
@@ -173,6 +173,7 @@ font-weight: bold;
             <th>Empresa Distribuidora</th>
             <th>Nombre Contrato</th>            
             <th>Categoria Precio</th>    
+            <th>Precio</th>
             <th>Potencia Equivalente Comprometida (MW)</th>
             <th>DMG-RC (MW)</th>
             <th>E (MWh)</th>
@@ -188,6 +189,7 @@ font-weight: bold;
             <td><%= cortoPlazoI[i].EMPRESA %></td>
             <td><%= cortoPlazoI[i].nombre_contrato %></td>
             <td><%= cortoPlazoI[i].categoria_precio %></td>                       
+            <td><%= cortoPlazoI[i].precio.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
             <td><%= cortoPlazoI[i].potencia_contratada.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
             <td><%= cortoPlazoI[i].dmm_s.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
             <td><%= cortoPlazoI[i].energia.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
@@ -211,6 +213,7 @@ font-weight: bold;
             <th>Empresa Distribuidora</th>
             <th>Nombre Contrato</th>            
             <th>Categoria Precio</th>    
+            <th>Precio</th>
             <th>Potencia Equivalente Comprometida (MW)</th>
             <th>DMG-RC (MW)</th>
             <th>E (MWh)</th>
@@ -226,6 +229,7 @@ font-weight: bold;
             <td><%= cortoPlazoII[i].EMPRESA %></td>
             <td><%= cortoPlazoII[i].nombre_contrato %></td>
             <td><%= cortoPlazoII[i].categoria_precio %></td>                       
+            <td><%= cortoPlazoII[i].precio.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
             <td><%= cortoPlazoII[i].potencia_contratada.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
             <td><%= cortoPlazoII[i].dmm_s.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
             <td><%= cortoPlazoII[i].energia.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
@@ -247,6 +251,7 @@ font-weight: bold;
             <th>Empresa Distribuidora</th>
             <th>Nombre Contrato</th>            
             <th>Categoria Precio</th>    
+            <th>Precio</th>
             <th>Potencia Equivalente Comprometida (MW)</th>
             <th>DMG-RC (MW)</th>
             <th>E (MWh)</th>
@@ -262,6 +267,7 @@ font-weight: bold;
             <td><%= largoPlazo[i].EMPRESA %></td>
             <td><%= largoPlazo[i].nombre_contrato %></td>
             <td><%= largoPlazo[i].categoria_precio %></td>                       
+            <td><%= largoPlazo[i].precio.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
             <td><%= largoPlazo[i].potencia_contratada.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
             <td><%= largoPlazo[i].dmm_s.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
             <td><%= largoPlazo[i].energia.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
@@ -283,10 +289,8 @@ font-weight: bold;
             <th>Empresa Distribuidora</th>
             <th>Nombre Contrato</th>            
             <th>Categoria Precio</th>    
-            <th>Potencia Equivalente Comprometida (MW)</th>
-            <!-- <th>DMG-RC (MW)</th>
-            <th>E (MWh)</th>
-            <th>EAR</th> -->
+            <th>Precio</th>
+            <th>Potencia Equivalente Comprometida (MW)</th>            
             <th>Ingreso a Precio de Contado</th>             
         </tr>     
     
@@ -298,10 +302,8 @@ font-weight: bold;
             <td><%= potenciaI[i].EMPRESA %></td>
             <td><%= potenciaI[i].nombre_contrato %></td>
             <td><%= potenciaI[i].categoria_precio %></td>                       
+            <td><%= potenciaI[i].precio.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
             <td><%= potenciaI[i].potencia_contratada.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
-            <!-- <td><%= potenciaI[i].dmm_s.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
-            <td><%= potenciaI[i].energia.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
-            <td><%= potenciaI[i].EAR.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td> -->
             <td><%= potenciaI[i].ingreso_precio_contado.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
         </tr>
         <% } %>
@@ -319,10 +321,8 @@ font-weight: bold;
             <th>Empresa Distribuidora</th>
             <th>Nombre Contrato</th>            
             <th>Categoria Precio</th>    
+            <th>Precio</th>
             <th>Potencia Equivalente Comprometida (MW)</th>
-            <!-- <th>DMG-RC (MW)</th>
-            <th>E (MWh)</th>
-            <th>EAR</th> -->
             <th>Ingreso a Precio de Contado</th>             
         </tr>     
     
@@ -334,10 +334,8 @@ font-weight: bold;
             <td><%= potenciaII[i].EMPRESA %></td>
             <td><%= potenciaII[i].nombre_contrato %></td>
             <td><%= potenciaII[i].categoria_precio %></td>                       
+            <td><%= potenciaII[i].precio.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
             <td><%= potenciaII[i].potencia_contratada.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
-            <!-- <td><%= potenciaII[i].dmm_s.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
-            <td><%= potenciaII[i].energia.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
-            <td><%= potenciaII[i].EAR.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td> -->
             <td><%= potenciaII[i].ingreso_precio_contado.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
         </tr>
         <% } %>

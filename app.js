@@ -507,6 +507,27 @@ router.get('/cierre/:fecha', function(req, res, next){
 });
 
 
+var contratos;  
+
+router.get('/contratos', function(req, res, next){
+    
+    (async function () 
+    {
+        try {
+            let pool = await sql.connect(dbConfig_localhost)     
+            let result = await pool.request()
+            .query("SELECT *  FROM INGRESOS_CONTRATOS")    
+            contratos = result.recordsets[0];
+        } catch (err) {            
+        }
+
+       
+    })().then(() => res.render('contratos', { contratos } ))
+    
+    sql.on('error', err => {
+        console.log(err);        
+    })   
+});
 
 
 

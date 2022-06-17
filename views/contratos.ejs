@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title> Contratos</title>
+
+<link rel="stylesheet" href="./styles/styles.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+
+
+
+<meta http-equiv='cache-control' content='no-cache'>
+<meta http-equiv='expires' content='0'>
+<meta http-equiv='pragma' content='no-cache'>
+</head>
+
+
+
+
+<body>
+    <div class="navbar navbar-inverse navbar-static-top">
+        <div class="container">
+          <a class="navbar-brand" href="/">Fountain</a>
+          <ul class="nav navbar-nav">            
+            <li><a href="/">Cierre </a></li>
+            <li><a href="contratos">Contratos</a></li>
+            <!-- <li><a href="noviembre">Ingresos - Noviembre 2021</a></li>
+            <li><a href="diciembre">Ingresos - Diciembre 2021</a></li>
+            <li><a href="enero">Ingresos - Enero 2022</a></li>
+            <li><a href="febrero">Ingresos - Febrero 2022</a></li> -->
+          </ul>
+        </div>
+      </nav>
+</div>
+
+<div class="container theme-showcase" role="main">
+
+    <form action="/action_page.php">
+        <label for="cars">Fecha:</label>
+
+        <select name="cars" id="fecha">
+          <option value="2021-10-31">Octubre 2021</option>
+          <option value="2021-11-30">Noviembre 2021</option>
+          <option value="2021-12-31">Diciembre 2021</option>
+          <option value="2022-01-31">Enero 2022</option>
+          <option value="2022-02-28">Febrero 2022</option>
+          <option value="2022-03-31">Marzo 2022</option>
+        </select>
+        
+
+       
+
+        <button type="button" class="btn btn-xs btn-success" onclick= " window.location='../cierre/' + getElementById('fecha').value ">Actualizar</button>
+        <!-- <button type="button" class="btn btn-xs btn-success" onclick="console.log(getElementById('cars').value)  ">Actualizar</button> -->
+        <button type="button" class="btn btn-xs btn-success">Descargar</button>
+      </form>
+
+
+
+    <table id="customers">
+        <tr>
+            <th>fecha</th>
+            <th>nombre_contrato</th>
+            <th>empresa</th>
+            <th>potencia_contratada</th>
+            <th>categoria_precio</th>
+            <th>precio</th>
+            <th>dmg</th>
+            <th>dmg_s</th>
+            <th>dmm_s</th>
+            <th>energia</th>
+            <th>EAR</th>
+            <th>ingreso_precio_contado</th>            
+        </tr>
+        
+        <% console.log('test');
+
+        console.log(typeof contratos)
+        %>
+
+        <% if ( contratos.length != 0 ) {
+            for ( var i=0 ; i <contratos.recordset.length ; i++) { %>
+                <tr>
+                    <td><%= contratos[i].fecha %></td>
+                    <td><%= contratos[i].nombre_contrato %></td>
+                    <td><%= contratos[i].empresa %></td>
+                    <td><%= contratos[i].potencia_contratada %></td>
+                    <td><%= contratos[i].categoria_precio %></td>
+                    <td><%= contratos[i].precio %></td>
+                    <td><%= contratos[i].dmg %></td>
+                    <td><%= contratos[i].dmg_s %></td>
+                    <td><%= contratos[i].dmm_s %></td>
+                    <td><%= contratos[i].energia %></td>
+                    <td><%= contratos[i].EAR %></td>
+                    <td><%= contratos[i].ingreso_precio_contado %></td>
+                  
+                </tr>
+            <% }
+        } else { %>
+            <tr>
+                <td colspan="3">No Data</td>
+            </tr>
+            <%  } %>
+    </table>
+
+</div>
+
+</body>
+
+
+
+
+
