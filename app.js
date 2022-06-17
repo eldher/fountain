@@ -15,6 +15,9 @@ const { render } = require("express/lib/response");
 
 console.log(__dirname)
 
+
+
+
 router.get('/',function(req,res){    
     res.sendFile(__dirname + "/index.html");
     //__dirname : It will resolve to your project folder.
@@ -451,7 +454,7 @@ router.get('/cierre_noasync', function(req, res){
 
 app.get("/cierre", (req, res) => {
 
-    res.status(301).redirect("localhost:3010")
+    res.status(301).redirect("localhost:3010/cierre/2021-12-31")
 
 })
 
@@ -467,7 +470,6 @@ router.get('/cierre/:fecha', function(req, res, next){
 
             let result1 = await pool.request()                
             .input('fecha_cierre', sql.Date, req.params.fecha )
-            .input('fecha_mes', sql.Date, req.params.fecha )
             .execute('sp_EjecutarCierre')
             firstQuery = result1;    
             //console.dir(result1);
@@ -516,9 +518,11 @@ router.get('/contratos', function(req, res, next){
         try {
             let pool = await sql.connect(dbConfig_localhost)     
             let result = await pool.request()
-            .query("SELECT *  FROM INGRESOS_CONTRATOS")    
-            contratos = result.recordsets[0];
+            .execute('sp_ObtenerContratos');
+            contratos = result.recordsets[0];            
+            console.log(contratos.length);
         } catch (err) {            
+            console.log(err);
         }
 
        
@@ -534,6 +538,7 @@ router.get('/contratos', function(req, res, next){
 
 app.use('/', router);
 app.set("view engine", "ejs")
+app.use(express.static(__dirname + '/public/'));
 app.listen(process.env.port || 3010 , function(){
     console.log("Server is running on localhost 3010");
 });

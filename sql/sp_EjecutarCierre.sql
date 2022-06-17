@@ -14,7 +14,7 @@ BEGIN
 
 EXEC ('USE [FOUNTAIN4];')
 
-
+Select @fecha_mes = CONCAT(YEAR(@fecha_cierre),'-',MONTH(@fecha_cierre))
 
 --DECLARE @fecha_cierre as date;
 --SET @fecha_cierre = '2021-12-31';
@@ -104,16 +104,17 @@ EXEC ('USE [FOUNTAIN4];')
 --update tipo_precio set fecha_cierre = '2021-12-31' where fecha_cierre = '2022-12-31'
 
 
-select * from tipo_precio
+--select * from tipo_precio
+--select * from #precios
 
 drop table if exists #precios
 select a.* , b.precio_base_usd_mwh + b.cargo_transmicion_seguimiento_electrico as precio
---into #precios
+into #precios
 from contratos_fecha a
 left join tipo_precio b on a.fecha_cierre = b.fecha_cierre and a.categoria_precio = b.categoria_precio
 
 
---select * from #precios
+
 
 --ALTER TABLE #precios ADD empresa varchar(20);
 
@@ -127,34 +128,46 @@ left join tipo_precio b on a.fecha_cierre = b.fecha_cierre and a.categoria_preci
 --end
 
 
+--------------------------------------------------------------------------
+--                       CREACION TABLA DE CONTRATOS 
+--------------------------------------------------------------------------
+
+--drop table if exists CONTRATOS;
+--select distinct 
+--coalesce(EOMONTH(a.fecha), b.fecha_cierre) as fecha
+--,coalesce(trim(a.nombre_contrato), trim(b.nombre_contrato)) as  nombre_contrato
+--,coalesce(trim(a.empresa), trim(b.empresa)) as  empresa
+----,trim(a.nombre_contrato) as nombre_contrato
+--,a.potencia_contratada
+----,EOMONTH(b.fecha_cierre) as fecha
+----,trim(b.nombre_contrato) as nombre_contrato
+--,b.categoria_precio
+--,b.precio
+
+--into CONTRATOS
+--from TotalesContratos2 a 
+--full join #precios b on ( EOMONTH(a.fecha)= b.fecha_cierre  ) and (trim(a.nombre_contrato) = trim(b.nombre_contrato) )
+--order by 1,2
 
 
-drop table if exists INGRESOS_CONTRATOS
+--------------------------------------------------------------------------
+--                       CREACION TABLA DE INGRESOS POR CONTRATOS 
+--------------------------------------------------------------------------
 
-select distinct 
-coalesce(EOMONTH(a.fecha), b.fecha_cierre) as fecha
-,coalesce(trim(a.nombre_contrato), trim(b.nombre_contrato)) as  nombre_contrato
-,coalesce(trim(a.empresa), trim(b.empresa)) as  empresa
---,trim(a.nombre_contrato) as nombre_contrato
-,a.potencia_contratada
---,EOMONTH(b.fecha_cierre) as fecha
---,trim(b.nombre_contrato) as nombre_contrato
-,b.categoria_precio
-,b.precio
-,c.dmg
-,c.dmg_s
-,c.dmm_s
-,d.energia
-,IIF(b.categoria_precio LIKE '%Energia%' , (potencia_contratada/dmm_s)*energia , 0 ) as EAR
-,IIF(b.categoria_precio LIKE '%Energia%' , (potencia_contratada/dmm_s)*energia*precio , potencia_contratada*precio*1000  ) as ingreso_precio_contado
-
-into INGRESOS_CONTRATOS
-from TotalesContratos2 a 
-full join #precios b on ( EOMONTH(a.fecha)= b.fecha_cierre  ) and (trim(a.nombre_contrato) = trim(b.nombre_contrato) )
-left join TotalesContratos c on EOMONTH(a.fecha) = EOMONTH(c.fecha) and a.empresa = c.Distribuidores
-left join TotalEnergia d on EOMONTH(a.fecha) = d.fecha and a.empresa = d.empresa
-order by 1,2
-
+--drop table if exists INGRESOS_CONTRATOS
+--select 
+--a.*
+--,dmg = IIF(a.categoria_precio LIKE '%Energia%', b.dmg , NULL) 
+--,dmg_s = IIF(a.categoria_precio LIKE '%Energia%', b.dmg_s , NULL)  
+--,dmm_s = IIF(a.categoria_precio LIKE '%Energia%', b.dmm_s , NULL)  
+--,energia = IIF(a.categoria_precio LIKE '%Energia%', c.energia , NULL) 
+--,EAR = IIF(a.categoria_precio LIKE '%Energia%' , (potencia_contratada/dmm_s)*energia , 0 ) 
+--,ingreso_precio_contado = IIF(a.categoria_precio LIKE '%Energia%' , (potencia_contratada/dmm_s)*energia*precio , potencia_contratada*precio*1000  )
+--into INGRESOS_CONTRATOS 
+--from CONTRATOS a
+--left join TotalesContratos b on a.fecha = EOMONTH(b.fecha) and a.empresa = b.Distribuidores
+--left join TotalEnergia c on a.fecha = c.fecha and a.empresa = c.empresa
+--order by 1,2
 
 
 --------------------------------------------------------------------------
