@@ -7,12 +7,14 @@ GO
 -- Author:		Eldher
 -- =============================================
 ALTER PROCEDURE [dbo].[sp_EjecutarCierre]
-	@fecha_cierre date,
-	@fecha_mes varchar
+	@fecha_cierre date
+	--@fecha_mes varchar
 AS
 BEGIN
-
 EXEC ('USE [FOUNTAIN4];')
+DECLARE @fecha_mes varchar(20);
+
+
 
 Select @fecha_mes = CONCAT(YEAR(@fecha_cierre),'-',MONTH(@fecha_cierre))
 
@@ -328,14 +330,27 @@ where EOMONTH(fecha) =  @fecha_cierre
 drop table if exists resumen
 
 select 
-*,
-ingreso_total_neto = ventas_energia_mercado_ocasional + ingresos_por_contratos + credito_energia_perdida_transmision
+cms_promedio = ISNULL(cms_promedio,0)
+,energia_generada = ISNULL(energia_generada,0)
+,compras_energia_mercado_ocasional = ISNULL(compras_energia_mercado_ocasional,0)
+,ventas_energia_mercado_ocasional = ISNULL(ventas_energia_mercado_ocasional, 0)
+,ingresos_por_contratos = ISNULL(ingresos_por_contratos, 0)
+,SAERLP = ISNULL(SAERLP, 0)
+,debito_energia_perdida_transmision = ISNULL(debito_energia_perdida_transmision, 0)
+,credito_energia_perdida_transmision = ISNULL(credito_energia_perdida_transmision, 0)
+,sasd = ISNULL(sasd, 0)
+,generacion_obligada = ISNULL(generacion_obligada, 0)
+,servicios_auxiliares = ISNULL(servicios_auxiliares, 0)
+,compensacion_potencia = ISNULL(compensacion_potencia , 0)
+
+
+
+,ingreso_total_neto = isnull((ventas_energia_mercado_ocasional + ingresos_por_contratos + credito_energia_perdida_transmision
 + sasd + generacion_obligada + servicios_auxiliares + compensacion_potencia + SAERLP
-- compras_energia_mercado_ocasional - debito_energia_perdida_transmision
+- compras_energia_mercado_ocasional - debito_energia_perdida_transmision), 0)
 into resumen
 from
 #prev
-
 
 select * from resumen
 

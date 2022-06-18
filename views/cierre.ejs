@@ -11,15 +11,15 @@
 
 <script>
 
-window.onload = function(){
-    var select = document.getElementById('fecha');
-    var value = select.options[select.selectedIndex].value;
-    console.log(value);
-    var text = select.options[select.selectedIndex].text;
-    console.log(text); // English
+// window.onload = function(){
+//     var select = document.getElementById('fecha');
+//     var value = select.options[select.selectedIndex].value;
+//     console.log(value);
+//     var text = select.options[select.selectedIndex].text;
+//     console.log(text); // English
 
-    document.getElementById('fecha').text ='<%= fecha %>';
-}
+//     document.getElementById('fecha').text ='<%= fecha %>';
+// }
 </script>
 
 
@@ -78,7 +78,7 @@ font-weight: bold;
 
 
 <body>
-    <!-- <% console.log(fecha) %>  -->
+    <%# console.log(fecha) %> 
     <div class="navbar navbar-inverse navbar-static-top">
         <div class="container">
           <a class="navbar-brand" href="/">Fountain</a>
@@ -97,15 +97,29 @@ font-weight: bold;
 <div class="container theme-showcase" role="main">
 
     <form action="/action_page.php">
-        <label for="cars">Fecha:</label>
+        <!-- <label for="cars">Fecha:</label> -->
+
+        <%#console.log(fechas.length) %>
+        <%# for(var i = 0; i < fechas.length; i++) { %>
+            <h1> <%#= fechas[i].fecha + fechas[i].mes + ' ' + fechas[i].anio %> </h1> 
+
+        <%# } %>
 
         <select name="cars" id="fecha">
-          <option value="2021-10-31">Octubre 2021</option>
+     
+        <% for(var i = 0; i < fechas.length; i++) { %>
+
+            <option value= <%= fechas[i].fecha %>   <%= fechas[i].fecha == fecha ? 'selected' : ''  %>     >  <%= fechas[i].mes  + ' ' + fechas[i].anio   %>   </option>
+
+        
+          <!-- <option value="2021-10-31">Octubre 2021</option>
           <option value="2021-11-30">Noviembre 2021</option>
           <option value="2021-12-31">Diciembre 2021</option>
-          <option value="2022-01-31">Enero 2022</option>
+          <option value="2022-01-31" selected>Enero 2022</option>
           <option value="2022-02-28">Febrero 2022</option>
-          <option value="2022-03-31">Marzo 2022</option>
+          <option value="2022-03-31">Marzo 2022</option> -->
+
+        <% } %>
         </select>
         
 
@@ -117,7 +131,7 @@ font-weight: bold;
       </form>
 
 
-   <h3><%= fecha %> </h3>  
+   <h3><%#= fecha %> </h3>  
     <table id="customers">
         <tr>
             <th>CMS Promedio</th>

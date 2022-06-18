@@ -392,8 +392,7 @@ var cortoPlazoII;
 var largoPlazo;
 var potenciaI;  
 var potenciaII;  
-
-
+var fechas;
 
 
 
@@ -447,11 +446,6 @@ router.get('/cierre_noasync', function(req, res){
 
 
 
-// app.get('/cierre', function(req, res) {
-//     res.redirect('cierre/2021-12-31');
-//   });
-
-
 app.get("/cierre", (req, res) => {
 
     res.status(301).redirect("localhost:3010/cierre/2021-12-31")
@@ -486,6 +480,14 @@ router.get('/cierre/:fecha', function(req, res, next){
             largoPlazo      = result2.recordsets[2];
             potenciaI       = result2.recordsets[3];
             potenciaII      = result2.recordsets[4];
+
+
+            let result3 = await pool.request()
+            .query('SET LANGUAGE Spanish; select distinct cast(fecha as varchar) as fecha ,DATENAME(MONTH, fecha) as mes ,YEAR(fecha) as anio from INGRESOS_CONTRATOS')
+            fechas = result3.recordsets[0];
+
+
+
         } catch (err) {
             // ... error checks
         }
@@ -495,6 +497,7 @@ router.get('/cierre/:fecha', function(req, res, next){
         title: 'Prueba Fountain',
         fecha:  req.params.fecha,
         data: firstQuery, 
+        fechas,
         cortoPlazoI, 
         cortoPlazoII,
         largoPlazo,  
@@ -535,9 +538,8 @@ router.get('/contratos', function(req, res, next){
 
 
 
-
 app.use('/', router);
-app.set("view engine", "ejs")
+app.set("view engine", "ejs");
 app.use(express.static(__dirname + '/public/'));
 app.listen(process.env.port || 3010 , function(){
     console.log("Server is running on localhost 3010");
