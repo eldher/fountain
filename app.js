@@ -1,13 +1,25 @@
 //import sql from "mssql";
+
+
+
+
+
 const express = require("express");
 const app = express();
+
+
 const path = require('path');
+
+
 const router = express.Router();
 const ejs = require("ejs");
 const dbConfig_localhost = require("./dbConfig_localhost");
 const dbConfig = require("./dbConfig");
 const sql = require('mssql');
 const { render } = require("express/lib/response");
+const { CLIENT_RENEG_LIMIT } = require("tls");
+const { dirname } = require("path");
+const { fileURLToPath } = require("url");
 
 
 
@@ -15,6 +27,8 @@ const { render } = require("express/lib/response");
 
 console.log(__dirname)
 
+
+//const __dirname = dirname(fileURLToPath(import.meta.url))
 
 
 
@@ -524,12 +538,48 @@ router.get('/contratos', function(req, res, next){
             .execute('sp_ObtenerContratos');
             contratos = result.recordsets[0];            
             console.log(contratos.length);
+
+            let result3 = await pool.request()
+            .query('SET LANGUAGE Spanish; select distinct cast(fecha as varchar) as fecha ,DATENAME(MONTH, fecha) as mes ,YEAR(fecha) as anio from INGRESOS_CONTRATOS')
+            fechas = result3.recordsets[0];
+
+
         } catch (err) {            
             console.log(err);
         }
 
        
-    })().then(() => res.render('contratos', { contratos } ))
+    })().then(() => res.render('contratos', { contratos, fechas } ))
+    
+    sql.on('error', err => {
+        console.log(err);        
+    })   
+});
+
+
+router.get('/contratos/:fecha', function(req, res, next){
+    
+    (async function () 
+    {
+        try {
+            let pool = await sql.connect(dbConfig_localhost)     
+            let result = await pool.request()
+            .input(req.params.fecha)
+            .execute('sp_ObtenerContratosPorFecha')
+            contratos = result.recordsets[0];
+            console.log(contratos.length);
+
+            let result3 = await pool.request()
+            .query('SET LANGUAGE Spanish; select distinct cast(fecha as varchar) as fecha ,DATENAME(MONTH, fecha) as mes ,YEAR(fecha) as anio from INGRESOS_CONTRATOS')
+            fechas = result3.recordsets[0];
+
+
+        } catch (err) {            
+            console.log(err);
+        }
+
+       
+    })().then(() => res.render('contratos', { contratos, fechas } ))
     
     sql.on('error', err => {
         console.log(err);        
@@ -538,9 +588,12 @@ router.get('/contratos', function(req, res, next){
 
 
 
+
+
 app.use('/', router);
 app.set("view engine", "ejs");
-app.use(express.static(__dirname + '/public/'));
+console.log(path.join(__dirname , '/public/'));
+app.use(express.static(path.join(__dirname , '/public/')));
 app.listen(process.env.port || 3010 , function(){
     console.log("Server is running on localhost 3010");
 });
