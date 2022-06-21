@@ -1,5 +1,6 @@
 
-<%- include('partials/header', { title: "Contratos" } )%>
+<%- include('partials/header', { title: "Modificar Contratos" } )%>
+
 
 <div class="container theme-showcase" role="main">
 
@@ -8,6 +9,8 @@
 
         <select name="cars" id="fecha">
             <% console.log(fechas)%>
+            <% console.log(fecha)%>
+
             <% for(var i = 0; i < fechas.length; i++) { %>
     
                 <option value= <%= fechas[i].fecha %>   <%= fechas[i].fecha == fecha ? 'selected' : ''  %>     >  <%= fechas[i].mes  + ' ' + fechas[i].anio   %>   </option>
@@ -34,13 +37,7 @@
             <th>empresa</th>
             <th>potencia_contratada</th>
             <th>categoria_precio</th>
-            <th>precio</th>
-            <th>dmg</th>
-            <th>dmg_s</th>
-            <th>dmm_s</th>
-            <th>energia</th>
-            <th>EAR</th>
-            <th>ingreso_precio_contado</th>            
+            <th>precio</th>                   
         </tr>
 
         <% if( contratos.length > 0 ) {
@@ -52,12 +49,8 @@
                     <td><%= contratos[i].potencia_contratada %></td>
                     <td><%= contratos[i].categoria_precio %></td>
                     <td><%= contratos[i].precio %></td>
-                    <td><%= contratos[i].dmg %></td>
-                    <td><%= contratos[i].dmg_s %></td>
-                    <td><%= contratos[i].dmm_s %></td>
-                    <td><%= contratos[i].energia %></td>
-                    <td><%= contratos[i].EAR %></td>
-                    <td><%= contratos[i].ingreso_precio_contado %></td>
+                    <td><button> Modificar Contrato  </button></td>
+
                   
                 </tr>
             <% } } %>
@@ -66,8 +59,4 @@
 </div>
 
 </body>
-
-
-
-
 

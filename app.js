@@ -32,10 +32,16 @@ console.log(__dirname)
 
 
 
+// router.get('/',function(req,res){    
+//     res.sendFile(__dirname + "/index.html");
+//     //__dirname : It will resolve to your project folder.
+//   });
+
 router.get('/',function(req,res){    
-    res.sendFile(__dirname + "/index.html");
-    //__dirname : It will resolve to your project folder.
-  });
+res.render('index');
+//__dirname : It will resolve to your project folder.
+});
+
 
 router.get('/dashboard',function(req,res){
     res.sendFile(__dirname+'/dashboard.html')
@@ -460,11 +466,11 @@ router.get('/cierre_noasync', function(req, res){
 
 
 
-app.get("/cierre", (req, res) => {
+// app.get("/cierre", (req, res) => {
 
-    res.status(301).redirect("localhost:3010/cierre/2021-12-31")
+//     res.status(301).redirect("localhost:3010/cierre/2021-12-31")
 
-})
+// })
 
 
 router.get('/cierre/:fecha', function(req, res, next){
@@ -529,7 +535,7 @@ router.get('/cierre/:fecha', function(req, res, next){
 var contratos;  
 
 router.get('/contratos', function(req, res, next){
-    
+    console.log('contratos');
     (async function () 
     {
         try {
@@ -540,7 +546,7 @@ router.get('/contratos', function(req, res, next){
             console.log(contratos.length);
 
             let result3 = await pool.request()
-            .query('SET LANGUAGE Spanish; select distinct cast(fecha as varchar) as fecha ,DATENAME(MONTH, fecha) as mes ,YEAR(fecha) as anio from INGRESOS_CONTRATOS')
+            .query('SET LANGUAGE Spanish; select \'\' as fecha, \'\' as mes, \'\' as anio  UNION ALL select distinct cast(fecha as varchar) as fecha ,DATENAME(MONTH, fecha) as mes ,cast(YEAR(fecha) as varchar) as anio from INGRESOS_CONTRATOS');
             fechas = result3.recordsets[0];
 
 
@@ -549,7 +555,7 @@ router.get('/contratos', function(req, res, next){
         }
 
        
-    })().then(() => res.render('contratos', { contratos, fechas } ))
+    })().then(() => res.render('contratos', { contratos, fechas, fecha: '' } ))
     
     sql.on('error', err => {
         console.log(err);        
@@ -558,19 +564,19 @@ router.get('/contratos', function(req, res, next){
 
 
 router.get('/contratos/:fecha', function(req, res, next){
-    
+    console.log('contratos con fecha');
     (async function () 
     {
         try {
             let pool = await sql.connect(dbConfig_localhost)     
             let result = await pool.request()
-            .input(req.params.fecha)
+            .input('fecha', req.params.fecha)
             .execute('sp_ObtenerContratosPorFecha')
             contratos = result.recordsets[0];
             console.log(contratos.length);
 
             let result3 = await pool.request()
-            .query('SET LANGUAGE Spanish; select distinct cast(fecha as varchar) as fecha ,DATENAME(MONTH, fecha) as mes ,YEAR(fecha) as anio from INGRESOS_CONTRATOS')
+            .query("SET LANGUAGE Spanish; select  \'\' as fecha, '' as mes, '' as anio  UNION ALL select distinct cast(fecha as varchar) as fecha ,DATENAME(MONTH, fecha) as mes ,cast(YEAR(fecha) as varchar) as anio from INGRESOS_CONTRATOS");
             fechas = result3.recordsets[0];
 
 
@@ -579,12 +585,80 @@ router.get('/contratos/:fecha', function(req, res, next){
         }
 
        
-    })().then(() => res.render('contratos', { contratos, fechas } ))
+    })().then(() => res.render('contratos', { contratos, fechas, fecha : req.params.fecha } ))
     
     sql.on('error', err => {
         console.log(err);        
     })   
 });
+
+
+
+
+router.get('/modificarContratos', function(req, res, next){
+    console.log('modificar contratos');
+    (async function () 
+    {
+        try {
+            let pool = await sql.connect(dbConfig_localhost)     
+            let result = await pool.request()
+            .query('select cast(fecha as varchar) as fecha, nombre_contrato, empresa, potencia_contratada, categoria_precio, format(precio, \'c\', \'en-US\') as precio  from CONTRATOS')
+            contratos = result.recordsets[0];
+            console.log(contratos.length);
+
+            let result3 = await pool.request()
+            .query("SET LANGUAGE Spanish; select  \'\' as fecha, '' as mes, '' as anio  UNION ALL select distinct cast(fecha as varchar) as fecha ,DATENAME(MONTH, fecha) as mes ,cast(YEAR(fecha) as varchar) as anio from INGRESOS_CONTRATOS");
+            fechas = result3.recordsets[0];
+
+
+        } catch (err) {            
+            console.log(err);
+        }
+
+       
+    })().then(() => res.render('modificarContratos', { contratos, fechas, fecha : '' } ))
+    
+    sql.on('error', err => {
+        console.log(err);        
+    })   
+});
+
+
+var precios;
+
+router.get('/modificarPrecios', function(req, res, next){
+    console.log('modificar precios');
+    (async function () 
+    {
+        try {
+            let pool = await sql.connect(dbConfig_localhost)     
+            let result = await pool.request()
+            .query('select id, cast(fecha_cierre as varchar) as fecha, categoria_precio, precio_base_usd_mwh, cargo_transmicion_seguimiento_electrico from tipo_precio')
+            precios = result.recordsets[0];
+            console.log(precios.length);
+
+            let result3 = await pool.request()
+            .query("SET LANGUAGE Spanish; select  \'\' as fecha, '' as mes, '' as anio  UNION ALL select distinct cast(fecha as varchar) as fecha ,DATENAME(MONTH, fecha) as mes ,cast(YEAR(fecha) as varchar) as anio from INGRESOS_CONTRATOS");
+            fechas = result3.recordsets[0];
+
+
+        } catch (err) {            
+            console.log(err);
+        }
+
+       
+    })().then(() => res.render('modificarPrecios', { precios, fechas, fecha : '' } ))
+    
+    sql.on('error', err => {
+        console.log(err);        
+    })   
+});
+
+
+
+
+
+
 
 
 

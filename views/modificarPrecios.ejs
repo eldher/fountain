@@ -1,0 +1,61 @@
+
+<%- include('partials/header', { title: "Modificar Precios" } )%>
+
+
+<div class="container theme-showcase" role="main">
+
+    <form action="/action_page.php">
+        <label for="cars">Fecha:</label>
+
+        <select name="cars" id="fecha">
+            <% console.log(fechas)%>
+            <% console.log(fecha)%>
+
+            <% for(var i = 0; i < fechas.length; i++) { %>
+    
+                <option value= <%= fechas[i].fecha %>   <%= fechas[i].fecha == fecha ? 'selected' : ''  %>     >  <%= fechas[i].mes  + ' ' + fechas[i].anio   %>   </option>
+    
+            <% } %>
+            </select>
+            
+    
+           
+    
+            <button type="button" class="btn btn-xs btn-success" onclick= " window.location='../contratos/' + getElementById('fecha').value ">Actualizar</button>
+            <!-- <button type="button" class="btn btn-xs btn-success" onclick="console.log(getElementById('cars').value)  ">Actualizar</button> -->
+            <button type="button" class="btn btn-xs btn-success">Descargar</button>
+        </form>
+
+
+        
+
+
+    <table id="customers">
+        <tr>
+            <th>id</th>
+            <th>Fecha</th>
+            <th>Categoia Precio</th>
+            <th>Precio Base USD/MWh</th>
+            <th>Cargo Transmisión Seguimiento Electrico</th>                           
+        </tr>
+
+        <% if( precios.length > 0 ) {
+            for ( var i=0 ; i <precios.length ; i++) { %>
+                <tr>
+                    <td><%= precios[i].id %></td>
+                    <td><%= precios[i].fecha %></td>
+                    <td><%= precios[i].categoria_precio %></td>
+                    <td><%= precios[i].precio_base_usd_mwh %></td>
+                    <td><%= precios[i].cargo_transmicion_seguimiento_electrico %></td>
+
+                    <td><button> Modificar Categoria Precio  </button></td>
+
+                  
+                </tr>
+            <% } } %>
+    </table>
+
+</div>
+
+</body>
+
