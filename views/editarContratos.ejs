@@ -1,0 +1,126 @@
+
+<%- include('partials/header', { title: "Editar Contratos" } )%>
+
+
+<div class="container theme-showcase" role="main">
+
+    <form action="/action_page.php">
+        <label for="cars">Fecha:</label>
+
+        <select name="cars" id="fecha">
+            <% console.log(fechas)%>
+            <% console.log(fecha)%>
+
+            <% for(var i = 0; i < fechas.length; i++) { %>
+    
+                <option value= <%= fechas[i].fecha %>   <%= fechas[i].fecha == fecha ? 'selected' : ''  %>     >  <%= fechas[i].mes  + ' ' + fechas[i].anio   %>   </option>
+    
+            <% } %>
+            </select>
+            
+    
+           
+    
+            <button type="button" class="btn btn-xs btn-success" onclick= " window.location='../contratos/' + getElementById('fecha').value ">Actualizar</button>
+            <!-- <button type="button" class="btn btn-xs btn-success" onclick="console.log(getElementById('cars').value)  ">Actualizar</button> -->
+            <button type="button" class="btn btn-xs btn-success">Descargar</button>
+        </form>
+
+
+        
+
+
+    <table id="customers">
+        <tr>
+            <th>id</th>
+            <th>fecha</th>
+            <th>nombre_contrato</th>
+            <th>empresa</th>
+            <th>potencia_contratada</th>
+            <th>categoria_precio</th>
+            <th>precio</th>                   
+        </tr>
+
+        <% if( contratos.length > 0 ) {
+            for ( var i=0 ; i <contratos.length ; i++) { %>
+                <tr>
+                    <td><%= contratos[i].id %></td>
+                    <td><%= contratos[i].fecha %></td>
+                    <td><%= contratos[i].nombre_contrato %></td>
+                    <td><%= contratos[i].empresa %></td>
+                    <td><%= contratos[i].potencia_contratada %></td>
+                    <td><%= contratos[i].categoria_precio %></td>
+                    <td><%= contratos[i].precio %></td>
+                    <td><button class="btn btn-xs btn-success"  onclick= " window.location = '../modificarContratos/<%= contratos[i].id %> '" > Modificar Contrato  </button></td>
+
+                  
+                </tr>
+            <% } } %>
+    </table>
+
+<form action="editarContrato" method="post">
+
+    <div class="form-group row">
+        <label for="id" class="col-sm-2 col-form-label">ID</label>
+        <div class="col-sm-6">
+            <input type="text" readonly class="form-control" id="id"  value="<%= contratos[0].id %>">
+        </div>
+    </div>
+
+
+    <div class="form-group row">
+        <label for="id" class="col-sm-2 col-form-label">Fecha</label>
+        <div class="col-sm-6">
+            <input type="text" readonly class="form-control" id="fecha"  value="<%= contratos[0].fecha %>">
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="id" class="col-sm-2 col-form-label">Nombre Contrato</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" id="nombre_contrato"  value="<%= contratos[0].nombre_contrato %>">
+        </div>
+    </div>
+
+
+    <div class="form-group row">
+        <label for="id" class="col-sm-2 col-form-label">Empresa</label>
+        <div class="col-sm-6">
+            <input type="text" readonly class="form-control" id="empresa"  value="<%= contratos[0].empresa %>">
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="id" class="col-sm-2 col-form-label">Potencia Contratada</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" id="potencia_contratada"  value="<%= contratos[0].potencia_contratada %>">
+        </div>
+    </div>
+
+
+    <div class="form-group row">
+        <label for="id" class="col-sm-2 col-form-label">Categoria Precio</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" id="categoria_precio"  value="<%= contratos[0].categoria_precio %>">
+        </div>
+    </div>
+
+
+    <div class="form-group row">
+        <label for="id" class="col-sm-2 col-form-label">Precio</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" id="precio"  value="<%= contratos[0].precio %>">
+        </div>
+    </div>
+
+    <button class="btn btn-s btn-success"  onclick= "" > Guardar Contrato  </button>
+    <a class="btn btn-s btn-warning"  href="/modificarContratos"> Cancelar  </a>
+    
+</div>
+</form>
+
+
+
+
+</body>
+
