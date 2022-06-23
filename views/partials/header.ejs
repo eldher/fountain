@@ -12,24 +12,52 @@
 <meta http-equiv='cache-control' content='no-cache'>
 <meta http-equiv='expires' content='0'>
 <meta http-equiv='pragma' content='no-cache'>
+
+<style>
+body { 
+  padding-top: 65px; 
+}
+</style>
+
+
 </head>
 
 
+
 <body>
-    <%# console.log(fecha) %> 
-<div class="navbar navbar-inverse navbar-static-top">
-    <div class="container">
-          <a class="navbar-brand" href="/">Fountain</a>
-          <ul class="nav navbar-nav">            
-            <li><a href="/cierre/2021-12-31">Ingresos Mensuales </a></li>
-            <li><a href="/contratos">Ingresos por Contratos</a></li>
-            <li><a href="/modificarContratos">Modificar Contratos</a></li>
-            <li><a href="/modificarPrecios">Modificar Precios</a></li>
-            <!-- <li><a href="noviembre">Ingresos - Noviembre 2021</a></li>
-            <li><a href="diciembre">Ingresos - Diciembre 2021</a></li>
-            <li><a href="enero">Ingresos - Enero 2022</a></li>
-            <li><a href="febrero">Ingresos - Febrero 2022</a></li> -->
-          </ul>
+
+<!-- Fixed navbar -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+
+      <a class="navbar-brand" href="#">Fountain</a>
     </div>
-    </nav>
-</div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li><a href="/cierre/2021-12-31">Ingresos Mensuales </a></li>
+        <li><a href="/contratos">Ingresos por Contratos</a></li>
+        <li><a href="/modificarContratos">Modificar Contratos</a></li>
+        <li><a href="/modificarPrecios">Modificar Precios</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Contratos <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Agregar</a></li>
+            <li><a href="#">Modificar</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Categorias Precios <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Agregar</a></li>
+            <li><a href="#">Modificar</a></li>
+          </ul>
+        </li>
+
+
+
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</nav>

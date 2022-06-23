@@ -602,7 +602,7 @@ router.get('/modificarContratos', function(req, res, next){
         try {
             let pool = await sql.connect(dbConfig_localhost)     
             let result = await pool.request()
-            .query('select cast(fecha as varchar) as fecha, nombre_contrato, empresa, potencia_contratada, categoria_precio, format(precio, \'c\', \'en-US\') as precio  from CONTRATOS')
+            .query('select id,cast(fecha as varchar) as fecha, nombre_contrato, empresa, potencia_contratada, categoria_precio, format(precio, \'c\', \'en-US\') as precio  from CONTRATOS')
             contratos = result.recordsets[0];
             console.log(contratos.length);
 
@@ -622,6 +622,57 @@ router.get('/modificarContratos', function(req, res, next){
         console.log(err);        
     })   
 });
+
+
+
+
+
+router.get('/modificarContratos/:id', function(req, res, next){
+    console.log('modificar contratos');
+    (async function () 
+    {
+        try {
+            let pool = await sql.connect(dbConfig_localhost)     
+            let result = await pool.request()
+            .query('select id,cast(fecha as varchar) as fecha, nombre_contrato, empresa, potencia_contratada, categoria_precio, format(precio, \'c\', \'en-US\') as precio  from CONTRATOS where id =' + req.params.id )
+            contratos = result.recordsets[0];
+            console.log(contratos.length);
+
+            let result3 = await pool.request()
+            .query("SET LANGUAGE Spanish; select  \'\' as fecha, '' as mes, '' as anio  UNION ALL select distinct cast(fecha as varchar) as fecha ,DATENAME(MONTH, fecha) as mes ,cast(YEAR(fecha) as varchar) as anio from INGRESOS_CONTRATOS");
+            fechas = result3.recordsets[0];
+
+
+        } catch (err) {            
+            console.log(err);
+        }
+
+       
+    })().then(() => res.render('editarContratos', { contratos, fechas, fecha : '' } ))
+    
+    sql.on('error', err => {
+        console.log(err);        
+    })   
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 var precios;
@@ -653,6 +704,18 @@ router.get('/modificarPrecios', function(req, res, next){
         console.log(err);        
     })   
 });
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
