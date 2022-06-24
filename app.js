@@ -350,6 +350,91 @@ router.get('/modificarPrecios/:id', function(req, res, next){
 
 
 
+var id;
+
+router.get('/agregarContrato/', function(req, res, next){
+    //console.log('modificar contratos');
+    (async function () 
+    {
+        try {
+            let pool = await sql.connect(dbConfig_localhost)     
+            let result = await pool.request()
+            .query('select max(id) + 1 as next_id from CONTRATOS')
+            id = result.recordsets[0];
+            // console.log(contratos.length);
+
+            let result3 = await pool.request()
+            .query("SET LANGUAGE Spanish; select  \'\' as fecha, '' as mes, '' as anio  UNION ALL select distinct cast(fecha as varchar) as fecha ,DATENAME(MONTH, fecha) as mes ,cast(YEAR(fecha) as varchar) as anio from INGRESOS_CONTRATOS");
+            fechas = result3.recordsets[0];
+
+            let result4 = await pool.request()
+            .query("select DISTINCT categoria_precio  from tipo_precio");
+            categoriasPrecio = result4.recordsets[0];
+
+
+
+
+
+
+
+
+        } catch (err) {            
+            console.log(err);
+        }
+
+       
+    })().then(() => res.render('agregarContrato', { id, fechas, categoriasPrecio, fecha : '' } ))
+    
+    sql.on('error', err => {
+        console.log(err);        
+    })   
+});
+
+
+
+
+router.get('/agregarPrecio/', function(req, res, next){
+    //console.log('modificar contratos');
+    (async function () 
+    {
+        try {
+            let pool = await sql.connect(dbConfig_localhost)     
+            let result = await pool.request()
+            .query('select max(id) + 1 as next_id from tipo_precio')
+            id = result.recordsets[0];
+            // console.log(contratos.length);
+
+            let result3 = await pool.request()
+            .query("SET LANGUAGE Spanish; select  \'\' as fecha, '' as mes, '' as anio  UNION ALL select distinct cast(fecha as varchar) as fecha ,DATENAME(MONTH, fecha) as mes ,cast(YEAR(fecha) as varchar) as anio from INGRESOS_CONTRATOS");
+            fechas = result3.recordsets[0];
+
+        } catch (err) {            
+            console.log(err);
+        }
+
+       
+    })().then(() => res.render('agregarPrecio', { id, fechas, fecha : '' } ))
+    
+    sql.on('error', err => {
+        console.log(err);        
+    })   
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 app.use('/', router);
 app.set("view engine", "ejs");
