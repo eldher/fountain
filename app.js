@@ -22,6 +22,25 @@ const { dirname } = require("path");
 const { fileURLToPath } = require("url");
 
 
+var bodyParser = require('body-parser');
+
+
+
+app.use(bodyParser.json());
+
+//support parsing of application/x-www-form-urlencoded post data
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use('/', router);
+app.set("view engine", "ejs");
+console.log(path.join(__dirname , '/public/'));
+app.use(express.static(path.join(__dirname , '/public/')));
+
+
+
+
+// support parsing of application/json type post data
+
 
 //app.use(express.static(__dirname + '/foldername'));
 
@@ -427,6 +446,11 @@ router.get('/agregarPrecio/', function(req, res, next){
 
 
 
+app.post('/guardarContrato', function(req, res){
+    console.log(req.body)
+    res.send(JSON.stringify(req.body));
+}
+);
 
 
 
@@ -436,10 +460,12 @@ router.get('/agregarPrecio/', function(req, res, next){
 
 
 
-app.use('/', router);
-app.set("view engine", "ejs");
-console.log(path.join(__dirname , '/public/'));
-app.use(express.static(path.join(__dirname , '/public/')));
+
+
+
+
+
+
 app.listen(process.env.port || 3010 , function(){
     console.log("Server is running on localhost 3010");
 });

@@ -38,12 +38,12 @@
 <% console.log(id) %> 
 <% console.log(categoriasPrecio) %> 
 
-<form action="editarContrato" method="post">
+<form action="guardarContrato" method="post" >
 
     <div class="form-group row">
         <label for="id" class="col-sm-2 col-form-label">ID</label>
         <div class="col-sm-6">
-            <input type="text" readonly class="form-control" id="id"  value="<%= id[0].next_id %>">
+            <input type="text" readonly class="form-control" id="id"  name="id" value="<%= id[0].next_id %>">
         </div>
     </div>
 
@@ -68,7 +68,7 @@
     <div class="form-group row">
         <label for="id" class="col-sm-2 col-form-label">Nombre Contrato</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" id="nombre_contrato"  >
+            <input type="text" class="form-control" id="nombre_contrato" name="nombre_contrato" >
         </div>
     </div>
 
@@ -76,7 +76,7 @@
     <div class="form-group row">
         <label for="id" class="col-sm-2 col-form-label">Empresa</label>
         <div class="col-sm-6">
-            <select class="form-control" id="empresa">
+            <select class="form-control" id="empresa" name="empresa">
                 <option>ENSA</option>
                 <option>EDEMET</option>
                 <option>EDECHI</option>
@@ -88,7 +88,7 @@
     <div class="form-group row">
         <label for="id" class="col-sm-2 col-form-label">Potencia Contratada</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" id="potencia_contratada" >
+            <input type="text" class="form-control" id="potencia_contratada" name="potencia_contratada" >
         </div>
     </div>
 
@@ -97,7 +97,7 @@
         <label for="id" class="col-sm-2 col-form-label">Categoria Precio</label>
         <div class="col-sm-6">
             
-                <select class="form-control" name="cars" id="categoria_precio">
+                <select class="form-control" name="categoria_precio" id="categoria_precio" name="categoria_precio">
                     <%# console.log(fechas)%>
                     <%# console.log(fecha)%>
     
@@ -115,11 +115,11 @@
     <div class="form-group row">
         <label for="id" class="col-sm-2 col-form-label">Precio</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" id="precio" >
+            <input type="text" class="form-control" id="precio" name="precio">
         </div>
     </div>
 
-    <button class="btn btn-s btn-success"  onclick= "" > Guardar Contrato  </button>
+    <button class="btn btn-s btn-success"  type="submit"  > Guardar Contrato  </button>
     <a class="btn btn-s btn-warning"  href="/modificaContratos"> Cancelar  </a>
     
 </div>
