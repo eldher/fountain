@@ -7,7 +7,7 @@
         <label for="cars">Fecha:</label>
 
         <select name="cars" id="fecha">
-            <% console.log(fechas)%>
+            <%# console.log(fechas)%>
             <% for(var i = 0; i < fechas.length; i++) { %>
     
                 <option value= <%= fechas[i].fecha %>   <%= fechas[i].fecha == fecha ? 'selected' : ''  %>     >  <%= fechas[i].mes  + ' ' + fechas[i].anio   %>   </option>

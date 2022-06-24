@@ -2,14 +2,14 @@
 
 # Carga de Archivos
 
-library(dplyr)
+
 library(readxl)
 library(tidyverse)
 library(data.table)
 library(reshape2)
 library(stringi)
 library(lubridate)
-library(readr)
+
 
 options(OutDec=".")
 
@@ -435,53 +435,6 @@ TotalesContratos <- distinct(TotalesContratos)
 TotalesContratos2 <- distinct(TotalesContratos2)
 
 
-
-
-# 
-# 
-# 
-# 
-# totales_contratos <- read_excel("totales_por_contratos_2021_noviembre_FOUNTAIN (6).xlsx", sheet = "TOTALESCONTRATOS", skip=10)
-# totales_contratos <- totales_contratos[c(1:3),c(1:4)]
-# 
-# 
-# 
-# 
-# view(filter(totales_contratos_2, `Nombre Contrato` %like% "%FOUNTAIN%"))
-# 
-# 
-# x <- names(totales_contratos_2)
-# x <- stri_trans_general(str = x,id = "Latin-ASCII")
-# x <- tolower(x)
-# x <- gsub("b/.","usd", x)
-# #x <- gsub("\\[$\]","usd",   x) 
-# x <- gsub("/","",   x) 
-# x <- gsub("\\(","", x)
-# x <- gsub("\\)","", x)
-# x <- gsub("\\)","", x)
-# x <- gsub(" ","_",  x)
-# x <- gsub("-","_",  x)
-# names(totales_contratos_2) <- x
-# 
-# rsm_totales_contratos_2 <- group_by(totales_contratos_2, nombre_contrato) %>% summarise(suma_dwh_contrato = sum(mwh_contrato)) 
-# 
-# ##"C:\Users\eld02\Documents\FOUNTAIN CORP\Fase 2\Preliminar_Servicios_Auxiliares_202111 (4).xlsx"
-
-
-
-# 
-# setwd("C:/Users/eld02/Documents/FOUNTAIN CORP/Fase 2/output")
-# 
-# write.table(compensacion_potencia, "compensacion_potencia.csv", row.names = F, quote = F, sep = ";" , fileEncoding = "UTF-16LE")
-# write.table(detalle_perdidas, "detalle_perdidas.csv", row.names = F, quote = F, sep = ";" , fileEncoding = "UTF-16LE")
-# 
-# write.table(generacion_matriz, "generacion_matriz.csv", row.names = F, quote = F, sep = ";" , fileEncoding = "UTF-16LE")
-# write.table(generacion_obligada, "generacion_obligada.csv", row.names = F, quote = F, sep = ";" , fileEncoding = "UTF-16LE")
-# 
-# write.table(preliminar_fountain, "preliminar_fountain.csv", row.names = F, quote = F, sep = ";" , fileEncoding = "UTF-16LE")
-# write.table(servicios_auxiliares, "servicios_auxiliares.csv", row.names = F, quote = F, sep = ";" , fileEncoding = "UTF-16LE")
-# write.table(totales_contratos, "totales_contratos.csv", row.names = F, quote = F, sep = ";" , fileEncoding = "UTF-16LE")
-# write.table(totales_contratos_2, "totales_contratos_2.csv", row.names = F, quote = F, sep = ";" , fileEncoding = "UTF-16LE")
 
 
 getwd()

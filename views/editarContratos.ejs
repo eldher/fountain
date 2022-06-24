@@ -4,32 +4,9 @@
 
 <div class="container theme-showcase" role="main">
 
-    <form action="/action_page.php">
-        <label for="cars">Fecha:</label>
-
-        <select name="cars" id="fecha">
-            <% console.log(fechas)%>
-            <% console.log(fecha)%>
-
-            <% for(var i = 0; i < fechas.length; i++) { %>
-    
-                <option value= <%= fechas[i].fecha %>   <%= fechas[i].fecha == fecha ? 'selected' : ''  %>     >  <%= fechas[i].mes  + ' ' + fechas[i].anio   %>   </option>
-    
-            <% } %>
-            </select>
-            
-    
-           
-    
-            <button type="button" class="btn btn-xs btn-success" onclick= " window.location='../contratos/' + getElementById('fecha').value ">Actualizar</button>
-            <!-- <button type="button" class="btn btn-xs btn-success" onclick="console.log(getElementById('cars').value)  ">Actualizar</button> -->
-            <button type="button" class="btn btn-xs btn-success">Descargar</button>
-        </form>
-
-
         
 
-
+<!-- 
     <table id="customers">
         <tr>
             <th>id</th>
@@ -41,22 +18,22 @@
             <th>precio</th>                   
         </tr>
 
-        <% if( contratos.length > 0 ) {
+        <%# if( contratos.length > 0 ) {
             for ( var i=0 ; i <contratos.length ; i++) { %>
                 <tr>
-                    <td><%= contratos[i].id %></td>
-                    <td><%= contratos[i].fecha %></td>
-                    <td><%= contratos[i].nombre_contrato %></td>
-                    <td><%= contratos[i].empresa %></td>
-                    <td><%= contratos[i].potencia_contratada %></td>
-                    <td><%= contratos[i].categoria_precio %></td>
-                    <td><%= contratos[i].precio %></td>
-                    <td><button class="btn btn-xs btn-success"  onclick= " window.location = '../modificarContratos/<%= contratos[i].id %> '" > Modificar Contrato  </button></td>
+                    <td><%#= contratos[i].id %></td>
+                    <td><%#= contratos[i].fecha %></td>
+                    <td><%#= contratos[i].nombre_contrato %></td>
+                    <td><%#= contratos[i].empresa %></td>
+                    <td><%#= contratos[i].potencia_contratada %></td>
+                    <td><%#= contratos[i].categoria_precio %></td>
+                    <td><%#= contratos[i].precio %></td>
+                    <td><button class="btn btn-xs btn-success"  onclick= " window.location = '../modificarContratos/<%#= contratos[i].id %> '" > Modificar Contrato  </button></td>
 
                   
                 </tr>
-            <% } } %>
-    </table>
+            <%# } } %>
+    </table> -->
 
 <form action="editarContrato" method="post">
 
