@@ -12,7 +12,7 @@ CREATE PROCEDURE [dbo].[spEjecutarCierre]
 AS
 BEGIN
 
-EXEC ('USE [FOUNTAIN4];')
+EXEC ('USE [FOUNTAIN5];')
 
 
 

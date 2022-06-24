@@ -276,24 +276,6 @@ router.get('/modificarContratos/:id', function(req, res, next){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-var precios;
-
 router.get('/modificarPrecios', function(req, res, next){
     console.log('modificar precios');
     (async function () 
@@ -316,6 +298,47 @@ router.get('/modificarPrecios', function(req, res, next){
 
        
     })().then(() => res.render('modificarPrecios', { precios, fechas, fecha : '' } ))
+    
+    sql.on('error', err => {
+        console.log(err);        
+    })   
+});
+
+
+
+
+
+
+
+
+
+
+
+
+var precios;
+
+router.get('/modificarPrecios/:id', function(req, res, next){
+    console.log('modificar precios');
+    (async function () 
+    {
+        try {
+            let pool = await sql.connect(dbConfig_localhost)     
+            let result = await pool.request()
+            .query('select id, cast(fecha_cierre as varchar) as fecha, categoria_precio, precio_base_usd_mwh, cargo_transmicion_seguimiento_electrico from tipo_precio where id =' + req.params.id)
+            precios = result.recordsets[0];
+            console.log(precios.length);
+
+            let result3 = await pool.request()
+            .query("SET LANGUAGE Spanish; select  \'\' as fecha, '' as mes, '' as anio  UNION ALL select distinct cast(fecha as varchar) as fecha ,DATENAME(MONTH, fecha) as mes ,cast(YEAR(fecha) as varchar) as anio from INGRESOS_CONTRATOS");
+            fechas = result3.recordsets[0];
+
+
+        } catch (err) {            
+            console.log(err);
+        }
+
+       
+    })().then(() => res.render('editarPrecios', { precios, fechas, fecha : '' } ))
     
     sql.on('error', err => {
         console.log(err);        
