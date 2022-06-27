@@ -439,7 +439,7 @@ TotalesContratos2 <- distinct(TotalesContratos2)
 
 getwd()
 
-setwd("C:/Users/eld02/Documents/FOUNTAIN CORP/Fase 2/output")
+setwd("C:/Users/eld02/Documents/FOUNTAIN CORP/Fase 2/output2")
 
 write.table(DetallePerdidas, "DetallePerdidas.csv", row.names = F, quote = F, sep = ";" , fileEncoding = "UTF-16LE")
 write.table(BalancesPotencia, "BalancesPotencia.csv", row.names = F, quote = F, sep = ";" , fileEncoding = "UTF-16LE")

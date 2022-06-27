@@ -1,10 +1,13 @@
-	
+USE [FOUNTAIN5]
+GO
 
+/****** Object:  StoredProcedure [dbo].[sp_ObtenerContratoCategoriaConTotal]    Script Date: 6/27/2022 3:37:49 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 -- =============================================
@@ -19,7 +22,7 @@ BEGIN
 DECLARE @CONT INT;
 SET @CONT = 0;
 
-BEGIN tran
+
 -------------------- Corto Plazo I
 
 
@@ -215,7 +218,10 @@ drop table #largo_plazo;
 drop table #potencia_1;
 drop table #potencia_2;
 
-COMMIT tran;
+
 
 END;
+
+
+
 

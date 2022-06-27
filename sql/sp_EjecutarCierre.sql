@@ -1,8 +1,13 @@
+USE [FOUNTAIN5]
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_EjecutarCierre]    Script Date: 6/27/2022 3:27:10 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
 -- =============================================
 -- Author:		Eldher
 -- =============================================
@@ -11,7 +16,7 @@ ALTER PROCEDURE [dbo].[sp_EjecutarCierre]
 	--@fecha_mes varchar
 AS
 BEGIN
-EXEC ('USE [FOUNTAIN4];')
+
 DECLARE @fecha_mes varchar(20);
 
 
@@ -32,7 +37,7 @@ Select @fecha_mes = CONCAT(YEAR(@fecha_cierre),'-',MONTH(@fecha_cierre))
 --ALTER TABLE TotalesContratos2 ADD empresa varchar(20);
 
 
---ALTER TABLE TotalesContratos2 DROP COLUMN empresa 
+----ALTER TABLE TotalesContratos2 DROP COLUMN empresa 
 
 --update TotalesContratos2
 --set empresa =  
@@ -78,7 +83,6 @@ Select @fecha_mes = CONCAT(YEAR(@fecha_cierre),'-',MONTH(@fecha_cierre))
 
 
 --select * from tipo_precio
---select * from #precios
 
 drop table if exists #precios
 select a.* , b.precio_base_usd_mwh + b.cargo_transmicion_seguimiento_electrico as precio
@@ -87,6 +91,8 @@ from contratos_fecha a
 left join tipo_precio b on a.fecha_cierre = b.fecha_cierre and a.categoria_precio = b.categoria_precio
 
 
+
+--select * from #precios
 
 
 --ALTER TABLE #precios ADD empresa varchar(20);
@@ -127,22 +133,28 @@ left join tipo_precio b on a.fecha_cierre = b.fecha_cierre and a.categoria_preci
 --                       CREACION TABLA DE INGRESOS POR CONTRATOS 
 --------------------------------------------------------------------------
 
---drop table if exists INGRESOS_CONTRATOS
---select 
---a.*
---,dmg     = IIF(a.categoria_precio LIKE '%Energia%', b.dmg , NULL) 
---,dmg_s   = IIF(a.categoria_precio LIKE '%Energia%', b.dmg_s , NULL)  
---,dmm_s   = IIF(a.categoria_precio LIKE '%Energia%', b.dmm_s , NULL)  
---,energia = IIF(a.categoria_precio LIKE '%Energia%', c.energia , NULL) 
---,EAR     = IIF(a.categoria_precio LIKE '%Energia%' , (potencia_contratada/dmm_s)*energia , 0 ) 
---,ingreso_precio_contado = IIF(a.categoria_precio LIKE '%Energia%' , (potencia_contratada/dmm_s)*energia*precio , potencia_contratada*precio*1000  )
---into INGRESOS_CONTRATOS 
---from CONTRATOS a
---left join TotalesContratos b on a.fecha = EOMONTH(b.fecha) and a.empresa = b.Distribuidores
---left join TotalEnergia c on a.fecha = c.fecha and a.empresa = c.empresa
---order by 1,2
+drop table if exists INGRESOS_CONTRATOS
+select 
+a.fecha
+,a.nombre_contrato
+,a.empresa
+,a.potencia_contratada*1.0 as potencia_contratada
+,a.categoria_precio
+,a.precio*1.0 as precio
+,dmg     = IIF(a.categoria_precio LIKE '%Energia%', b.dmg , NULL) 
+,dmg_s   = IIF(a.categoria_precio LIKE '%Energia%', b.dmg_s , NULL)  
+,dmm_s   = IIF(a.categoria_precio LIKE '%Energia%', b.dmm_s , NULL)  
+,energia = IIF(a.categoria_precio LIKE '%Energia%', c.energia , NULL) 
+,EAR     = IIF(a.categoria_precio LIKE '%Energia%' , (potencia_contratada/dmm_s)*energia , 0 ) 
+,ingreso_precio_contado = IIF(a.categoria_precio LIKE '%Energia%' , (potencia_contratada/dmm_s)*energia*precio , potencia_contratada*precio*1000  )
+into INGRESOS_CONTRATOS 
+from CONTRATOS a
+left join TotalesContratos b on a.fecha = EOMONTH(b.fecha) and a.empresa = b.Distribuidores
+left join TotalEnergia c on a.fecha = c.fecha and a.empresa = c.empresa
+order by 1,2
 
 
+--select * from INGRESOS_CONTRATOS
 --------------------------------------------------------------------------
 --                      SECCION 2 -- TABLA MENSUAL
 --------------------------------------------------------------------------
@@ -327,3 +339,6 @@ select * from resumen
 
 
 END;
+GO
+
+
