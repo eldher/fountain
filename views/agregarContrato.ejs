@@ -35,8 +35,9 @@
             <%# } } %>
     </table> -->
 
-<% console.log(id) %> 
-<% console.log(categoriasPrecio) %> 
+<%# console.log(id) %> 
+<%# console.log(categoriasPrecio) %> 
+<%# console.log(tiposPrecio) %> 
 
 <form action="guardarContrato" method="post" >
 
@@ -52,9 +53,9 @@
         <label for="fecha" class="col-sm-2 col-form-label">Fecha</label>
         <div class="col-sm-6">
             <select class="form-control" id="fecha">
-                <option>Noviembre 2021</option>
-                <option>Diciembre 2021</option>
-                <option>Enero 2022</option>
+                <option value ="2021-11-30">Noviembre 2021</option>
+                <option value ="2021-12-31">Diciembre 2021</option>
+                <option value ="2022-01-31">Enero 2022</option>
                 <option>Febrero 2022</option>
                 <option>Marzo 2022</option>
                 <option>Abril 2022</option>
@@ -103,7 +104,7 @@
     
                     <% for(var i = 0; i < categoriasPrecio.length; i++) { %>
             
-                        <option value= <%= categoriasPrecio[i].categoria_precio %>   <%#= fechas[i].fecha == fecha ? 'selected' : ''  %>     > <%= categoriasPrecio[i].categoria_precio %>    </option>
+                        <option value=" <%= categoriasPrecio[i].categoria_precio %> "  <%#= fechas[i].fecha == fecha ? 'selected' : ''  %>     > <%= categoriasPrecio[i].categoria_precio %>    </option>
             
                     <% } %>
                     </select>
@@ -112,13 +113,25 @@
     </div>
 
 
+
+
+
     <div class="form-group row">
         <label for="id" class="col-sm-2 col-form-label">Precio</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" id="precio" name="precio">
+            <input type="text" class="form-control" id="precio_base_usd_mwh" name="precio_base_usd_mwh">
         </div>
     </div>
 
+
+    <div class="form-group row">
+        <label for="id" class="col-sm-2 col-form-label">Cargo Transmisión</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" id="cargo_transmicion_seguimiento_electrico" name="cargo_transmicion_seguimiento_electrico">
+        </div>
+    </div>
+
+    
     <button class="btn btn-s btn-success"  type="submit"  > Guardar Contrato  </button>
     <a class="btn btn-s btn-warning"  href="/modificaContratos"> Cancelar  </a>
     
@@ -126,6 +139,50 @@
 </form>
 
 
+
+<script>
+
+    
+    const rest = <%- JSON.stringify(tiposPrecio) %>;
+
+    const select_categoria = document.getElementById('categoria_precio');
+    const select_fecha = document.getElementById('fecha');
+
+    select_categoria.addEventListener('change', function handleChange(event) {
+
+        console.log("1")   
+
+        console.log(event.target.value); // 👉️ get selected VALUE
+
+        // 👇️ get selected VALUE even outside event handler
+        console.log(select_categoria.options[select_categoria.selectedIndex].value);
+
+        // 👇️ get selected TEXT in or outside event handler
+        console.log(select_categoria.options[select_categoria.selectedIndex].text);
+
+        console.log( rest );
+
+        console.log( select_fecha.options[select_fecha.selectedIndex].value );
+
+        var newArray = rest.filter(function (el) {
+                return el.categoria_precio == select_categoria.options[select_categoria.selectedIndex].text && 
+                el.fecha == select_fecha.options[select_fecha.selectedIndex].value 
+            //el.num_of_beds >= 2 &&
+            //el.num_of_baths >= 1.5; // Changed this so a home would match
+        });
+        console.log(newArray);
+
+        document.getElementById("precio_base_usd_mwh").value = newArray[0].precio_base_usd_mwh;
+        document.getElementById("cargo_transmicion_seguimiento_electrico").value = newArray[0].cargo_transmicion_seguimiento_electrico;
+
+
+});
+        
+       //console.log(tp);
+
+
+
+</script>
 
 
 </body>

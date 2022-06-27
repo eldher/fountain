@@ -370,6 +370,8 @@ router.get('/modificarPrecios/:id', function(req, res, next){
 
 
 var id;
+var tiposPrecio;
+
 
 router.get('/agregarContrato/', function(req, res, next){
     //console.log('modificar contratos');
@@ -387,12 +389,13 @@ router.get('/agregarContrato/', function(req, res, next){
             fechas = result3.recordsets[0];
 
             let result4 = await pool.request()
-            .query("select DISTINCT categoria_precio  from tipo_precio");
+            .query("select  DISTINCT categoria_precio  from tipo_precio");
             categoriasPrecio = result4.recordsets[0];
 
 
-
-
+            let result5 = await pool.request()
+            .query('select id, cast(fecha_cierre as varchar) as fecha, categoria_precio, precio_base_usd_mwh, cargo_transmicion_seguimiento_electrico from tipo_precio')
+            tiposPrecio = result5.recordsets[0];
 
 
 
@@ -402,7 +405,7 @@ router.get('/agregarContrato/', function(req, res, next){
         }
 
        
-    })().then(() => res.render('agregarContrato', { id, fechas, categoriasPrecio, fecha : '' } ))
+    })().then(() => res.render('agregarContrato', { id, fechas, categoriasPrecio, tiposPrecio, fecha : '' } ))
     
     sql.on('error', err => {
         console.log(err);        

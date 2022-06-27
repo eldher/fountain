@@ -25,7 +25,7 @@ Select @fecha_mes = CONCAT(YEAR(@fecha_cierre),'-',MONTH(@fecha_cierre))
 --SET @fecha_mes  = '2021-12'
 
 --------------------------------------------------------------------------
---                       CREACION CAMPO DE EMPRESA DISTRIBUIDORA
+--                       CREACION CAMPO DE EMPRESA DISTRIBUIDORA EN TOTALESCONTRATOS2
 --------------------------------------------------------------------------
 
 
@@ -44,35 +44,6 @@ Select @fecha_mes = CONCAT(YEAR(@fecha_cierre),'-',MONTH(@fecha_cierre))
 --end
 
 
---select * from TotalesContratos2
-
-
---------------------------------------------------------------------------
---                      INSERTAR CONTRATOS DE POTENCIA QUE NO VIENENE EN EL CONTRATO
---------------------------------------------------------------------------
-
---- para noviembre 2021
-
---INSERT INTO TotalesContratos2(fecha, hora, nombre_contrato, tipo_contrato, consumo, suplido, potencia_contratada, mwh_contrato, empresa)
---VALUES ('2021-11-30', 23, '08-21', 'N', 0, 0, 1.1968, 0, 'EDEMET');
-
---INSERT INTO TotalesContratos2(fecha, hora, nombre_contrato, tipo_contrato, consumo, suplido, potencia_contratada, mwh_contrato, empresa)
---VALUES ('2021-11-30', 23, '011-21', 'S', 0, 0, 4.7872, 0, 'ENSA');
-
---INSERT INTO TotalesContratos2(fecha, hora, nombre_contrato, tipo_contrato, consumo, suplido, potencia_contratada, mwh_contrato, empresa)
---VALUES ('2021-11-30', 23, '37-21', 'S', 0, 0, 1.056, 0, 'EDECHI');
-
-
---- para diciembre 2021
-
---INSERT INTO TotalesContratos2(fecha, hora, nombre_contrato, tipo_contrato, consumo, suplido, potencia_contratada, mwh_contrato, empresa)
---VALUES ('2021-12-31', 23, '10-20', 'N', 0, 0, 1.2563, 0, 'EDEMET');
-
---INSERT INTO TotalesContratos2(fecha, hora, nombre_contrato, tipo_contrato, consumo, suplido, potencia_contratada, mwh_contrato, empresa)
---VALUES ('2021-12-31', 23, '006-20', 'S', 0, 0, 3.7319, 0, 'ENSA');
-
---INSERT INTO TotalesContratos2(fecha, hora, nombre_contrato, tipo_contrato, consumo, suplido, potencia_contratada, mwh_contrato, empresa)
---VALUES ('2021-12-31', 23, '30-20', 'S', 0, 0, 0.8818, 0, 'EDECHI');
 
 
 --------------------------------------------------------------------------
@@ -159,11 +130,11 @@ left join tipo_precio b on a.fecha_cierre = b.fecha_cierre and a.categoria_preci
 --drop table if exists INGRESOS_CONTRATOS
 --select 
 --a.*
---,dmg = IIF(a.categoria_precio LIKE '%Energia%', b.dmg , NULL) 
---,dmg_s = IIF(a.categoria_precio LIKE '%Energia%', b.dmg_s , NULL)  
---,dmm_s = IIF(a.categoria_precio LIKE '%Energia%', b.dmm_s , NULL)  
+--,dmg     = IIF(a.categoria_precio LIKE '%Energia%', b.dmg , NULL) 
+--,dmg_s   = IIF(a.categoria_precio LIKE '%Energia%', b.dmg_s , NULL)  
+--,dmm_s   = IIF(a.categoria_precio LIKE '%Energia%', b.dmm_s , NULL)  
 --,energia = IIF(a.categoria_precio LIKE '%Energia%', c.energia , NULL) 
---,EAR = IIF(a.categoria_precio LIKE '%Energia%' , (potencia_contratada/dmm_s)*energia , 0 ) 
+--,EAR     = IIF(a.categoria_precio LIKE '%Energia%' , (potencia_contratada/dmm_s)*energia , 0 ) 
 --,ingreso_precio_contado = IIF(a.categoria_precio LIKE '%Energia%' , (potencia_contratada/dmm_s)*energia*precio , potencia_contratada*precio*1000  )
 --into INGRESOS_CONTRATOS 
 --from CONTRATOS a
@@ -298,7 +269,7 @@ select @ingresos_contratos =
 
 
 --------------------------------------------------------------------------
---                       CREACION #prev Diciembre
+--                       CREACION #preV
 --------------------------------------------------------------------------
 
 drop table if exists #prev
@@ -325,7 +296,7 @@ where EOMONTH(fecha) =  @fecha_cierre
 
 
 --------------------------------------------------------------------------
---                       CREACION resumen_mes
+--                       CREACION resumen
 --------------------------------------------------------------------------
 drop table if exists resumen
 
