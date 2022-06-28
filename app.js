@@ -327,13 +327,6 @@ router.get('/modificarPrecios', function(req, res, next){
 
 
 
-
-
-
-
-
-
-
 var precios;
 
 router.get('/modificarPrecios/:id', function(req, res, next){
