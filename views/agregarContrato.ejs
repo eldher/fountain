@@ -4,41 +4,6 @@
 
 <div class="container theme-showcase" role="main">
 
-        
-
-<!-- 
-    <table id="customers">
-        <tr>
-            <th>id</th>
-            <th>fecha</th>
-            <th>nombre_contrato</th>
-            <th>empresa</th>
-            <th>potencia_contratada</th>
-            <th>categoria_precio</th>
-            <th>precio</th>                   
-        </tr>
-
-        <%# if( contratos.length > 0 ) {
-            for ( var i=0 ; i <contratos.length ; i++) { %>
-                <tr>
-                    <td><%#= contratos[i].id %></td>
-                    <td><%#= contratos[i].fecha %></td>
-                    <td><%#= contratos[i].nombre_contrato %></td>
-                    <td><%#= contratos[i].empresa %></td>
-                    <td><%#= contratos[i].potencia_contratada %></td>
-                    <td><%#= contratos[i].categoria_precio %></td>
-                    <td><%#= contratos[i].precio %></td>
-                    <td><button class="btn btn-xs btn-success"  onclick= " window.location = '../modificarContratos/<%#= contratos[i].id %> '" > Modificar Contrato  </button></td>
-
-                  
-                </tr>
-            <%# } } %>
-    </table> -->
-
-<%# console.log(id) %> 
-<%# console.log(categoriasPrecio) %> 
-<%# console.log(tiposPrecio) %> 
-
 <form action="guardarContrato" method="post" >
 
     <div class="form-group row">
@@ -52,15 +17,15 @@
     <div class="form-group row">
         <label for="fecha" class="col-sm-2 col-form-label">Fecha</label>
         <div class="col-sm-6">
-            <select class="form-control" id="fecha">
+            <select class="form-control" id="fecha" name="fecha" >
                 <option value ="2021-11-30">Noviembre 2021</option>
                 <option value ="2021-12-31">Diciembre 2021</option>
                 <option value ="2022-01-31">Enero 2022</option>
-                <option>Febrero 2022</option>
-                <option>Marzo 2022</option>
-                <option>Abril 2022</option>
-                <option>Mayo 2022</option>
-                <option>Junio 2022</option>
+                <option value ="2022-02-28">Febrero 2022</option>
+                <option value ="2022-03-31">Marzo 2022</option>
+                <option value ="2022-04-30">Abril 2022</option>
+                <option value ="2022-05-31">Mayo 2022</option>
+                <option value ="2022-06-30">Junio 2022</option>
             </select>
         </div>
     </div>
@@ -101,7 +66,9 @@
                 <select class="form-control" name="categoria_precio" id="categoria_precio" name="categoria_precio">
                     <%# console.log(fechas)%>
                     <%# console.log(fecha)%>
-    
+                    
+                    <option value="" ></option>
+
                     <% for(var i = 0; i < categoriasPrecio.length; i++) { %>
             
                         <option value=" <%= categoriasPrecio[i].categoria_precio %> "  <%#= fechas[i].fecha == fecha ? 'selected' : ''  %>     > <%= categoriasPrecio[i].categoria_precio %>    </option>
@@ -114,12 +81,10 @@
 
 
 
-
-
     <div class="form-group row">
         <label for="id" class="col-sm-2 col-form-label">Precio</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" id="precio_base_usd_mwh" name="precio_base_usd_mwh">
+            <input type="text" readonly class="form-control" id="precio_base_usd_mwh" name="precio_base_usd_mwh">
         </div>
     </div>
 
@@ -127,13 +92,13 @@
     <div class="form-group row">
         <label for="id" class="col-sm-2 col-form-label">Cargo Transmisión</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" id="cargo_transmicion_seguimiento_electrico" name="cargo_transmicion_seguimiento_electrico">
+            <input type="text" readonly class="form-control" id="cargo_transmicion_seguimiento_electrico" name="cargo_transmicion_seguimiento_electrico">
         </div>
     </div>
 
     
     <button class="btn btn-s btn-success"  type="submit"  > Guardar Contrato  </button>
-    <a class="btn btn-s btn-warning"  href="/modificaContratos"> Cancelar  </a>
+    <a class="btn btn-s btn-warning"  href="/modificarContratos"> Cancelar  </a>
     
 </div>
 </form>
@@ -141,7 +106,7 @@
 
 
 <script>
-
+    // script para actualizar precios en text boxs
     
     const rest = <%- JSON.stringify(tiposPrecio) %>;
 

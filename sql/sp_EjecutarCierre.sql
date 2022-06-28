@@ -129,6 +129,12 @@ left join tipo_precio b on a.fecha_cierre = b.fecha_cierre and a.categoria_preci
 --order by 1,2
 
 
+--ALTER TABLE dbo.CONTRATOS
+--ADD id INT IDENTITY(1,1)
+
+
+
+
 --------------------------------------------------------------------------
 --                       CREACION TABLA DE INGRESOS POR CONTRATOS 
 --------------------------------------------------------------------------

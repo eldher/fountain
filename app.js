@@ -389,7 +389,7 @@ router.get('/agregarContrato/', function(req, res, next){
             fechas = result3.recordsets[0];
 
             let result4 = await pool.request()
-            .query("select  DISTINCT categoria_precio  from tipo_precio");
+            .query("select  DISTINCT categoria_precio  from tipo_precio ");
             categoriasPrecio = result4.recordsets[0];
 
 
@@ -450,13 +450,65 @@ router.get('/agregarPrecio/', function(req, res, next){
 
 
 app.post('/guardarContrato', function(req, res){
-    console.log(req.body)
-    res.send(JSON.stringify(req.body));
+    console.log(req.body);
+
+    
+    const fecha = req.body.fecha;
+    const nombre_contrato = req.body.nombre_contrato;
+    const empresa = req.body.empresa;
+    const potencia_contratada = req.body.potencia_contratada;
+    const categoria_precio = req.body.categoria_precio;
+    const precio = req.body.precio_base_usd_mwh*1 + req.body.cargo_transmicion_seguimiento_electrico*1
+    const id = req.body.id;
+    
+
+    const queryString = "INSERT INTO CONTRATOS (fecha, nombre_contrato, empresa, potencia_contratada, categoria_precio, precio ) VALUES ('" +  fecha + "', '"+ nombre_contrato + "', '"+empresa+"', '"+potencia_contratada+"', '"+categoria_precio+"', '"+precio+"')";
+
+    console.log(queryString);
+    console.log(JSON.stringify(req.body));
+
+    ( async function(){
+        try {
+            let pool = await sql.connect(dbConfig_localhost)     
+            let result = await pool.request()
+            .query(queryString)  
+
+        } catch (error) {
+            console.log(error);
+        }
+
+    })().then(() => res.send('<script type="text/javascript"> alert("Contrato Guardado!"); window.location="./contratos";</script>'))
+
+  //res.send(JSON.stringify(req.body));  
 }
 );
 
 
+app.post('/guardarPrecio', function(req, res){
+    console.log(req.body);
+    console.log(JSON.stringify(req.body));
 
+    const id = req.body.id;
+    const fecha = req.body.fecha;
+    const categoria_precio = req.body.categoria_precio;
+    const precio_base_usd_mwh = req.body.precio_base_usd_mwh;
+    const cargo_transmicion_seguimiento_electrico = req.body.cargo_transmicion_seguimiento_electrico;
+   // const sumprecio = req.body.precio_base_usd_mwh*1 + req.body.cargo_transmicion_seguimiento_electrico*1
+
+    const queryString = "INSERT INTO tipo_precio (id, fecha_cierre, categoria_precio, precio_base_usd_mwh, cargo_transmicion_seguimiento_electrico ) VALUES ('" +  id + "', '"+ fecha + "', '"+ categoria_precio + "', '"+precio_base_usd_mwh+"', '"+cargo_transmicion_seguimiento_electrico+"')";
+
+    console.log(queryString);
+    
+    ( async function(){
+        try {
+            let pool = await sql.connect(dbConfig_localhost)
+            let result = await pool.request()
+            .query(queryString)
+        } catch (error) {
+            console.log(error)            
+        }
+    })().then(() =>  res.send('<script type="text/javascript"> alert("Precio Guardado!"); window.location="./contratos";</script>') )   
+});
 
 
 
