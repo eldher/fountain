@@ -20,6 +20,7 @@ const { render } = require("express/lib/response");
 const { CLIENT_RENEG_LIMIT } = require("tls");
 const { dirname } = require("path");
 const { fileURLToPath } = require("url");
+const port = process.env.PORT || 3000
 
 
 var bodyParser = require('body-parser');
@@ -509,11 +510,13 @@ app.post('/guardarPrecio', function(req, res){
 
 
 
+app.listen(port, () => {
+    console.log(`Example app listening at http://localhost:${port}`)
+  })
 
 
 
 
-
-app.listen(process.env.port || 3010 , function(){
-    console.log("Server is running on localhost 3010");
-});
+// app.listen(process.env.port || 3010 , function(){
+//     console.log("Server is running on localhost 3010");
+// });
