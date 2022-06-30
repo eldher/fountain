@@ -4,33 +4,6 @@
 
 <div class="container theme-showcase" role="main">
 
-    <form action="/action_page.php">
-        <label for="cars">Fecha:</label>
-
-        <select name="cars" id="fecha">
-            <%# console.log(fechas)%>
-            <%# console.log(fecha)%>
-
-            <% for(var i = 0; i < fechas.length; i++) { %>
-    
-                <option value= <%= fechas[i].fecha %>   <%= fechas[i].fecha == fecha ? 'selected' : ''  %>     >  <%= fechas[i].mes  + ' ' + fechas[i].anio   %>   </option>
-    
-            <% } %>
-            </select>
-            
-    
-           
-    
-            <!-- <button type="button" class="btn btn-xs btn-success" onclick= " window.location='../contratos/' + getElementById('fecha').value ">Actualizar</button> -->
-            <button type="button" class="btn btn-xs btn-success" onclick= "">Actualizar</button>
-            <!-- <button type="button" class="btn btn-xs btn-success" onclick="console.log(getElementById('cars').value)  ">Actualizar</button> -->
-            <button type="button" class="btn btn-xs btn-success">Descargar</button>
-        </form>
-
-
-        
-
-
     <table id="customers">
         <tr>
             <th>id</th>
@@ -48,10 +21,7 @@
                     <td><%= precios[i].categoria_precio %></td>
                     <td><%= precios[i].precio_base_usd_mwh %></td>
                     <td><%= precios[i].cargo_transmicion_seguimiento_electrico %></td>
-                    <td><button class="btn btn-xs btn-success"  onclick= " window.location = '../modificarPrecios/<%= precios[i].id %>'" > Modificar Precio  </button></td>
-                   
-
-                  
+                    <td><button class="btn btn-xs btn-success"  onclick= " window.location = '../modificarPrecios/<%= precios[i].id %>'" > Modificar Precio  </button></td> 
                 </tr>
             <% } } %>
     </table>

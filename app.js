@@ -456,7 +456,7 @@ app.post('/guardarContrato', function(req, res){
     const id = req.body.id;
     
 
-    const queryString = "INSERT INTO CONTRATOS (fecha, nombre_contrato, empresa, potencia_contratada, categoria_precio, precio ) VALUES ('" +  fecha + "', '"+ nombre_contrato + "', '"+empresa+"', '"+potencia_contratada+"', '"+categoria_precio+"', '"+precio+"')";
+    const queryString = "INSERT INTO CONTRATOS (fecha, nombre_contrato, empresa, potencia_contratada, categoria_precio, precio, id ) VALUES ('" +  fecha + "', '"+ nombre_contrato + "', '"+empresa+"', '"+potencia_contratada+"', '"+categoria_precio+"', '"+precio+"'," + "'"+id+"')";
 
     console.log(queryString);
     console.log(JSON.stringify(req.body));
