@@ -108,6 +108,16 @@ Select @fecha_mes = CONCAT(YEAR(@fecha_cierre),'-',MONTH(@fecha_cierre))
 
 
 --------------------------------------------------------------------------
+--                       AGREGAR SUMA DE PRECIO y CARGO TRANSMISION 
+--------------------------------------------------------------------------
+
+--alter table tipo_precio add precio float
+--update tipo_precio set precio = precio_base_usd_mwh + cargo_transmicion_seguimiento_electrico
+
+
+
+
+--------------------------------------------------------------------------
 --                       CREACION TABLA DE CONTRATOS 
 ------------------------------------------------------------------------
 

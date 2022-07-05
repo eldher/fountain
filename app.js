@@ -212,7 +212,7 @@ router.get('/modificarContratos', function(req, res, next){
             let result = await pool.request()
             .query('select a.id,cast(fecha as varchar) as fecha, nombre_contrato, empresa, potencia_contratada, a.categoria_precio,' +
                    'format(b.precio_base_usd_mwh, \'c\', \'en-US\') as precio_base_usd_mwh  , format(b.cargo_transmicion_seguimiento_electrico, \'c\', \'en-US\') as cargo_transmicion_seguimiento_electrico , ' + 
-                   'format(b.precio_base_usd_mwh + b.cargo_transmicion_seguimiento_electrico,  \'c\', \'en-US\')  as precio ' +
+                   'format(b.precio,  \'c\', \'en-US\')  as precio ' +
                    'from CONTRATOS a ' +
                    'left join tipo_precio b on a.fecha = b.fecha_cierre and a.categoria_precio = b.categoria_precio ' )
             contratos = result.recordsets[0];
@@ -247,7 +247,7 @@ router.get('/modificarContratos/:id', function(req, res, next){
             let result = await pool.request()
             .query('select a.id,cast(fecha as varchar) as fecha, nombre_contrato, empresa, potencia_contratada, a.categoria_precio ' + 
                     ',format(b.precio_base_usd_mwh, \'c\', \'en-US\') as precio_base_usd_mwh  , format(b.cargo_transmicion_seguimiento_electrico, \'c\', \'en-US\') as cargo_transmicion_seguimiento_electrico ' + 
-                    ',format(b.precio_base_usd_mwh + b.cargo_transmicion_seguimiento_electrico,  \'c\', \'en-US\')  as precio ' +       
+                    ',format(b.precio,  \'c\', \'en-US\')  as precio ' +       
                     'from CONTRATOS a ' + 
                     'left join tipo_precio b on a.fecha = b.fecha_cierre and a.categoria_precio = b.categoria_precio ' +                   
                     'where a.id =' + req.params.id )
@@ -284,7 +284,7 @@ router.get('/modificarPrecios', function(req, res, next){
         try {
             let pool = await sql.connect(dbConfig_localhost)     
             let result = await pool.request()
-            .query('select id, cast(fecha_cierre as varchar) as fecha, categoria_precio, precio_base_usd_mwh, cargo_transmicion_seguimiento_electrico from tipo_precio')
+            .query('select id, cast(fecha_cierre as varchar) as fecha, categoria_precio, precio_base_usd_mwh, cargo_transmicion_seguimiento_electrico, precio from tipo_precio')
             precios = result.recordsets[0];
             console.log(precios.length);
 
@@ -318,7 +318,7 @@ router.get('/modificarPrecios/:id', function(req, res, next){
         try {
             let pool = await sql.connect(dbConfig_localhost)     
             let result = await pool.request()
-            .query('select id, cast(fecha_cierre as varchar) as fecha, categoria_precio, precio_base_usd_mwh, cargo_transmicion_seguimiento_electrico from tipo_precio where id =' + req.params.id)
+            .query('select id, cast(fecha_cierre as varchar) as fecha, categoria_precio, precio_base_usd_mwh, cargo_transmicion_seguimiento_electrico, precio from tipo_precio where id =' + req.params.id)
             precios = result.recordsets[0];
             console.log(precios.length);
 
@@ -369,11 +369,8 @@ router.get('/agregarContrato/', function(req, res, next){
 
 
             let result5 = await pool.request()
-            .query('select id, cast(fecha_cierre as varchar) as fecha, categoria_precio, precio_base_usd_mwh, cargo_transmicion_seguimiento_electrico from tipo_precio')
+            .query('select id, cast(fecha_cierre as varchar) as fecha, categoria_precio, precio_base_usd_mwh, cargo_transmicion_seguimiento_electrico, precio from tipo_precio')
             tiposPrecio = result5.recordsets[0];
-
-
-
 
         } catch (err) {            
             console.log(err);
@@ -437,7 +434,7 @@ app.post('/guardarContrato', function(req, res){
     const id = req.body.id;
     
 
-    const queryString = "INSERT INTO CONTRATOS (fecha, nombre_contrato, empresa, potencia_contratada, categoria_precio, precio, id ) VALUES ('" +  fecha + "', '"+ nombre_contrato + "', '"+empresa+"', '"+potencia_contratada+"', '"+categoria_precio+"', '"+precio+"'," + "'"+id+"')";
+    const queryString = "INSERT INTO CONTRATOS (fecha, nombre_contrato, empresa, potencia_contratada, categoria_precio ) VALUES ('"+ fecha + "','"+ nombre_contrato + "','"+ empresa + "','"+potencia_contratada+"', '"+categoria_precio +"')";
 
     console.log(queryString);
     console.log(JSON.stringify(req.body));
@@ -452,7 +449,7 @@ app.post('/guardarContrato', function(req, res){
             console.log(error);
         }
 
-    })().then(() => res.send('<script type="text/javascript"> alert("Contrato Guardado!"); window.location="./contratos";</script>'))
+    })().then(() => res.send('<script type="text/javascript"> alert("Contrato Guardado!"); window.location="./modificarContratos";</script>'))
 
   //res.send(JSON.stringify(req.body));  
 }
@@ -466,11 +463,13 @@ app.post('/guardarPrecio', function(req, res){
     const id = req.body.id;
     const fecha = req.body.fecha;
     const categoria_precio = req.body.categoria_precio;
-    const precio_base_usd_mwh = req.body.precio_base_usd_mwh;
-    const cargo_transmicion_seguimiento_electrico = req.body.cargo_transmicion_seguimiento_electrico;
+    const precio_base_usd_mwh = parseFloat(req.body.precio_base_usd_mwh);
+    const cargo_transmicion_seguimiento_electrico = parseFloat(req.body.cargo_transmicion_seguimiento_electrico);
+    const precio = precio_base_usd_mwh + cargo_transmicion_seguimiento_electrico
    // const sumprecio = req.body.precio_base_usd_mwh*1 + req.body.cargo_transmicion_seguimiento_electrico*1
 
-    const queryString = "INSERT INTO tipo_precio (id, fecha_cierre, categoria_precio, precio_base_usd_mwh, cargo_transmicion_seguimiento_electrico ) VALUES ('" +  id + "', '"+ fecha + "', '"+ categoria_precio + "', '"+precio_base_usd_mwh+"', '"+cargo_transmicion_seguimiento_electrico+"')";
+    const queryString = "INSERT INTO tipo_precio (id, fecha_cierre, categoria_precio, precio_base_usd_mwh, cargo_transmicion_seguimiento_electrico, precio ) " + 
+    "VALUES ('" +  id + "', '"+ fecha + "', '"+ categoria_precio + "', '"+precio_base_usd_mwh+"', '"+cargo_transmicion_seguimiento_electrico +"', '"+ precio + "')";
 
     console.log(queryString);
     
@@ -482,7 +481,7 @@ app.post('/guardarPrecio', function(req, res){
         } catch (error) {
             console.log(error)            
         }
-    })().then(() =>  res.send('<script type="text/javascript"> alert("Precio Guardado!"); window.location="./contratos";</script>') )   
+    })().then(() =>  res.send('<script type="text/javascript"> alert("Precio Guardado!"); window.location="./modificarPrecios";</script>') )   
 });
 
 
