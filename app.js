@@ -1,25 +1,11 @@
-//import sql from "mssql";
-
-
-
-
 
 const express = require("express");
 const app = express();
-
-
 const path = require('path');
-
-
 const router = express.Router();
 const ejs = require("ejs");
 const dbConfig_localhost = require("./dbConfig_localhost");
-const dbConfig = require("./dbConfig");
 const sql = require('mssql');
-const { render } = require("express/lib/response");
-const { CLIENT_RENEG_LIMIT } = require("tls");
-const { dirname } = require("path");
-const { fileURLToPath } = require("url");
 const port = process.env.PORT || 3000
 
 
@@ -38,17 +24,6 @@ console.log(path.join(__dirname , '/public/'));
 app.use(express.static(path.join(__dirname , '/public/')));
 
 
-
-
-// support parsing of application/json type post data
-
-
-//app.use(express.static(__dirname + '/foldername'));
-
-console.log(__dirname)
-
-
-//const __dirname = dirname(fileURLToPath(import.meta.url))
 
 
 
@@ -92,11 +67,6 @@ router.get('/localtest_db', function(req, res){
       });
     }
 );
-
-
-
-
-
 
 
 
@@ -240,7 +210,11 @@ router.get('/modificarContratos', function(req, res, next){
         try {
             let pool = await sql.connect(dbConfig_localhost)     
             let result = await pool.request()
-            .query('select id,cast(fecha as varchar) as fecha, nombre_contrato, empresa, potencia_contratada, categoria_precio, format(precio, \'c\', \'en-US\') as precio  from CONTRATOS')
+            .query('select a.id,cast(fecha as varchar) as fecha, nombre_contrato, empresa, potencia_contratada, a.categoria_precio,' +
+                   'format(b.precio_base_usd_mwh, \'c\', \'en-US\') as precio_base_usd_mwh  , format(b.cargo_transmicion_seguimiento_electrico, \'c\', \'en-US\') as cargo_transmicion_seguimiento_electrico , ' + 
+                   'format(b.precio_base_usd_mwh + b.cargo_transmicion_seguimiento_electrico,  \'c\', \'en-US\')  as precio ' +
+                   'from CONTRATOS a ' +
+                   'left join tipo_precio b on a.fecha = b.fecha_cierre and a.categoria_precio = b.categoria_precio ' )
             contratos = result.recordsets[0];
             // console.log(contratos.length);
 
@@ -271,7 +245,14 @@ router.get('/modificarContratos/:id', function(req, res, next){
         try {
             let pool = await sql.connect(dbConfig_localhost)     
             let result = await pool.request()
-            .query('select id,cast(fecha as varchar) as fecha, nombre_contrato, empresa, potencia_contratada, categoria_precio, format(precio, \'c\', \'en-US\') as precio  from CONTRATOS where id =' + req.params.id )
+            .query('select a.id,cast(fecha as varchar) as fecha, nombre_contrato, empresa, potencia_contratada, a.categoria_precio ' + 
+                    ',format(b.precio_base_usd_mwh, \'c\', \'en-US\') as precio_base_usd_mwh  , format(b.cargo_transmicion_seguimiento_electrico, \'c\', \'en-US\') as cargo_transmicion_seguimiento_electrico ' + 
+                    ',format(b.precio_base_usd_mwh + b.cargo_transmicion_seguimiento_electrico,  \'c\', \'en-US\')  as precio ' +       
+                    'from CONTRATOS a ' + 
+                    'left join tipo_precio b on a.fecha = b.fecha_cierre and a.categoria_precio = b.categoria_precio ' +                   
+                    'where a.id =' + req.params.id )
+            
+            
             contratos = result.recordsets[0];
             // console.log(contratos.length);
 

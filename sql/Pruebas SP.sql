@@ -26,6 +26,7 @@ select distinct * from [dbo].[tipo_precio]
 select * from [dbo].[TotalesContratos]
 
 
+select  DISTINCT categoria_precio  from tipo_precio
 
 
 SET LANGUAGE Spanish; 
@@ -67,3 +68,9 @@ select DISTINCT categoria_precio  from tipo_precio
 select * from [dbo].[TotalesContratos]
 select * from [dbo].[TotalEnergia]
 select * from [dbo].[preliminar_fountain_dia]
+
+
+delete from CONTRATOS where nombre_contrato like '%TEST%'
+
+
+SELECT * from CONTRATOS where nombre_contrato like '%TEST%'

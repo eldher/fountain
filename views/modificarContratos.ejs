@@ -12,6 +12,8 @@
             <th>Empresa</th>
             <th>Potencia Contratada</th>
             <th>Categoria Precio</th>
+            <th>Precio Base USD MWh</th>
+            <th>Cargo Transmisión</th>
             <th>Precio </th>                   
         </tr>
 
@@ -24,7 +26,9 @@
                     <td><%= contratos[i].empresa %></td>
                     <td><%= contratos[i].potencia_contratada %></td>
                     <td><%= contratos[i].categoria_precio %></td>
-                    <td><%= contratos[i].precio %></td>
+                    <td><%= contratos[i].precio_base_usd_mwh %></td>
+                    <td><%= contratos[i].cargo_transmicion_seguimiento_electrico %></td>
+                    <td><%= contratos[i].precio  %></td>
                     <td><button class="btn btn-xs btn-success"  onclick= " window.location = '../modificarContratos/<%= contratos[i].id %>'" > Modificar Contrato  </button></td>
 
                 
