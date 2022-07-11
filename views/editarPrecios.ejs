@@ -35,12 +35,12 @@
             <%# } } %>
     </table> -->
 
-<form action="editarPrecio" method="post">
+<form method="POST" action="/guardarPrecio" >
 
     <div class="form-group row">
         <label for="id" class="col-sm-2 col-form-label">ID</label>
         <div class="col-sm-6">
-            <input type="text" readonly class="form-control" id="id"  value="<%= precios[0].id %>">
+            <input type="text" readonly class="form-control" id="id"  name="id" value="<%= precios[0].id %>">
         </div>
     </div>
 
@@ -48,7 +48,7 @@
     <div class="form-group row">
         <label for="id" class="col-sm-2 col-form-label">Fecha</label>
         <div class="col-sm-6">
-            <input type="text" readonly class="form-control" id="fecha"  value="<%= precios[0].fecha %>">
+            <input type="text" readonly class="form-control" id="fecha"  name="fecha" value="<%= precios[0].fecha %>">
         </div>
     </div>
 
@@ -56,7 +56,7 @@
     <div class="form-group row">
         <label for="id" class="col-sm-2 col-form-label">Categoria Precio</label>
         <div class="col-sm-6">
-            <input type="text" readonly class="form-control" id="categoria_precio"  value="<%= precios[0].categoria_precio %>">
+            <input type="text" readonly class="form-control" id="categoria_precio"  name="categoria_precio" value="<%= precios[0].categoria_precio %>">
         </div>
     </div>
 
@@ -65,7 +65,7 @@
     <div class="form-group row">
         <label for="id" class="col-sm-2 col-form-label">Precio Base USD/MWh</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" id="precio_base_usd_mwh"  value="<%= precios[0].precio_base_usd_mwh %>">
+            <input type="text" class="form-control" id="precio_base_usd_mwh" name="precio_base_usd_mwh" value="<%= precios[0].precio_base_usd_mwh %>">
         </div>
     </div>
 
@@ -73,7 +73,7 @@
     <div class="form-group row">
         <label for="id" class="col-sm-2 col-form-label">Cargo Transmisión</label>
         <div class="col-sm-6">
-            <input type="text"  class="form-control" id="cargo_transmicion_seguimiento_electrico"  value="<%= precios[0].cargo_transmicion_seguimiento_electrico %>">
+            <input type="text"  class="form-control" id="cargo_transmicion_seguimiento_electrico" name="cargo_transmicion_seguimiento_electrico" value="<%= precios[0].cargo_transmicion_seguimiento_electrico %>">
         </div>
     </div>
 
@@ -81,15 +81,38 @@
     <div class="form-group row">
         <label for="id" class="col-sm-2 col-form-label">Precio</label>
         <div class="col-sm-6">
-            <input type="text" readonly class="form-control" id="precio"  value="<%= precios[0].precio_base_usd_mwh + precios[0].cargo_transmicion_seguimiento_electrico %>">
+            <input type="text" readonly class="form-control" id="precio" name="precio" value="<%= precios[0].precio_base_usd_mwh + precios[0].cargo_transmicion_seguimiento_electrico %>">
         </div>
     </div>
 
-    <button class="btn btn-s btn-success"  onclick= "" > Guardar Precio  </button>
+
+    <input type="hidden" id="accion" name="accion" value="modificar">
+
+    <button class="btn btn-s btn-success"  onclick= "" type="submit" >Guardar Precio</button>
     <a class="btn btn-s btn-warning"  href="/modificarContratos"> Cancelar  </a>
     
 </div>
 </form>
+
+
+
+
+<script>
+    var txtPrecioBase = document.getElementById('precio_base_usd_mwh');
+    var txtCargo = document.getElementById('cargo_transmicion_seguimiento_electrico');
+    var txtPrecio = document.getElementById('precio');
+
+    txtPrecioBase.addEventListener('keyup', function handleChange(event) {   
+        // if(txtPrecioBase.value == ""){ txtPrecioBase.value = 0 };
+        txtPrecio.value = parseFloat(txtPrecioBase.value) +   parseFloat(txtCargo.value) ;
+        // console.log( parseFloat(txtPrecioBase.value)   + parseFloat(txtCargo.value));    
+    });
+
+
+    txtCargo.addEventListener('keyup', function handleChange(event) {   
+        txtPrecio.value = parseFloat(txtPrecioBase.value) +   parseFloat(txtCargo.value) ;
+    });
+</script>
 
 
 

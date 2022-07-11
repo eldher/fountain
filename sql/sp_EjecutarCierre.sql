@@ -10,7 +10,7 @@ GO
 -- =============================================
 -- Author:		Eldher
 -- =============================================
-CREATE PROCEDURE [dbo].[sp_EjecutarCierre]
+ALTER PROCEDURE [dbo].[sp_EjecutarCierre]
 	@fecha_cierre date
 	--@fecha_mes varchar
 AS

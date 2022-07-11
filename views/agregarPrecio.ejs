@@ -64,12 +64,33 @@
         </div>
     </div>
 
+
+    <input type="hidden" id="accion" name="accion" value="agregar">
     <button class="btn btn-s btn-success"  onclick= "" type="submit"> Guardar Precio  </button>
     <a class="btn btn-s btn-warning"  href="/modificarPrecios"> Cancelar  </a>
     
 </div>
 </form>
 
+
+
+
+<script>
+    var txtPrecioBase = document.getElementById('precio_base_usd_mwh');
+    var txtCargo = document.getElementById('cargo_transmicion_seguimiento_electrico');
+    var txtPrecio = document.getElementById('precio');
+
+    txtPrecioBase.addEventListener('keyup', function handleChange(event) {   
+        // if(txtPrecioBase.value == ""){ txtPrecioBase.value = 0 };
+        txtPrecio.value = parseFloat(txtPrecioBase.value) +   parseFloat(txtCargo.value) ;
+        // console.log( parseFloat(txtPrecioBase.value)   + parseFloat(txtCargo.value));    
+    });
+
+
+    txtCargo.addEventListener('keyup', function handleChange(event) {   
+        txtPrecio.value = parseFloat(txtPrecioBase.value) +   parseFloat(txtCargo.value) ;
+    });
+</script>
 
 
 

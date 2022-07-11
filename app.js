@@ -284,7 +284,12 @@ router.get('/modificarPrecios', function(req, res, next){
         try {
             let pool = await sql.connect(dbConfig_localhost)     
             let result = await pool.request()
-            .query('select id, cast(fecha_cierre as varchar) as fecha, categoria_precio, precio_base_usd_mwh, cargo_transmicion_seguimiento_electrico, precio from tipo_precio')
+            .query('select id, cast(fecha_cierre as varchar) as fecha, categoria_precio ' +
+            ',cast(precio_base_usd_mwh as decimal(10,3)) as precio_base_usd_mwh ' +
+            ',cast(cargo_transmicion_seguimiento_electrico as decimal(10,3)) as cargo_transmicion_seguimiento_electrico ' +
+            ',cast(precio as decimal(10,3)) as precio ' + 
+            'from tipo_precio')
+       
             precios = result.recordsets[0];
             console.log(precios.length);
 
@@ -325,7 +330,6 @@ router.get('/modificarPrecios/:id', function(req, res, next){
             let result3 = await pool.request()
             .query("SET LANGUAGE Spanish; select  \'\' as fecha, '' as mes, '' as anio  UNION ALL select distinct cast(fecha as varchar) as fecha ,DATENAME(MONTH, fecha) as mes ,cast(YEAR(fecha) as varchar) as anio from INGRESOS_CONTRATOS");
             fechas = result3.recordsets[0];
-
 
         } catch (err) {            
             console.log(err);
@@ -460,6 +464,7 @@ app.post('/guardarPrecio', function(req, res){
     console.log(req.body);
     console.log(JSON.stringify(req.body));
 
+    const accion = req.body.accion
     const id = req.body.id;
     const fecha = req.body.fecha;
     const categoria_precio = req.body.categoria_precio;
@@ -468,20 +473,51 @@ app.post('/guardarPrecio', function(req, res){
     const precio = precio_base_usd_mwh + cargo_transmicion_seguimiento_electrico
    // const sumprecio = req.body.precio_base_usd_mwh*1 + req.body.cargo_transmicion_seguimiento_electrico*1
 
-    const queryString = "INSERT INTO tipo_precio (id, fecha_cierre, categoria_precio, precio_base_usd_mwh, cargo_transmicion_seguimiento_electrico, precio ) " + 
-    "VALUES ('" +  id + "', '"+ fecha + "', '"+ categoria_precio + "', '"+precio_base_usd_mwh+"', '"+cargo_transmicion_seguimiento_electrico +"', '"+ precio + "')";
 
-    console.log(queryString);
-    
-    ( async function(){
-        try {
-            let pool = await sql.connect(dbConfig_localhost)
-            let result = await pool.request()
-            .query(queryString)
-        } catch (error) {
-            console.log(error)            
-        }
-    })().then(() =>  res.send('<script type="text/javascript"> alert("Precio Guardado!"); window.location="./modificarPrecios";</script>') )   
+   if(accion == 'agregar'){
+
+        const queryString = "INSERT INTO tipo_precio (id, fecha_cierre, categoria_precio, precio_base_usd_mwh, cargo_transmicion_seguimiento_electrico, precio ) " + 
+        "VALUES ('" +  id + "', '"+ fecha + "', '"+ categoria_precio + "', '"+precio_base_usd_mwh+"', '"+cargo_transmicion_seguimiento_electrico +"', '"+ precio + "')";
+
+        console.log(queryString);
+        
+        ( async function(){
+            try {
+                let pool = await sql.connect(dbConfig_localhost)
+                let result = await pool.request()
+                .query(queryString)
+            } catch (error) {
+                console.log(error)            
+            }
+        })().then(() =>  res.send('<script type="text/javascript"> alert("Precio Guardado!"); window.location="./modificarPrecios";</script>') )   
+
+    }
+
+    if(accion == 'modificar'){
+        console.log("Modificar Precio")
+        const queryString = "UPDATE tipo_precio SET precio_base_usd_mwh =" + precio_base_usd_mwh + ", cargo_transmicion_seguimiento_electrico = " +  cargo_transmicion_seguimiento_electrico +
+        ", precio ="+ precio + " where id="+id
+        
+        console.log(queryString);
+
+        // "INSERT INTO tipo_precio (id, fecha_cierre, categoria_precio, precio_base_usd_mwh, cargo_transmicion_seguimiento_electrico, precio ) " + 
+        // "VALUES ('" +  id + "', '"+ fecha + "', '"+ categoria_precio + "', '"+precio_base_usd_mwh+"', '"+cargo_transmicion_seguimiento_electrico +"', '"+ precio + "')";
+
+
+        
+        ( async function(){
+            try {
+                let pool = await sql.connect(dbConfig_localhost)
+                let result = await pool.request()
+                .query(queryString)
+            } catch (error) {
+                console.log(error)            
+            }
+        })().then(() =>  res.send('<script type="text/javascript"> alert("Precio Guardado!"); window.location="./modificarPrecios";</script>') )   
+
+    }
+
+
 });
 
 

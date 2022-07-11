@@ -72,5 +72,7 @@ select * from [dbo].[preliminar_fountain_dia]
 
 delete from CONTRATOS where nombre_contrato like '%TEST%'
 
+delete from tipo_precio where categoria_precio like '%TEST%'
+
 
 SELECT * from CONTRATOS where nombre_contrato like '%TEST%'
