@@ -260,13 +260,26 @@ router.get('/modificarContratos/:id', function(req, res, next){
             .query("SET LANGUAGE Spanish; select  \'\' as fecha, '' as mes, '' as anio  UNION ALL select distinct cast(fecha as varchar) as fecha ,DATENAME(MONTH, fecha) as mes ,cast(YEAR(fecha) as varchar) as anio from INGRESOS_CONTRATOS");
             fechas = result3.recordsets[0];
 
+            
+            let result4 = await pool.request()
+            .query("select distinct categoria_precio from tipo_precio WHERE fecha_cierre =( SELECT FECHA FROM CONTRATOS WHERE ID = + " +  req.params.id + " )");
+            categoriasPrecio = result4.recordsets[0];
+
+
+            qry = 'select id, cast(fecha_cierre as varchar) as fecha, categoria_precio, precio_base_usd_mwh, cargo_transmicion_seguimiento_electrico, precio from tipo_precio ' + 
+            'WHERE fecha_cierre = ( SELECT FECHA FROM CONTRATOS WHERE ID = '+  req.params.id + ')'
+            console.log(qry)
+            let result5 = await pool.request()
+            .query(qry);
+            tiposPrecio = result5.recordsets[0];
+
 
         } catch (err) {            
             console.log(err);
         }
 
        
-    })().then(() => res.render('editarContratos', { contratos, fechas, fecha : '' } ))
+    })().then(() => res.render('editarContratos', { contratos, fechas, fecha : '', categoriasPrecio, tiposPrecio } ))
     
     sql.on('error', err => {
         console.log(err);        
@@ -330,6 +343,7 @@ router.get('/modificarPrecios/:id', function(req, res, next){
             let result3 = await pool.request()
             .query("SET LANGUAGE Spanish; select  \'\' as fecha, '' as mes, '' as anio  UNION ALL select distinct cast(fecha as varchar) as fecha ,DATENAME(MONTH, fecha) as mes ,cast(YEAR(fecha) as varchar) as anio from INGRESOS_CONTRATOS");
             fechas = result3.recordsets[0];
+            
 
         } catch (err) {            
             console.log(err);
@@ -428,7 +442,7 @@ router.get('/agregarPrecio/', function(req, res, next){
 app.post('/guardarContrato', function(req, res){
     console.log(req.body);
 
-    
+    const accion = req.body.accion
     const fecha = req.body.fecha;
     const nombre_contrato = req.body.nombre_contrato;
     const empresa = req.body.empresa;
@@ -438,22 +452,54 @@ app.post('/guardarContrato', function(req, res){
     const id = req.body.id;
     
 
-    const queryString = "INSERT INTO CONTRATOS (fecha, nombre_contrato, empresa, potencia_contratada, categoria_precio ) VALUES ('"+ fecha + "','"+ nombre_contrato + "','"+ empresa + "','"+potencia_contratada+"', '"+categoria_precio +"')";
+    if(accion =="agregar"){
 
-    console.log(queryString);
-    console.log(JSON.stringify(req.body));
+        var queryString = "INSERT INTO CONTRATOS (fecha, nombre_contrato, empresa, potencia_contratada, categoria_precio ) VALUES ('"+ fecha + "','"+ nombre_contrato + "','"+ empresa + "','"+potencia_contratada+"', '"+categoria_precio +"')";
 
-    ( async function(){
-        try {
-            let pool = await sql.connect(dbConfig_localhost)     
-            let result = await pool.request()
-            .query(queryString)  
+        console.log(queryString);
+        console.log(JSON.stringify(req.body));
 
-        } catch (error) {
-            console.log(error);
-        }
+        (async function(){
+            try {
+                let pool = await sql.connect(dbConfig_localhost)     
+                let result = await pool.request()
+                .query(queryString)  
+
+            } catch (error) {
+                console.log(error);
+            }
 
     })().then(() => res.send('<script type="text/javascript"> alert("Contrato Guardado!"); window.location="./modificarContratos";</script>'))
+    }
+
+    
+    if(accion == "modificar"){
+        console.log("modificar")
+
+        var queryString = "UPDATE CONTRATOS SET "+
+        "nombre_contrato = '" + nombre_contrato + "'" +
+        ", empresa = '" + empresa + "'" +
+        ", potencia_contratada = "+potencia_contratada +
+        ", categoria_precio = '"+categoria_precio + "'"        
+        " where id = "+id
+        
+        console.log(queryString);
+
+        (async function(){
+            try {
+                let pool = await sql.connect(dbConfig_localhost)     
+                let result = await pool.request()
+                .query(queryString)  
+    
+            } catch (error) {
+                console.log(error);
+            }
+    
+        })().then(() => res.send('<script type="text/javascript"> alert("Contrato Guardado!"); window.location="./modificarContratos";</script>'))
+
+
+    }
+
 
   //res.send(JSON.stringify(req.body));  
 }
