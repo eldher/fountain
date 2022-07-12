@@ -480,7 +480,7 @@ app.post('/guardarContrato', function(req, res){
         "nombre_contrato = '" + nombre_contrato + "'" +
         ", empresa = '" + empresa + "'" +
         ", potencia_contratada = "+potencia_contratada +
-        ", categoria_precio = '"+categoria_precio + "'"        
+        ", categoria_precio = '"+categoria_precio + "'" +       
         " where id = "+id
         
         console.log(queryString);
@@ -541,7 +541,7 @@ app.post('/guardarPrecio', function(req, res){
 
     if(accion == 'modificar'){
         console.log("Modificar Precio")
-        const queryString = "UPDATE tipo_precio SET precio_base_usd_mwh =" + precio_base_usd_mwh + ", cargo_transmicion_seguimiento_electrico = " +  cargo_transmicion_seguimiento_electrico +
+        const queryString = "UPDATE  tipo_precio SET  categoria_precio ='"+categoria_precio+"', precio_base_usd_mwh =" + precio_base_usd_mwh + ", cargo_transmicion_seguimiento_electrico = " +  cargo_transmicion_seguimiento_electrico +
         ", precio ="+ precio + " where id="+id
         
         console.log(queryString);
