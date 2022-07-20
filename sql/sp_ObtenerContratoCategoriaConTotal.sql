@@ -25,12 +25,16 @@ SET @CONT = 0;
 
 -------------------- Corto Plazo I
 
+--declare @fecha date;
+--set @fecha = '2022-04-30'
+
 
 drop table if exists #corto_plazo_1;
 
 select  
 cast(fecha as nvarchar) as fecha, 
-EMPRESA, nombre_contrato, categoria_precio, precio, potencia_contratada , dmm_s, energia, EAR, 
+EMPRESA, nombre_contrato, categoria_precio, precio_base_usd_mwh, cargo_transmicion_seguimiento_electrico, precio,
+potencia_contratada , dmm_s, energia, EAR, 
 ingreso_precio_contado
 into #corto_plazo_1
 from INGRESOS_CONTRATOS
@@ -50,6 +54,8 @@ IF @CONT > 0
 		,empresa = ''
 		,nombre_contrato = ''
 		,categoria_precio = ''
+		,precio_base_usd_mwh = max(precio_base_usd_mwh)
+		,cargo_transmicion_seguimiento_electrico = max(cargo_transmicion_seguimiento_electrico)
 		,precio = max(precio)
 		,potencia_contratada = SUM(potencia_contratada)
 		,dmm_s = SUM(dmm_s)
@@ -65,7 +71,9 @@ IF @CONT > 0
 select @CONT = 0;
 
 drop table if exists #corto_plazo_2
-select cast(fecha as nvarchar) as fecha, EMPRESA, nombre_contrato, categoria_precio, precio, potencia_contratada , dmm_s, energia, EAR, 
+select cast(fecha as nvarchar) as fecha, 
+EMPRESA, nombre_contrato, categoria_precio, precio_base_usd_mwh, cargo_transmicion_seguimiento_electrico, precio,
+potencia_contratada , dmm_s, energia, EAR, 
 ingreso_precio_contado
 into #corto_plazo_2
 from INGRESOS_CONTRATOS
@@ -85,6 +93,8 @@ BEGIN
 	,empresa = ''
 	,nombre_contrato = ''
 	,categoria_precio = ''
+	,precio_base_usd_mwh = max(precio_base_usd_mwh)
+	,cargo_transmicion_seguimiento_electrico = max(cargo_transmicion_seguimiento_electrico)
 	,precio = max(precio)
 	,potencia_contratada = SUM(potencia_contratada)
 	,dmm_s = SUM(dmm_s)
@@ -102,7 +112,9 @@ END
 select @CONT = 0;
 
 drop table if exists #largo_plazo;
-select cast(fecha as nvarchar) as fecha, EMPRESA, nombre_contrato, categoria_precio, precio, potencia_contratada , dmm_s, energia, EAR, 
+select cast(fecha as nvarchar) as fecha, 
+EMPRESA, nombre_contrato, categoria_precio, precio_base_usd_mwh, cargo_transmicion_seguimiento_electrico, precio,
+potencia_contratada , dmm_s, energia, EAR, 
 ingreso_precio_contado
 into #largo_plazo
 from INGRESOS_CONTRATOS
@@ -122,6 +134,8 @@ BEGIN
 	,empresa = ''
 	,nombre_contrato = ''
 	,categoria_precio = ''
+	,precio_base_usd_mwh = max(precio_base_usd_mwh)
+	,cargo_transmicion_seguimiento_electrico = max(cargo_transmicion_seguimiento_electrico)
 	,precio = max(precio)
 	,potencia_contratada = SUM(potencia_contratada)
 	,dmm_s = SUM(dmm_s)
@@ -133,36 +147,44 @@ END
 
 
 -------------------- Potencia I
-select @CONT = 0;
 
-drop table if exists #potencia_1;
+BEGIN
+	select @CONT = 0;
 
-select cast(fecha as nvarchar) as fecha, EMPRESA, nombre_contrato, categoria_precio, precio, potencia_contratada,
-ingreso_precio_contado
-into #potencia_1
-from INGRESOS_CONTRATOS
-where categoria_precio = 'Potencia I'
-and ingreso_precio_contado IS NOT NULL
-and fecha = @fecha;
+	drop table if exists #potencia_1;
+
+	select cast(fecha as nvarchar) as fecha, 
+	EMPRESA, nombre_contrato, categoria_precio, precio_base_usd_mwh, cargo_transmicion_seguimiento_electrico, precio,
+	potencia_contratada 
+	,ingreso_precio_contado
+	into #potencia_1
+	from INGRESOS_CONTRATOS
+	where categoria_precio = 'Potencia I'
+	and ingreso_precio_contado IS NOT NULL
+	and fecha = @fecha;
 
 
-select @CONT = count(*) from #potencia_1;
+	select @CONT = count(*) from #potencia_1;
 
+	--select @CONT
 
-IF @CONT > 0
-BEGIN 
-	insert into #potencia_1
-	select 
-	fecha = ''
-	,empresa = ''
-	,nombre_contrato = ''
-	,categoria_precio = ''
-	,precio = max(precio)
-	,potencia_contratada = SUM(potencia_contratada)
-	,ingreso_precio_contado = SUM(ingreso_precio_contado)
-	from #potencia_1;
+	IF @CONT > 0
+	BEGIN
+		insert into #potencia_1 (fecha, empresa, nombre_contrato, categoria_precio, precio_base_usd_mwh, cargo_transmicion_seguimiento_electrico, precio, potencia_contratada, ingreso_precio_contado)
+		select 
+		fecha = ''
+		,empresa = ''
+		,nombre_contrato = ''
+		,categoria_precio = ''
+		,precio_base_usd_mwh = max(precio_base_usd_mwh)
+		,cargo_transmicion_seguimiento_electrico = max(cargo_transmicion_seguimiento_electrico)
+		,precio = max(precio)
+		,potencia_contratada = SUM(potencia_contratada)
+		,ingreso_precio_contado = SUM(ingreso_precio_contado)
+		from #potencia_1;
+	END
+
 END
-
 
 
 
@@ -173,8 +195,10 @@ select @CONT = 0;
 
 drop table if exists #potencia_2;
 
-select cast(fecha as nvarchar) as fecha, EMPRESA, nombre_contrato, categoria_precio, precio, potencia_contratada , 
-ingreso_precio_contado
+select cast(fecha as nvarchar) as fecha, 
+EMPRESA, nombre_contrato, categoria_precio, precio_base_usd_mwh, cargo_transmicion_seguimiento_electrico, precio,
+potencia_contratada
+,ingreso_precio_contado
 into #potencia_2
 from INGRESOS_CONTRATOS
 where categoria_precio = 'Potencia II'
@@ -187,12 +211,14 @@ select @CONT = count(*) from #potencia_2;
 
 IF @CONT > 0
 BEGIN 
-	insert into #potencia_2
+	insert into #potencia_2 (fecha, empresa, nombre_contrato, categoria_precio, precio_base_usd_mwh, cargo_transmicion_seguimiento_electrico, precio, potencia_contratada, ingreso_precio_contado)
 	select 
 	fecha = ''
 	,empresa = ''
 	,nombre_contrato = ''
 	,categoria_precio = ''
+	,precio_base_usd_mwh = max(precio_base_usd_mwh)
+	,cargo_transmicion_seguimiento_electrico = max(cargo_transmicion_seguimiento_electrico)
 	,precio = max(precio)
 	,potencia_contratada = SUM(potencia_contratada)
 	,ingreso_precio_contado = SUM(ingreso_precio_contado)
