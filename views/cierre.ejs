@@ -94,6 +94,8 @@
             <th>Empresa Distribuidora</th>
             <th>Nombre Contrato</th>            
             <th>Categoria Precio</th>    
+            <th>Precio Base</th>
+            <th>Cargo Transmisión</th>
             <th>Precio</th>
             <th>Potencia Equivalente Comprometida (MW)</th>
             <th>DMG-RC (MW)</th>
@@ -110,6 +112,8 @@
             <td><%= cortoPlazoI[i].EMPRESA %></td>
             <td><%= cortoPlazoI[i].nombre_contrato %></td>
             <td><%= cortoPlazoI[i].categoria_precio %></td>                       
+            <td><%= cortoPlazoI[i].precio_base_usd_mwh.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td><%= cortoPlazoI[i].cargo_transmicion_seguimiento_electrico.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
             <td><%= cortoPlazoI[i].precio.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
             <td><%= cortoPlazoI[i].potencia_contratada.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
             <td><%= cortoPlazoI[i].dmm_s.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
@@ -134,6 +138,8 @@
             <th>Empresa Distribuidora</th>
             <th>Nombre Contrato</th>            
             <th>Categoria Precio</th>    
+            <th>Precio Base</th>
+            <th>Cargo Transmisión</th>
             <th>Precio</th>
             <th>Potencia Equivalente Comprometida (MW)</th>
             <th>DMG-RC (MW)</th>
@@ -150,6 +156,8 @@
             <td><%= cortoPlazoII[i].EMPRESA %></td>
             <td><%= cortoPlazoII[i].nombre_contrato %></td>
             <td><%= cortoPlazoII[i].categoria_precio %></td>                       
+            <td><%= cortoPlazoII[i].precio_base_usd_mwh.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td><%= cortoPlazoII[i].cargo_transmicion_seguimiento_electrico.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
             <td><%= cortoPlazoII[i].precio.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
             <td><%= cortoPlazoII[i].potencia_contratada.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
             <td><%= cortoPlazoII[i].dmm_s.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
@@ -172,6 +180,8 @@
             <th>Empresa Distribuidora</th>
             <th>Nombre Contrato</th>            
             <th>Categoria Precio</th>    
+            <th>Precio Base</th>
+            <th>Cargo Transmisión</th>
             <th>Precio</th>
             <th>Potencia Equivalente Comprometida (MW)</th>
             <th>DMG-RC (MW)</th>
@@ -188,6 +198,8 @@
             <td><%= largoPlazo[i].EMPRESA %></td>
             <td><%= largoPlazo[i].nombre_contrato %></td>
             <td><%= largoPlazo[i].categoria_precio %></td>                       
+            <td><%= largoPlazo[i].precio_base_usd_mwh.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td><%= largoPlazo[i].cargo_transmicion_seguimiento_electrico.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
             <td><%= largoPlazo[i].precio.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
             <td><%= largoPlazo[i].potencia_contratada.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
             <td><%= largoPlazo[i].dmm_s.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
@@ -210,6 +222,8 @@
             <th>Empresa Distribuidora</th>
             <th>Nombre Contrato</th>            
             <th>Categoria Precio</th>    
+            <th>Precio Base</th>
+            <th>Cargo Transmisión</th>
             <th>Precio</th>
             <th>Potencia Equivalente Comprometida (MW)</th>            
             <th>Ingreso a Precio de Contado</th>             
@@ -223,6 +237,8 @@
             <td><%= potenciaI[i].EMPRESA %></td>
             <td><%= potenciaI[i].nombre_contrato %></td>
             <td><%= potenciaI[i].categoria_precio %></td>                       
+            <td><%= potenciaI[i].precio_base_usd_mwh.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td><%= potenciaI[i].cargo_transmicion_seguimiento_electrico.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
             <td><%= potenciaI[i].precio.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
             <td><%= potenciaI[i].potencia_contratada.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
             <td><%= potenciaI[i].ingreso_precio_contado.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
@@ -242,6 +258,8 @@
             <th>Empresa Distribuidora</th>
             <th>Nombre Contrato</th>            
             <th>Categoria Precio</th>    
+            <th>Precio Base</th>
+            <th>Cargo Transmisión</th>
             <th>Precio</th>
             <th>Potencia Equivalente Comprometida (MW)</th>
             <th>Ingreso a Precio de Contado</th>             
@@ -255,6 +273,8 @@
             <td><%= potenciaII[i].EMPRESA %></td>
             <td><%= potenciaII[i].nombre_contrato %></td>
             <td><%= potenciaII[i].categoria_precio %></td>                       
+            <td><%= potenciaII[i].precio_base_usd_mwh.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td><%= potenciaII[i].cargo_transmicion_seguimiento_electrico.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
             <td><%= potenciaII[i].precio.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
             <td><%= potenciaII[i].potencia_contratada.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
             <td><%= potenciaII[i].ingreso_precio_contado.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
