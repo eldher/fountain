@@ -4,10 +4,20 @@
 <div class="container theme-showcase" role="main">
 
 
+<% 
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+}
+%>
+
+
+
+
+
     <!-- tabla 1 -->
-    <table id="customers">
+    <table id="customers" style="width:100%">
         <tr>
-            <th>Fecha</th>
+            <th style="width:8%">Fecha</th>
             <th>FHPCs Generation CND</th>
             <th>Spot Energy Purchases</th>
             <th>FICs Avg Purchase Price </th>
@@ -24,16 +34,16 @@
             for ( var i=0 ; i <tabla_eb1.length ; i++) { %>
                 <tr>
                     <td><%= tabla_eb1[i].fecha %></td>
-                    <td><%= tabla_eb1[i].fhpc_generation %></td>
-                    <td><%= tabla_eb1[i].spot_energy_purchases %></td>
-                    <td><%= tabla_eb1[i].avg_purchase_price %></td>
-                    <td><%= tabla_eb1[i].total_gwh_1 %></td>
-                    <td><%= tabla_eb1[i].spot_energy_sales %></td>
-                    <td><%= tabla_eb1[i].avg_sale_price %></td>
-                    <td><%= tabla_eb1[i].ppa_sales %></td>
-                    <td><%= tabla_eb1[i].transmission_losses %></td>
-                    <td><%= tabla_eb1[i].exports %></td>
-                    <td><%= tabla_eb1[i].total_gwh_2 %></td>                    
+                    <td><%= tabla_eb1[i].fhpc_generation.toLocaleString() %></td>
+                    <td><%= tabla_eb1[i].spot_energy_purchases.toLocaleString() %></td>
+                    <td><%= tabla_eb1[i].avg_purchase_price.toLocaleString() %></td>
+                    <td><%= tabla_eb1[i].total_gwh_1.toLocaleString() %></td>
+                    <td><%= tabla_eb1[i].spot_energy_sales.toLocaleString() %></td>
+                    <td><%= tabla_eb1[i].avg_sale_price.toLocaleString() %></td>
+                    <td><%= tabla_eb1[i].ppa_sales.toLocaleString() %></td>
+                    <td><%= tabla_eb1[i].transmission_losses.toLocaleString() %></td>
+                    <td><%= tabla_eb1[i].exports.toLocaleString() %></td>
+                    <td><%= tabla_eb1[i].total_gwh_2.toLocaleString() %></td>                    
                 </tr>
             <% } } %>
     </table>
@@ -42,43 +52,43 @@
 
 
     <p>
-        <table id="customers">
-        <tr>
-            <th>Fecha</th>
-            <th>Delivered CND</th>
-            <th>Spot Energy Purchases</th>
-            <th>Total (GWh)</th>
-            <th>PPA Sales (MWh)</th>
-            <th>Spot Energy Sales</th>
-            <th>Transmission Compensation</th>
-            <th>Exports (MWh)</th>
-            <th>Total (GWh)</th>                 
-        </tr>
+        <table id="customers" style="width:100%">
+            <tr>
+                <th style="width:8%">Fecha</th>
+                <th>Delivered CND</th>
+                <th>Spot Energy Purchases</th>
+                <th>Total (GWh)</th>
+                <th>PPA Sales (MWh)</th>
+                <th>Spot Energy Sales</th>
+                <th>Transmission Compensation</th>
+                <th>Exports (MWh)</th>
+                <th>Total (GWh)</th>                 
+            </tr>
 
         <% if( tabla_eb2.length > 0 ) {
             for ( var i=0 ; i <tabla_eb2.length ; i++) { %>
                 <tr>
                     <td><%= tabla_eb2[i].fecha %></td>
-                    <td><%= tabla_eb2[i].delivered_cnd %></td>
-                    <td><%= tabla_eb2[i].spot_energy_purchases %></td>
-                    <td><%= tabla_eb2[i].total_gwh_1 %></td>
-                    <td><%= tabla_eb2[i].ppa_sales %></td>
-                    <td><%= tabla_eb2[i].spot_energy_sales %></td>
-                    <td><%= tabla_eb2[i].transmission_losses %></td>
-                    <td><%= tabla_eb2[i].exports %></td>
-                    <td><%= tabla_eb2[i].total_gwh_2 %></td>
+                    <td><%= tabla_eb2[i].delivered_cnd.toLocaleString() %></td>
+                    <td><%= tabla_eb2[i].spot_energy_purchases.toLocaleString() %></td>
+                    <td><%= tabla_eb2[i].total_gwh_1.toLocaleString() %></td>
+                    <td><%= tabla_eb2[i].ppa_sales.toLocaleString() %></td>
+                    <td><%= tabla_eb2[i].spot_energy_sales.toLocaleString() %></td>
+                    <td><%= tabla_eb2[i].transmission_losses.toLocaleString() %></td>
+                    <td><%= tabla_eb2[i].exports.toLocaleString() %></td>
+                    <td><%= tabla_eb2[i].total_gwh_2.toLocaleString() %></td>
                     
                 </tr>
             <% } } %>
-    </table>
+        </table>
     </p>
 
 
 
     <p>
-        <table id="customers">
+        <table id="customers" style="width:100%" >
         <tr>
-            <th>Fecha</th>
+            <th style="width:8%">Fecha</th>
             <th>FIC's Generation CND</th>
             <th>Spot Energy Purchases</th>
             <th>Total</th>
@@ -92,13 +102,13 @@
             for ( var i=0 ; i <tabla_eb3.length ; i++) { %>
                 <tr>
                     <td><%= tabla_eb3[i].fecha %></td>
-                    <td><%= tabla_eb3[i].fic_generation_cnd %></td>
-                    <td><%= tabla_eb3[i].spot_energy_purchases %></td>
-                    <td><%= tabla_eb3[i].total_gwh_1 %></td>
-                    <td><%= tabla_eb3[i].ppa_sales %></td>
-                    <td><%= tabla_eb3[i].spot_energy_sales %></td>
-                    <td><%= tabla_eb3[i].transmission_losses %></td>
-                    <td><%= tabla_eb3[i].total_gwh_2 %></td>                    
+                    <td><%= tabla_eb3[i].fic_generation_cnd.toLocaleString() %></td>
+                    <td><%= tabla_eb3[i].spot_energy_purchases.toLocaleString() %></td>
+                    <td><%= tabla_eb3[i].total_gwh_1.toLocaleString() %></td>
+                    <td><%= tabla_eb3[i].ppa_sales.toLocaleString() %></td>
+                    <td><%= tabla_eb3[i].spot_energy_sales.toLocaleString() %></td>
+                    <td><%= tabla_eb3[i].transmission_losses.toLocaleString() %></td>
+                    <td><%= tabla_eb3[i].total_gwh_2.toLocaleString() %></td>                    
                 </tr>
             <% } } %>
     </table>
@@ -108,9 +118,9 @@
 
 
     <p>
-        <table id="customers">
+        <table id="customers" style="width:100%">
         <tr>
-            <th>Fecha</th>
+            <th style="width:8%">Fecha</th>
             <th>FHPC'S GROSS ENERGY - GOP (MWh)</th>
             <th>FHPC'S ENERGY - GOP (MWh)</th>
             <th>FHPC's Generation CND</th>
@@ -124,39 +134,18 @@
             for ( var i=0 ; i <tabla_eb4.length ; i++) { %>
                 <tr>
                     <td><%= tabla_eb4[i].fecha_cierre %></td>
-                    <td><%= tabla_eb4[i].fhcp_gross_enery_gop %></td>
-                    <td><%= tabla_eb4[i].fhcp_enery_gop %></td>
-                    <td><%= tabla_eb4[i].fhpc_generation_cnd %></td>
-                    <td><%= tabla_eb4[i].fhpc_generation_smec %></td>
-                    <td><%= tabla_eb4[i].losses_smec %></td>
-                    <td><%= tabla_eb4[i].losses_gop %></td>
-                    <td><%= tabla_eb4[i].losses_gross_generation_gop %></td>
+                    <td><%= tabla_eb4[i].fhcp_gross_enery_gop.toLocaleString() %></td>
+                    <td><%= tabla_eb4[i].fhcp_enery_gop.toLocaleString() %></td>
+                    <td><%= tabla_eb4[i].fhpc_generation_cnd.toLocaleString() %></td>
+                    <td><%= tabla_eb4[i].fhpc_generation_smec.toLocaleString() %></td>
+                    <td><%= tabla_eb4[i].losses_smec.toLocaleString() %></td>
+                    <td><%= tabla_eb4[i].losses_gop.toLocaleString() %></td>
+                    <td><%= tabla_eb4[i].losses_gross_generation_gop.toLocaleString() %></td>
                   
                 </tr>
             <% } } %>
-    </table>
+        </table>
     </p>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 </div>
 

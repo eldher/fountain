@@ -30,6 +30,10 @@ body{
     color: white;
 }
 
+#customers tr {
+    text-align: left;
+}
+
 #customers tr:last-child {
   font-weight: bold;
 }
