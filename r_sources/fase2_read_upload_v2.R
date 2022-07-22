@@ -485,15 +485,14 @@ c(
 
 
 FormatearResumen <- function(filename, mes){
-  resumen <- read_excel(filename, sheet = mes, skip=3)
-  names(resumen) <- c("fecha",
-                         "LAP_GB_G1","LAP_GB_G2","LAP_GB_G3","LAP_GB_G4","LAP_BRUTA_TOTAL","LAP_CONSUMO_TOTAL","LAP_NETA_TOTAL","spacer1",
-                         "SAL_GB_G1","SAL_GB_G2","SAL_GB_G3","SAL_GB_G4","SAL_BRUTA_TOTAL","SAL_CONSUMO_TOTAL","SAL_NETA_TOTAL")
+  resumen <- read_excel(filename, sheet = mes, skip = 3)
+  names(resumen) <- c("fecha","LAP_GB_G1","LAP_GB_G2","LAP_GB_G3","LAP_GB_G4","LAP_BRUTA_TOTAL","LAP_CONSUMO_TOTAL","LAP_NETA_TOTAL","spacer1",
+                      "SAL_GB_G1","SAL_GB_G2","SAL_GB_G3","SAL_BRUTA_TOTAL","SAL_CONSUMO_TOTAL","SAL_NETA_TOTAL","DAILY_NET")
   
   # encontrar primera fila con NA del campo LAP_GB_C1 y cortar la tabla una fila anterior
   resumen <- resumen[c(1:(min(which(is.na(resumen$LAP_GB_G1))) - 1)), ]
   resumen[,] <- sapply(resumen[,],as.numeric)
-  resumen$fecha <- as.Date(as.numeric(resumen$fecha), origin="1900-01-01")
+  resumen$fecha <- as.Date(as.numeric(resumen$fecha) , origin= "1899-12-30")
 
   
 
@@ -510,7 +509,7 @@ for (mes in meses[1:4]) {
 }
 
 
-#xx <- FormatearResumen(filename ,"Enero")
+xx <- FormatearResumen(filename ,"Enero")
 dt_Resumenes <- bind_rows(Resumenes)
 
 setwd("C:/Users/eld02/Documents/FOUNTAIN CORP/Fase 2/output2")

@@ -1,0 +1,168 @@
+
+<%- include('partials/header', { title: "Energy Balance" } )%>
+
+<div class="container theme-showcase" role="main">
+
+
+    <!-- tabla 1 -->
+    <table id="customers">
+        <tr>
+            <th>Fecha</th>
+            <th>FHPCs Generation CND</th>
+            <th>Spot Energy Purchases</th>
+            <th>FICs Avg Purchase Price </th>
+            <th>Total (GWh)</th>
+            <th>Spot Energy Sales</th>
+            <th>FICs Avg Sale Price</th>
+            <th>PPA Sales (MWh)</th>
+            <th>Transmission Losses Energy</th>
+            <th>Exports (MWh)</th>
+            <th>Total (GWh)</th>                  
+        </tr>
+
+        <% if( tabla_eb1.length > 0 ) {
+            for ( var i=0 ; i <tabla_eb1.length ; i++) { %>
+                <tr>
+                    <td><%= tabla_eb1[i].fecha %></td>
+                    <td><%= tabla_eb1[i].fhpc_generation %></td>
+                    <td><%= tabla_eb1[i].spot_energy_purchases %></td>
+                    <td><%= tabla_eb1[i].avg_purchase_price %></td>
+                    <td><%= tabla_eb1[i].total_gwh_1 %></td>
+                    <td><%= tabla_eb1[i].spot_energy_sales %></td>
+                    <td><%= tabla_eb1[i].avg_sale_price %></td>
+                    <td><%= tabla_eb1[i].ppa_sales %></td>
+                    <td><%= tabla_eb1[i].transmission_losses %></td>
+                    <td><%= tabla_eb1[i].exports %></td>
+                    <td><%= tabla_eb1[i].total_gwh_2 %></td>                    
+                </tr>
+            <% } } %>
+    </table>
+
+
+
+
+    <p>
+        <table id="customers">
+        <tr>
+            <th>Fecha</th>
+            <th>Delivered CND</th>
+            <th>Spot Energy Purchases</th>
+            <th>Total (GWh)</th>
+            <th>PPA Sales (MWh)</th>
+            <th>Spot Energy Sales</th>
+            <th>Transmission Compensation</th>
+            <th>Exports (MWh)</th>
+            <th>Total (GWh)</th>                 
+        </tr>
+
+        <% if( tabla_eb2.length > 0 ) {
+            for ( var i=0 ; i <tabla_eb2.length ; i++) { %>
+                <tr>
+                    <td><%= tabla_eb2[i].fecha %></td>
+                    <td><%= tabla_eb2[i].delivered_cnd %></td>
+                    <td><%= tabla_eb2[i].spot_energy_purchases %></td>
+                    <td><%= tabla_eb2[i].total_gwh_1 %></td>
+                    <td><%= tabla_eb2[i].ppa_sales %></td>
+                    <td><%= tabla_eb2[i].spot_energy_sales %></td>
+                    <td><%= tabla_eb2[i].transmission_losses %></td>
+                    <td><%= tabla_eb2[i].exports %></td>
+                    <td><%= tabla_eb2[i].total_gwh_2 %></td>
+                    
+                </tr>
+            <% } } %>
+    </table>
+    </p>
+
+
+
+    <p>
+        <table id="customers">
+        <tr>
+            <th>Fecha</th>
+            <th>FIC's Generation CND</th>
+            <th>Spot Energy Purchases</th>
+            <th>Total</th>
+            <th>PPA Sales</th>
+            <th>Spot Energy Sales</th>
+            <th>Transmission Compensation</th>
+            <th>Total</th>            
+        </tr>
+
+        <% if( tabla_eb3.length > 0 ) {
+            for ( var i=0 ; i <tabla_eb3.length ; i++) { %>
+                <tr>
+                    <td><%= tabla_eb3[i].fecha %></td>
+                    <td><%= tabla_eb3[i].fic_generation_cnd %></td>
+                    <td><%= tabla_eb3[i].spot_energy_purchases %></td>
+                    <td><%= tabla_eb3[i].total_gwh_1 %></td>
+                    <td><%= tabla_eb3[i].ppa_sales %></td>
+                    <td><%= tabla_eb3[i].spot_energy_sales %></td>
+                    <td><%= tabla_eb3[i].transmission_losses %></td>
+                    <td><%= tabla_eb3[i].total_gwh_2 %></td>                    
+                </tr>
+            <% } } %>
+    </table>
+    </p>
+
+
+
+
+    <p>
+        <table id="customers">
+        <tr>
+            <th>Fecha</th>
+            <th>FHPC'S GROSS ENERGY - GOP (MWh)</th>
+            <th>FHPC'S ENERGY - GOP (MWh)</th>
+            <th>FHPC's Generation CND</th>
+            <th>FHPC's Generation SMEC 230-36</th>
+            <th>%Losses SMEC 230-36</th>
+            <th>% Losses GOP</th>
+            <th>% Losses GROSS GENERATION GOP</th> 
+        </tr>
+
+        <% if( tabla_eb4.length > 0 ) {
+            for ( var i=0 ; i <tabla_eb4.length ; i++) { %>
+                <tr>
+                    <td><%= tabla_eb4[i].fecha_cierre %></td>
+                    <td><%= tabla_eb4[i].fhcp_gross_enery_gop %></td>
+                    <td><%= tabla_eb4[i].fhcp_enery_gop %></td>
+                    <td><%= tabla_eb4[i].fhpc_generation_cnd %></td>
+                    <td><%= tabla_eb4[i].fhpc_generation_smec %></td>
+                    <td><%= tabla_eb4[i].losses_smec %></td>
+                    <td><%= tabla_eb4[i].losses_gop %></td>
+                    <td><%= tabla_eb4[i].losses_gross_generation_gop %></td>
+                  
+                </tr>
+            <% } } %>
+    </table>
+    </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+</body>
+
+
+
+
+

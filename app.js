@@ -570,6 +570,39 @@ app.post('/guardarPrecio', function(req, res){
 
 
 
+var tabla_eb1
+var tabla_eb2
+var tabla_eb3
+var tabla_eb4
+
+
+
+
+app.get('/energyBalance', function(req, res){
+    //console.log('modificar contratos');
+    (async function () 
+    {
+        try {
+            let pool = await sql.connect(dbConfig_localhost)     
+            let result = await pool.request()
+            .execute('sp_EnergyBalance')
+            energyBalance = result.recordsets;
+            tabla_eb1  = result.recordsets[0];
+            tabla_eb2  = result.recordsets[1];
+            tabla_eb3  = result.recordsets[2];
+            tabla_eb4  = result.recordsets[3];        
+            console.log(tabla_eb4);    
+        } catch (err) {            
+            console.log(err);
+        }
+       
+    })().then(() => res.render('energyBalance', { tabla_eb1, tabla_eb2, tabla_eb3, tabla_eb4 } ))
+    
+    sql.on('error', err => {
+        console.log(err);        
+    })   
+});
+
 
 
 app.listen(port, () => {
