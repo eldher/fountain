@@ -453,3 +453,69 @@ write.table(TotalesContratos2, "TotalesContratos2.csv", row.names = F, quote = F
 
 
 
+
+###################################################
+############ RESUMEN 24H ################
+###################################################
+
+setwd("C:/Users/eld02/Documents/FOUNTAIN CORP/Fase 2")
+name <- "Resúmen" 
+archivos <- list.files(pattern = name, recursive = TRUE)
+archivos <- archivos[!archivos %like% "~" & !archivos %like% ".csv"]
+print(archivos)
+
+Resumenes <- list()
+filename = archivos[1]
+
+meses <-    
+c(
+ "Enero"
+,"Febrero"
+,"Marzo"
+,"Abril"
+,"Mayo"
+,"Junio"
+,"Julio"
+,"Agosto"
+,"Septiembre"
+,"Octubre"
+,"Noviembre"
+,"Diciembre")
+
+
+
+FormatearResumen <- function(filename, mes){
+  resumen <- read_excel(filename, sheet = mes, skip=3)
+  names(resumen) <- c("fecha",
+                         "LAP_GB_G1","LAP_GB_G2","LAP_GB_G3","LAP_GB_G4","LAP_BRUTA_TOTAL","LAP_CONSUMO_TOTAL","LAP_NETA_TOTAL","spacer1",
+                         "SAL_GB_G1","SAL_GB_G2","SAL_GB_G3","SAL_GB_G4","SAL_BRUTA_TOTAL","SAL_CONSUMO_TOTAL","SAL_NETA_TOTAL")
+  
+  # encontrar primera fila con NA del campo LAP_GB_C1 y cortar la tabla una fila anterior
+  resumen <- resumen[c(1:(min(which(is.na(resumen$LAP_GB_G1))) - 1)), ]
+  resumen[,] <- sapply(resumen[,],as.numeric)
+  resumen$fecha <- as.Date(as.numeric(resumen$fecha), origin="1900-01-01")
+
+  
+
+  resumen$fecha_cierre <- resumen$fecha
+  day(resumen$fecha_cierre) <- days_in_month(resumen$fecha)
+  return(resumen)
+}
+
+
+i=0
+for (mes in meses[1:4]) {
+  i=i+1
+  Resumenes[[i]] <- FormatearResumen(filename ,mes)
+}
+
+
+#xx <- FormatearResumen(filename ,"Enero")
+dt_Resumenes <- bind_rows(Resumenes)
+
+setwd("C:/Users/eld02/Documents/FOUNTAIN CORP/Fase 2/output2")
+write.table(dt_Resumenes, "resumenes_generacion.csv", row.names = F, quote = F, sep = ";" , fileEncoding = "UTF-16LE")
+  
+
+
+
