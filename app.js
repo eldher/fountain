@@ -604,10 +604,17 @@ app.get('/energyBalance', function(req, res){
 });
 
 
+app.get('/chart-test', function(req, res){
+
+res.render('chart-test');
+});
+
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
   })
+
+
 
 
 

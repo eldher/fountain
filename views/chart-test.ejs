@@ -1,0 +1,101 @@
+
+<head>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+   
+    
+    </head>
+    
+  <body>
+
+    <div class="chart-container" style="position: relative; height:400px; width:800px">
+        <canvas id="myChart"></canvas>
+
+    </div>
+
+
+    <div class="chart-container" style="position: absolute; height:400px; width:800px">
+        <canvas id="myChart2"></canvas>
+    </div>
+
+
+    <div class="chart-container" style="height:400px; width:800px; float: right">
+        <canvas id="myChart3"></canvas>
+    </div>
+
+
+
+  <script>
+
+
+const ctx = document.getElementById('myChart');
+const ctx2 = document.getElementById('myChart2');
+const ctx3 = document.getElementById('myChart3');
+
+const labels = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+];
+
+const data = {
+    labels: labels,
+    datasets: [{
+    label: 'My First dataset',
+    backgroundColor: 'rgb(255, 99, 132)',
+    borderColor: 'rgb(255, 100, 100)',
+    data: [50, 10, 5, 2, 20, 30, 45],
+    }]
+};
+
+const config = {
+    type: 'line',
+    data: data,
+    options: {}
+};
+
+
+const config2 = {
+    type: 'bar',
+    data: data,
+    options: {}
+};
+
+
+
+
+
+
+
+
+
+
+
+const myChart = new Chart(ctx, config);
+const myChar2 = new Chart(ctx2, config2);
+const mixedChart = new Chart(ctx3, {
+    data: {
+        datasets: [{
+            type: 'bar',
+            label: 'Bar Dataset',
+            data: [10, 20, 30, 40]
+        }, {
+            type: 'line',
+            label: 'Line Dataset',
+            data: [23, 10, 54, 78],
+        }],
+        labels: ['January', 'February', 'March', 'April']
+    }
+//,
+//    options: options
+});
+ 
+ 
+
+</script>
+
+</body>  
