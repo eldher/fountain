@@ -35,6 +35,7 @@ order by EOMONTH(a.fecha)
 
 
 -- tabla 1 
+drop table if exists #tabla1
 select 
 cast(a.fecha as varchar) as fecha
 ,a.fountain_a_saliendo as fhpc_generation
@@ -45,9 +46,10 @@ cast(a.fecha as varchar) as fecha
 ,a.avg_sale_price
 ,b.EAR as ppa_sales
 ,a.transmission_losses
-,'' as exports
+,0 as exports
 ,(b.EAR + a.ocasional_venta + a.transmission_losses)/1000 as total_gwh_2
 ,fhpc_generation_smec
+into #tabla1
 from #energy_balance a 
 left join 	(select fecha, sum(EAR) as EAR from INGRESOS_CONTRATOS group by fecha) b  on a.fecha = b.fecha
 where YEAR(a.fecha) = 2022
@@ -55,7 +57,27 @@ order by a.fecha
 
 
 
+-- tabla1 con totales
+select 
+fecha = ISNULL(fecha,'Total') 
+,fhpc_generation = SUM(fhpc_generation)
+,spot_energy_purchases = SUM(spot_energy_purchases)
+,avg_purchase_price  = SUM(avg_purchase_price )
+,total_gwh_1 = SUM(total_gwh_1)
+,spot_energy_sales = SUM(spot_energy_sales)
+,avg_sale_price = SUM(avg_sale_price)
+,ppa_sales = SUM(ppa_sales)
+,transmission_losses = SUM(transmission_losses)
+,exports = SUM(exports)
+,total_gwh_2 = SUM(total_gwh_2)
+,fhpc_generation_smec = SUM(fhpc_generation_smec)
+from #tabla1
+GROUP BY ROLLUP(fecha)
+
+
+
 -- tabla 2
+drop table if exists #tabla2
 select 
 cast(a.fecha as varchar) as fecha
 ,a.fountain_a_saliendo as delivered_cnd
@@ -64,16 +86,40 @@ cast(a.fecha as varchar) as fecha
 ,b.EAR as ppa_sales
 ,a.ocasional_venta as spot_energy_sales
 ,a.transmission_losses
-,'' as exports
+,0 as exports
 ,(b.EAR + a.ocasional_venta + a.transmission_losses)/1000 as total_gwh_2
-
+into #tabla2
 from #energy_balance a 
 left join 	(select fecha, sum(EAR) as EAR from INGRESOS_CONTRATOS group by fecha) b  on a.fecha = b.fecha
 where YEAR(a.fecha) = 2022
 order by a.fecha
 
 
+-- tabla2 con totales
+select 
+fecha = ISNULL(fecha,'Total') 
+,delivered_cnd = SUM(delivered_cnd)
+,spot_energy_purchases = SUM(spot_energy_purchases)
+,total_gwh_1 = SUM(total_gwh_1)
+,ppa_sales = SUM(ppa_sales)
+,spot_energy_sales = SUM(spot_energy_sales)
+,transmission_losses = SUM(transmission_losses)
+,exports = SUM(exports)
+,total_gwh_2 = SUM(total_gwh_2)
+from #tabla2
+GROUP BY ROLLUP(fecha)
+
+
+
+
+
+
+
+
+
+
 -- tabla 3
+drop table  if exists #tabla3
 select 
 cast(a.fecha as varchar) as fecha
 ,a.fountain_a_saliendo/1000 as fic_generation_cnd
@@ -83,14 +129,31 @@ cast(a.fecha as varchar) as fecha
 ,a.ocasional_venta/1000 as spot_energy_sales
 ,a.transmission_losses/1000 as transmission_losses
 ,(b.EAR + a.ocasional_venta + a.transmission_losses)/1000 as total_gwh_2
-
+into #tabla3
 from #energy_balance a 
 left join 	(select fecha, sum(EAR) as EAR from INGRESOS_CONTRATOS group by fecha) b  on a.fecha = b.fecha
 where YEAR(a.fecha) = 2022
 order by a.fecha
 
 
+-- tabla3 con totales
+select 
+fecha = ISNULL(fecha,'Total') 
+,fic_generation_cnd = SUM(fic_generation_cnd)
+,spot_energy_purchases = SUM(spot_energy_purchases)
+,total_gwh_1 = SUM(total_gwh_1)
+,ppa_sales = SUM(ppa_sales)
+,spot_energy_sales = SUM(spot_energy_sales)
+,transmission_losses = SUM(transmission_losses)
+,total_gwh_2 = SUM(total_gwh_2)
+from #tabla3
+GROUP BY ROLLUP(fecha)
 
+
+
+
+
+-- tabla 4
 
 drop table if exists #resumen
 select 
@@ -102,7 +165,7 @@ from [dbo].[resumenes_generacion]
 group by fecha_cierre
 
 
-
+drop table if exists #tabla4
 select 
 cast(a.fecha_cierre as varchar) as fecha_cierre	
 ,a.BRUTA_TOTAL as fhcp_gross_enery_gop
@@ -112,11 +175,24 @@ cast(a.fecha_cierre as varchar) as fecha_cierre
 ,(b.fhpc_generation_smec - b.fountain_a_saliendo )/b.fhpc_generation_smec as [losses_smec]
 ,(a.NETA_TOTAL - b.fountain_a_saliendo  )/a.NETA_TOTAL as [losses_gop]
 ,(a.BRUTA_TOTAL - b.fountain_a_saliendo  )/a.BRUTA_TOTAL as [losses_gross_generation_gop]
-
+into #tabla4
 from #resumen a 
 left join #energy_balance b on a.fecha_cierre = b.fecha
 where YEAR(a.fecha_cierre) = 2022
 
+
+-- tabla4 con totales
+select 
+fecha_cierre = ISNULL(fecha_cierre,'Total') 
+,fhcp_gross_enery_gop = SUM(fhcp_gross_enery_gop)
+,fhcp_enery_gop = SUM(fhcp_enery_gop)
+,fhpc_generation_cnd = SUM(fhpc_generation_cnd)
+,fhpc_generation_smec = SUM(fhpc_generation_smec)
+,losses_smec = SUM(losses_smec)
+,losses_gop = SUM(losses_gop)
+,losses_gross_generation_gop = SUM(losses_gross_generation_gop)
+from #tabla4
+GROUP BY ROLLUP(fecha_cierre)
 
 
 END
