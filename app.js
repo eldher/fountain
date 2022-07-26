@@ -604,9 +604,33 @@ app.get('/energyBalance', function(req, res){
 });
 
 
+var graficos;
+var cards;
+var EAR;
+
+
 app.get('/chart-test', function(req, res){
 
-res.render('chart-test');
+    (async function () 
+    {
+        try {
+            let pool = await sql.connect(dbConfig_localhost)     
+            let result = await pool.request()
+            .input('fecha', "2022-05-31")
+            .execute('sp_Dashboard')            
+            graficos  = result.recordsets[0];
+            cards  = result.recordsets[1];
+            EAR  = result.recordsets[2];
+
+            console.log(EAR);    
+        } catch (err) {            
+            console.log(err);
+        }
+       
+    })().then(() => res.render('chart-test', { graficos, cards, EAR} ))
+    sql.on('error', err => {
+        console.log(err);        
+    })   
 });
 
 

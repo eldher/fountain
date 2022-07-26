@@ -1,4 +1,7 @@
 
+
+<!-- graficos, cards, EAR -->
+
 <head>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -26,8 +29,36 @@
 
 
 
-  <script>
+<script>
 
+// const graficos = <%#- JSON.stringify(graficos) %>;
+// const cards = <%#- JSON.stringify(cards) %>;
+// const EAR = <%#- JSON.stringify(EAR) %>;
+
+<% 
+var fechas = [];
+var generacion = [];
+var contratos = [];
+var cms = [];
+
+ for( var i = 0; i < graficos.length; i++){
+    fechas.push( graficos[i].fecha );
+    generacion.push(graficos[i].fountain_a_supl_loc)
+    contratos.push(graficos[i].energia_asignada)
+    cms.push(graficos[i].cms)
+}
+
+console.log(fechas);
+console.log(generacion);
+
+%>
+
+const _fechas = [<%- fechas %>]
+const _generacion = [<%- generacion %>]
+const _contratos = [<%- contratos %>]
+const _cms = [<%- cms %>]
+
+console.log(_fechas)
 
 const ctx = document.getElementById('myChart');
 const ctx2 = document.getElementById('myChart2');
@@ -42,15 +73,34 @@ const labels = [
     'June',
 ];
 
+// const data = {
+//     labels: labels,
+//     datasets: [{
+//     label: 'My First dataset',
+//     backgroundColor: 'rgb(255, 99, 132)',
+//     borderColor: 'rgb(255, 100, 100)',
+//     data: [50, 10, 5, 2, 20, 30, 45],
+//     }]
+// };
+
+
+
+
+
 const data = {
-    labels: labels,
+    labels: _fechas,
     datasets: [{
     label: 'My First dataset',
     backgroundColor: 'rgb(255, 99, 132)',
     borderColor: 'rgb(255, 100, 100)',
-    data: [50, 10, 5, 2, 20, 30, 45],
+    data: _cms,
     }]
 };
+
+
+
+
+
 
 const config = {
     type: 'line',
@@ -68,27 +118,29 @@ const config2 = {
 
 
 
-
-
-
-
-
-
-
 const myChart = new Chart(ctx, config);
 const myChar2 = new Chart(ctx2, config2);
 const mixedChart = new Chart(ctx3, {
     data: {
         datasets: [{
             type: 'bar',
-            label: 'Bar Dataset',
-            data: [10, 20, 30, 40]
+            label: 'Generación',
+            data: _generacion,
+            backgroundColor: 'rgb(130, 99, 132)',
+            borderColor: 'rgb(130, 99, 132)',
+            order: 2
+            
         }, {
             type: 'line',
-            label: 'Line Dataset',
-            data: [23, 10, 54, 78],
-        }],
-        labels: ['January', 'February', 'March', 'April']
+            label: 'Contratos',
+            data: _contratos,
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            order: 1
+        }
+    
+    ],
+        labels: _fechas//['January', 'February', 'March', 'April']
     }
 //,
 //    options: options

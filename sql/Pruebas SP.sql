@@ -15,7 +15,7 @@ EXECUTE [dbo].[sp_ObtenerContratoCategoriaConTotal] N'2022-04-30'
 EXECUTE [dbo].[sp_ObtenerContratos]
 EXECUTE [dbo].[sp_ObtenerContratosPorFecha] N'2022-04-30'
 EXECUTE [dbo].[sp_EnergyBalance]
-
+EXECUTE [dbo].[sp_Dashboard] N'2022-05-31'
 
 
 
