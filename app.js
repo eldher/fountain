@@ -33,8 +33,26 @@ app.use(express.static(path.join(__dirname , '/public/')));
 //   });
 
 router.get('/',function(req,res){    
-res.render('index');
-//__dirname : It will resolve to your project folder.
+    (async function () 
+    {
+        try {
+            let pool = await sql.connect(dbConfig_localhost)     
+            let result = await pool.request()
+            .input('fecha', "2022-05-31")
+            .execute('sp_Dashboard')            
+            graficos  = result.recordsets[0];
+            cards  = result.recordsets[1];
+            EAR  = result.recordsets[2];
+
+            console.log(EAR);    
+        } catch (err) {            
+            console.log(err);
+        }
+       
+    })().then(() => res.render('index', { graficos, cards, EAR} ))
+    sql.on('error', err => {
+        console.log(err);        
+    })   
 });
 
 

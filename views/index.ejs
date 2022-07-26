@@ -9,6 +9,186 @@
     </div>
 
 
+
+
+    <div class="grid-container" style="width:900px" >
+
+        <div class="grid-child purple"  style="height:300px; width:560px;">
+            <canvas id="myChart"></canvas>
+        </div>
+    
+        <div class="grid-child green"  style="height:300px; width:560px;">
+            <canvas id="myChart3"></canvas>
+        </div>
+      
+    </div>
+
+    <div style="height: 50px ;"></div>
+
+    <div class="contain" >
+
+        <div class="chart-container" style="height:200px; width:700px; display: inline";>
+            <table id="dashboard">
+            <tr >
+                <th style="height: 20px;">Generación del mes (MWh)</th>
+                <th>CMS del mes ($/MWh)</th>
+                <th>Contratos del mes (MWh)</th>
+            </tr>
+            <tr >
+                <td><%= cards[0].fountain_a_saliendo.toLocaleString() %></td>
+                <td><%= cards[0].cms.toLocaleString() %></td>
+                <td><%= EAR[0].EAR.toLocaleString() %></td>
+            </tr>
+            </table>
+        </div>
+
+        <div style="height: 50px ;"></div>
+
+        <div style="height:200px; width:700px; display: inline">
+            <table id="dashboard">
+            <tr >
+                <th style="background-color:white"></th>
+                <th>MWh</th>
+                <th>1,000's USD </th>
+            </tr>
+            <tr >
+                <td style="background-color:MediumTurquoise">Ventas</td>
+                <td style="background-color:MediumTurquoise"><%= cards[0].ocasional_venta.toLocaleString() %> </td>
+                <td style="background-color:MediumTurquoise"><%= cards[0].ocasional_credito.toLocaleString() %></td>
+            </tr>
+            <tr>
+                <td style="background-color: LightSlateGrey;" >Compras</td>
+                <td style="background-color: LightSlateGrey;"><%= cards[0].ocasional_compra.toLocaleString() %></td>
+                <td style="background-color: LightSlateGrey;"> <%= cards[0].ocasional_debito.toLocaleString() %></td>
+            </tr>
+            </table>
+        </div>
+
+    </div>
+
+    <script>
+
+    // const graficos = <%#- JSON.stringify(graficos) %>;
+    // const cards = <%#- JSON.stringify(cards) %>;
+    // const EAR = <%#- JSON.stringify(EAR) %>;
+
+    <% 
+    var fechas = [];
+    var generacion = [];
+    var contratos = [];
+    var cms = [];
+
+    for( var i = 0; i < graficos.length; i++){
+        fechas.push( graficos[i].fecha );
+        generacion.push(graficos[i].fountain_a_supl_loc)
+        contratos.push(graficos[i].energia_asignada)
+        cms.push(graficos[i].cms)
+    }
+
+    console.log(fechas);
+    console.log(generacion);
+
+    %>
+
+    const _fechas = [<%- fechas %>]
+    const _generacion = [<%- generacion %>]
+    const _contratos = [<%- contratos %>]
+    const _cms = [<%- cms %>]
+
+    console.log(_fechas)
+
+    const ctx = document.getElementById('myChart');
+    const ctx2 = document.getElementById('myChart2');
+    const ctx3 = document.getElementById('myChart3');
+
+    const labels = [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+    ];
+
+    // const data = {
+    //     labels: labels,
+    //     datasets: [{
+    //     label: 'My First dataset',
+    //     backgroundColor: 'rgb(255, 99, 132)',
+    //     borderColor: 'rgb(255, 100, 100)',
+    //     data: [50, 10, 5, 2, 20, 30, 45],
+    //     }]
+    // };
+
+
+
+
+
+    const data = {
+        labels: _fechas,
+        datasets: [{
+        label: 'CMS Promedio',
+        backgroundColor: 'rgb(143, 188, 143)',
+        borderColor: 'rgb(143, 188, 143)',
+        data: _cms,
+        }]
+    };
+
+
+
+
+
+
+    const config = {
+        type: 'line',
+        data: data,
+        options: {}
+    };
+
+
+    const config2 = {
+        type: 'bar',
+        data: data,
+        options: {}
+    };
+
+
+
+
+    const myChart = new Chart(ctx, config);
+    const myChar2 = new Chart(ctx2, config2);
+    const mixedChart = new Chart(ctx3, {
+        data: {
+            datasets: [{
+                type: 'bar',
+                label: 'Generación',
+                data: _generacion,
+                backgroundColor: 'rgb(135, 206, 235)',
+                borderColor: 'rgb(135, 206, 235)',
+                order: 2
+                
+            }, {
+                type: 'line',
+                label: 'Contratos',
+                data: _contratos,
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                order: 1
+            }
+        
+        ],
+            labels: _fechas//['January', 'February', 'March', 'April']
+        }
+    //,
+    //    options: options
+    });
+    
+    
+
+    </script>
+
+
+
 </div>
 
 <footer class="footer">
