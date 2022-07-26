@@ -10,7 +10,7 @@ GO
 -- =============================================
 -- Author:		Eldher
 -- =============================================
-CREATE PROCEDURE [dbo].[sp_Dashboard]
+ALTER PROCEDURE [dbo].[sp_Dashboard]
 	@fecha date
 AS
 BEGIN
@@ -35,9 +35,9 @@ select
 sum(fountain_a_saliendo) as fountain_a_saliendo
 ,avg(cms) as cms
 ,sum(ocasional_venta) as ocasional_venta
-,sum(ocasional_credito)/1000 as  ocasional_credito
+,format(sum(ocasional_credito)/1000, 'c','en-US') as  ocasional_credito
 ,sum(ocasional_compra) as ocasional_compra
-,sum(ocasional_debito)/1000 as ocasional_debito
+,format(sum(ocasional_debito)/1000, 'c','en-US') as ocasional_debito
 from [dbo].[LiquidacionFountain]
 where EOMONTH(fecha) = @fecha
 

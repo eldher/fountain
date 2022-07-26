@@ -45,3 +45,51 @@ font-size: 18px;
 font-weight: bold;
 
 }
+
+
+/* *********         dashboard          */
+
+#dashboard {
+    font-family: 'Open Sans', 'Helvetica Neue', sans-serif;
+    border-collapse: collapse;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    
+    width: 100%;
+}
+
+#dashboard th {
+    border-left: 6px solid white;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: center;
+    background-color: #009dc9;
+    color: white;
+    height: 20px;
+    width: 20%;
+}
+
+#dashboard td {
+    border-left: 6px solid white;
+    border-bottom: 6px solid white;
+    background-color: #009dc9;
+    color: white;
+
+
+    height: 100px;
+    width: 33%;
+    font-size: 30px;
+    font-weight: bolder;
+
+}
+
+
+
+#dashboard tr:hover {background-color: #ddd;}
+
+
+
+#dashboard tr {
+    text-align: center;
+}
+

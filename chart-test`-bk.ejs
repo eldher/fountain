@@ -1,59 +1,32 @@
 
 
-<%- include('partials/header', { title: "Dashboard" } )%>
+<!-- graficos, cards, EAR -->
 
+<head>
 
-    <div class="chart-container" style="position: relative; height:300px; width:600px">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+   
+    
+    </head>
+    
+  <body>
+
+    <div class="chart-container" style="position: relative; height:400px; width:800px">
         <canvas id="myChart"></canvas>
 
     </div>
 
-<!-- 
+
     <div class="chart-container" style="position: absolute; height:400px; width:800px">
         <canvas id="myChart2"></canvas>
-    </div> -->
+    </div>
 
 
-    <div class="chart-container" style="height:300px; width:600px;">
+    <div class="chart-container" style="height:400px; width:800px; float: right">
         <canvas id="myChart3"></canvas>
     </div>
 
-
-    <div class="chart-container" style="height:200px; width:600px;">
-        <table id="dashboard">
-        <tr >
-            <th style="height: 20px;">Generación del mes (MWh)</th>
-            <th>CMS del mes ($/MWh)</th>
-            <th>Contratos del mes (MWh)</th>
-        </tr>
-        <tr >
-            <td><%= cards[0].fountain_a_saliendo.toLocaleString() %></td>
-            <td><%= cards[0].cms.toLocaleString() %></td>
-            <td><%= EAR[0].EAR.toLocaleString() %></td>
-        </tr>
-        </table>
-    </div>
-
-
-    <div style="height:100px; width:600px;">
-        <table id="dashboard">
-        <tr >
-            <th style="background-color:white"></th>
-            <th>MWh</th>
-            <th>USD.000</th>
-        </tr>
-        <tr >
-            <td style="background-color:MediumTurquoise">Ventas</td>
-            <td style="background-color:MediumTurquoise"><%= cards[0].ocasional_venta.toLocaleString() %> </td>
-            <td style="background-color:MediumTurquoise"><%= cards[0].ocasional_credito.toLocaleString() %></td>
-        </tr>
-        <tr>
-            <td style="background-color: LightSlateGrey;" >Compras</td>
-            <td style="background-color: LightSlateGrey;"><%= cards[0].ocasional_compra.toLocaleString() %></td>
-            <td style="background-color: LightSlateGrey;"> <%= cards[0].ocasional_debito.toLocaleString() %></td>
-        </tr>
-        </table>
-    </div>
 
 
 <script>
@@ -117,7 +90,7 @@ const labels = [
 const data = {
     labels: _fechas,
     datasets: [{
-    label: 'CMS Promedio',
+    label: 'My First dataset',
     backgroundColor: 'rgb(255, 99, 132)',
     borderColor: 'rgb(255, 100, 100)',
     data: _cms,
