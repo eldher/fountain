@@ -3,8 +3,8 @@
 <div class="container theme-showcase" role="main">
 
     <div class="jumbotron">
-        <h1>Fountain Corp</h1>
-        <p>Aplicación para Data Interna del Centro Nacional de Distribución Panamá</p>
+        <h1>Fountain Hydro Power Corp.</h1>
+        <p>Aplicación para manejo de datos publicados por el CND</p>
         <!-- <p><a class="btn btn-primary btn-lg" href="#" role="button">Lanzar App</a></p> -->
     </div>
 
@@ -79,7 +79,7 @@
     var cms = [];
 
     for( var i = 0; i < graficos.length; i++){
-        fechas.push( graficos[i].fecha );
+        fechas.push( '"' + graficos[i].fecha + '"' );
         generacion.push(graficos[i].fountain_a_supl_loc)
         contratos.push(graficos[i].energia_asignada)
         cms.push(graficos[i].cms)
@@ -90,7 +90,10 @@
 
     %>
 
-    const _fechas = [<%- fechas %>]
+    var _fechas = [<%- fechas %>]
+    //var _fechas = _fechas.map(s => `"${}"`).join(',');
+    
+
     const _generacion = [<%- generacion %>]
     const _contratos = [<%- contratos %>]
     const _cms = [<%- cms %>]
