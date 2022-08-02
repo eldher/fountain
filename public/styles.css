@@ -5,6 +5,10 @@ body{
 
 }
 
+#jumbotron {
+    height: 100px;
+}
+
 #customers {
     font-family: 'Open Sans', 'Helvetica Neue', sans-serif;
     border-collapse: collapse;
