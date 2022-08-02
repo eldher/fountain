@@ -223,7 +223,7 @@ for (filename in archivos) {
   
   liquidacion$Fecha <- liquidacion$Fecha2
   liquidacion$Fecha2 <- NULL
-  liquidacion$filename <- filename
+  #liquidacion$filename <- filename
   
   liquidacion <- filter(liquidacion, !is.na(Fecha))
   

@@ -139,7 +139,7 @@ router.get('/cierre/:fecha', function(req, res, next){
 
        // cambiar el render 
     })().then(() => res.render('cierre', {
-        title: 'Prueba Fountain',
+        title: 'Ingreso Mensual',
         fecha:  req.params.fecha,
         data: firstQuery, 
         fechas,
@@ -650,6 +650,20 @@ app.get('/chart-test', function(req, res){
         console.log(err);        
     })   
 });
+
+
+
+
+router.get('/cargarDataAplicacion', function(req, res){
+    res.render('cargarDataAplicacion')}
+);
+
+router.get('/cargarDataPowerBi', function(req, res){
+    res.render('cargarDataPowerBi')}
+);
+
+
+
 
 
 app.listen(port, () => {
