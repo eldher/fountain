@@ -109,6 +109,7 @@ function numberWithCommas(x) {
             <th>PPA Sales</th>
             <th>Spot Energy Sales</th>
             <th>Transmission Compensation</th>
+            <th>Exports (MWh)</th>
             <th>Total</th>            
         </tr>
 
@@ -122,6 +123,7 @@ function numberWithCommas(x) {
                     <td><%= tabla_eb3[i].ppa_sales.toLocaleString() %></td>
                     <td><%= tabla_eb3[i].spot_energy_sales.toLocaleString() %></td>
                     <td><%= tabla_eb3[i].transmission_losses.toLocaleString() %></td>
+                    <td><%= tabla_eb2[i].exports.toLocaleString() %></td>
                     <td><%= tabla_eb3[i].total_gwh_2.toLocaleString() %></td>                    
                 </tr>
             <% } } %>

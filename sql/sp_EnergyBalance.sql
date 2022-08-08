@@ -128,6 +128,7 @@ cast(a.fecha as varchar) as fecha
 ,b.EAR/1000 as ppa_sales
 ,a.ocasional_venta/1000 as spot_energy_sales
 ,a.transmission_losses/1000 as transmission_losses
+,0 as exports
 ,(b.EAR + a.ocasional_venta + a.transmission_losses)/1000 as total_gwh_2
 into #tabla3
 from #energy_balance a 
@@ -145,6 +146,7 @@ fecha = ISNULL(fecha,'Total')
 ,ppa_sales = SUM(ppa_sales)
 ,spot_energy_sales = SUM(spot_energy_sales)
 ,transmission_losses = SUM(transmission_losses)
+,exports = SUM(exports)
 ,total_gwh_2 = SUM(total_gwh_2)
 from #tabla3
 GROUP BY ROLLUP(fecha)

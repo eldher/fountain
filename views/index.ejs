@@ -33,9 +33,9 @@
         <div class="chart-container" style="height:200px; width:700px; display: inline";>
             <table id="dashboard">
             <tr >
-                <th style="height: 20px;">Generación del mes (MWh)</th>
-                <th>CMS del mes ($/MWh)</th>
-                <th>Contratos del mes (MWh)</th>
+                <th style="height: 20px;">Generación (MWh)</th>
+                <th>CMS Promedio ($/MWh)</th>
+                <th>Contratos (MWh)</th>
             </tr>
             <tr >
                 <td><%= cards[0].fountain_a_saliendo.toLocaleString() %></td>
@@ -52,15 +52,15 @@
             <tr >
                 <th style="background-color:white"></th>
                 <th>MWh</th>
-                <th>1,000's USD </th>
+                <th>Miles USD </th>
             </tr>
             <tr >
-                <td style="background-color:MediumTurquoise">Ventas</td>
+                <td style="background-color:MediumTurquoise">Ventas - MO</td>
                 <td style="background-color:MediumTurquoise"><%= cards[0].ocasional_venta.toLocaleString() %> </td>
                 <td style="background-color:MediumTurquoise"><%= cards[0].ocasional_credito.toLocaleString() %></td>
             </tr>
             <tr>
-                <td style="background-color: LightSlateGrey;" >Compras</td>
+                <td style="background-color: LightSlateGrey;" >Compras - MO</td>
                 <td style="background-color: LightSlateGrey;"><%= cards[0].ocasional_compra.toLocaleString() %></td>
                 <td style="background-color: LightSlateGrey;"> <%= cards[0].ocasional_debito.toLocaleString() %></td>
             </tr>
