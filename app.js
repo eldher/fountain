@@ -37,8 +37,47 @@ router.get('/',function(req,res){
     {
         try {
             let pool = await sql.connect(dbConfig_localhost)     
+
+            let query_anios = await pool.request()
+            .query('select distinct YEAR(fecha) as anio from LiquidacionFountain')
+            anios = query_anios.recordsets[0];
+
+
             let result = await pool.request()
-            .input('fecha', "2022-05-31")
+            .input('anio', 2022)
+            .input('mes', 05)
+            .execute('sp_Dashboard')              
+            graficos  = result.recordsets[0];
+            cards  = result.recordsets[1];
+            EAR  = result.recordsets[2];
+
+            console.log(EAR);    
+        } catch (err) {            
+            console.log(err);
+        }
+       
+    })().then(() => res.render('index', { anios, anio: 2022 , mes: 05 ,graficos, cards, EAR} ))
+    sql.on('error', err => {
+        console.log(err);        
+    })   
+});
+
+
+
+router.get('/:anio&:mes',function(req,res){    
+    (async function () 
+    {
+        try {
+            let pool = await sql.connect(dbConfig_localhost)     
+
+            let query_anios = await pool.request()
+            .query('select distinct YEAR(fecha) as anio from LiquidacionFountain')
+            anios = query_anios.recordsets[0];
+
+
+            let result = await pool.request()
+            .input('anio', req.params.anio)
+            .input('mes', req.params.mes)
             .execute('sp_Dashboard')            
             graficos  = result.recordsets[0];
             cards  = result.recordsets[1];
@@ -49,7 +88,7 @@ router.get('/',function(req,res){
             console.log(err);
         }
        
-    })().then(() => res.render('index', { graficos, cards, EAR} ))
+    })().then(() => res.render('index', { anios, anio: req.params.anio, mes: req.params.mes ,graficos, cards, EAR} ))
     sql.on('error', err => {
         console.log(err);        
     })   
@@ -592,18 +631,31 @@ var tabla_eb1
 var tabla_eb2
 var tabla_eb3
 var tabla_eb4
+var result
 
 
 
 
-app.get('/energyBalance', function(req, res){
+app.get('/energyBalance/', function(req, res){
     //console.log('modificar contratos');
     (async function () 
     {
         try {
-            let pool = await sql.connect(dbConfig_localhost)     
+
+            let pool = await sql.connect(dbConfig_localhost)  
+            let query_anios = await pool.request()
+            .query('select distinct anio from tb1')
+            anios = query_anios.recordsets[0];
+
+
+
+            //let pool = await sql.connect(dbConfig_localhost)     
             let result = await pool.request()
-            .execute('sp_EnergyBalance')
+            .execute('sp_EnergyBalance')      
+
+
+
+            
             energyBalance = result.recordsets;
             tabla_eb1  = result.recordsets[0];
             tabla_eb2  = result.recordsets[1];
@@ -614,7 +666,49 @@ app.get('/energyBalance', function(req, res){
             console.log(err);
         }
        
-    })().then(() => res.render('energyBalance', { tabla_eb1, tabla_eb2, tabla_eb3, tabla_eb4 } ))
+    })().then(() => res.render('energyBalance', { anios, anio: '', tabla_eb1, tabla_eb2, tabla_eb3, tabla_eb4 } ))
+    
+    sql.on('error', err => {
+        console.log(err);        
+    })   
+});
+
+
+
+
+
+app.get('/energyBalance/:anio', function(req, res){
+    //console.log('modificar contratos');
+    
+    (async function () 
+    {
+
+        try {
+            let pool = await sql.connect(dbConfig_localhost)  
+
+            let query_anios = await pool.request()
+            .query('select distinct anio from tb1')
+            anios = query_anios.recordsets[0];
+
+
+
+   
+            let result = await pool.request()
+            .input('anio', req.params.anio)
+            .execute('sp_EnergyBalancePorFecha')
+            energyBalance = result.recordsets;
+            tabla_eb1  = result.recordsets[0];
+            tabla_eb2  = result.recordsets[1];
+            tabla_eb3  = result.recordsets[2];
+            tabla_eb4  = result.recordsets[3];        
+            console.log(tabla_eb4);    
+        } catch (err) {            
+            console.log(err);
+        }
+
+       
+       
+    })().then(() => res.render('energyBalance', { anios, anio : req.params.anio, tabla_eb1, tabla_eb2, tabla_eb3, tabla_eb4 } ))
     
     sql.on('error', err => {
         console.log(err);        

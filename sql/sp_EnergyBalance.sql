@@ -122,7 +122,7 @@ GROUP BY ROLLUP(fecha)
 drop table  if exists #tabla3
 select 
 cast(a.fecha as varchar) as fecha
-,a.fountain_a_saliendo/1000 as fic_generation_cnd
+,a.fountain_a_saliendo/1000 as delivered_cnd
 ,a.ocasional_compra/1000 as spot_energy_purchases
 ,(b.EAR + a.ocasional_venta + a.transmission_losses)/1000 as total_gwh_1
 ,b.EAR/1000 as ppa_sales
@@ -140,7 +140,7 @@ order by a.fecha
 -- tabla3 con totales
 select 
 fecha = ISNULL(fecha,'Total') 
-,fic_generation_cnd = SUM(fic_generation_cnd)
+,delivered_cnd = SUM(delivered_cnd)
 ,spot_energy_purchases = SUM(spot_energy_purchases)
 ,total_gwh_1 = SUM(total_gwh_1)
 ,ppa_sales = SUM(ppa_sales)
@@ -169,7 +169,7 @@ group by fecha_cierre
 
 drop table if exists #tabla4
 select 
-cast(a.fecha_cierre as varchar) as fecha_cierre	
+cast(a.fecha_cierre as varchar) as fecha_cierre
 ,a.BRUTA_TOTAL as fhcp_gross_enery_gop
 ,a.NETA_TOTAL  as fhcp_enery_gop
 ,b.fountain_a_saliendo as fhpc_generation_cnd
@@ -185,7 +185,7 @@ where YEAR(a.fecha_cierre) = 2022
 
 -- tabla4 con totales
 select 
-fecha_cierre = ISNULL(fecha_cierre,'Total') 
+fecha = ISNULL(fecha_cierre,'Total') 
 ,fhcp_gross_enery_gop = SUM(fhcp_gross_enery_gop)
 ,fhcp_enery_gop = SUM(fhcp_enery_gop)
 ,fhpc_generation_cnd = SUM(fhpc_generation_cnd)

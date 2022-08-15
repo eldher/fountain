@@ -14,16 +14,35 @@ function numberWithCommas(x) {
 
 <form action="">
 
+
+    <select name="anios" id="anios">
+   
+        <% for(var i = 0; i < anios.length; i++) { %>
+
+            <option value=<%=anios[i].anio%>   <%=anios[i].anio == anio ? 'selected' : ''%>>  <%= anios[i].anio   %>   </option>
+
+        <% } %>
+    </select>
+        
+
+<!-- 
     <select name="cars" id="fecha">
-        <option value="2021">2020</option>
+        
+        <option value="2016"  <%#= anio == "2016" ? 'selected' : '' %> >2016</option>
+        <option value="2017">2017</option>
+        <option value="2018">2018</option>
+        <option value="2019">2019</option>
+        <option value="2020">2020</option>
         <option value="2021">2021</option>
         <option value="2022" selected>2022</option>
-    </select>
+    </select> -->
     
   
 
-    <button type="button" class="btn btn-xs btn-success" onclick= "">Actualizar</button>
-    <button type="button" class="btn btn-xs btn-success">Descargar</button>
+    <!-- <button type="button" class="btn btn-xs btn-success" onclick= "">Actualizar</button> -->
+    <!-- <button type="button" class="btn btn-xs btn-success">Descargar</button> -->
+
+    <button type="button" class="btn btn-xs btn-success" onclick= " window.location='../energyBalance/' + getElementById('anios').value ">Consultar</button>
 </form>
 
 
@@ -117,7 +136,7 @@ function numberWithCommas(x) {
             for ( var i=0 ; i <tabla_eb3.length ; i++) { %>
                 <tr>
                     <td><%= tabla_eb3[i].fecha %></td>
-                    <td><%= tabla_eb3[i].fic_generation_cnd.toLocaleString() %></td>
+                    <td><%= tabla_eb3[i].delivered_cnd.toLocaleString() %></td>
                     <td><%= tabla_eb3[i].spot_energy_purchases.toLocaleString() %></td>
                     <td><%= tabla_eb3[i].total_gwh_1.toLocaleString() %></td>
                     <td><%= tabla_eb3[i].ppa_sales.toLocaleString() %></td>
@@ -149,7 +168,7 @@ function numberWithCommas(x) {
         <% if( tabla_eb4.length > 0 ) {
             for ( var i=0 ; i <tabla_eb4.length ; i++) { %>
                 <tr>
-                    <td><%= tabla_eb4[i].fecha_cierre %></td>
+                    <td><%= tabla_eb4[i].fecha %></td>
                     <td><%= tabla_eb4[i].fhcp_gross_enery_gop.toLocaleString() %></td>
                     <td><%= tabla_eb4[i].fhcp_enery_gop.toLocaleString() %></td>
                     <td><%= tabla_eb4[i].fhpc_generation_cnd.toLocaleString() %></td>

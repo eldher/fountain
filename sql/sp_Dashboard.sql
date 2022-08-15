@@ -11,9 +11,14 @@ GO
 -- Author:		Eldher
 -- =============================================
 ALTER PROCEDURE [dbo].[sp_Dashboard]
-	@fecha date
+	@anio as int,
+	@mes as int
 AS
 BEGIN
+
+declare @fecha as date
+select @fecha = EOMONTH(DATEFROMPARTS(@anio, @mes, 01) )
+
 
 
 

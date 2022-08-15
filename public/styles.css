@@ -6,6 +6,10 @@ body{
 }
 
 
+.jumbotron {
+margin-bottom: 10px;
+}
+
 #customers {
     font-family: 'Open Sans', 'Helvetica Neue', sans-serif;
     border-collapse: collapse;

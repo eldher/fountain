@@ -518,3 +518,14 @@ write.table(dt_Resumenes, "resumenes_generacion.csv", row.names = F, quote = F, 
 
 
 
+
+##############################################################
+############ TABLAS HISTORICAS ENERGY BALANCE ################
+##############################################################
+
+
+file = "C:/Users/eld02/Documents/FOUNTAIN CORP/Fase 2/pendientes_mayo/Energy Balance To Load.xlsx"
+tb1 <- read_excel(file, sheet = "tb1")
+tb2 <- read_excel(file, sheet = "tb2")
+tb3 <- read_excel(file, sheet = "tb3")
+tb4 <- read_excel(file, sheet = "tb4")

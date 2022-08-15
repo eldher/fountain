@@ -3,71 +3,133 @@
 <div class="container theme-showcase" role="main">
 
     <img src="/logotipo.png" alt="">
-    <div class="jumbotron" style="height: 50px; padding: 0; background-color:#f4f4f4; text-align: center; line-height: 50px;" >
-        
-        <!-- <h1>Fountain Hydro Power Corp.</h1> -->
-        
+    <div class="jumbotron" style="height: 40px; padding: 0; background-color:#f4f4f4; text-align: center; line-height: 40px;" >
         <p style="font-size: 20px; margin-top: 15px; margin-left: 15px; font-family: Arial, Helvetica, sans-serif; font-weight: bold; color:#4daec9;">Administración de datos publicados por el CND</p>
-        <!-- <p><a class="btn btn-primary btn-lg" href="#" role="button">Lanzar App</a></p> -->
     </div>
 
 
 
-    <div class="grid-container" style="width:900px" >
+    <form action="" style="margin: 0px">
 
-        <div class="grid-child purple"  style="height:300px; width:560px;">
-            <canvas id="myChart"></canvas>
-        </div>
+
+        <select name="anios" id="anios">
+       
+            <% for(var i = 0; i < anios.length; i++) { %>
     
-        <div class="grid-child green"  style="height:300px; width:560px;">
-            <canvas id="myChart3"></canvas>
-        </div>
+                <option value=<%=anios[i].anio%>   <%=anios[i].anio == anio ? 'selected' : ''%>>  <%= anios[i].anio   %>   </option>
+    
+            <% } %>
+        </select>
+        
+        
+        <% console.log(mes) %> 
+
+        <select name="meses" id="meses">
+
+            <option value ="01" <%= mes == 01 ? 'selected' : '' %> > Enero</option>
+            <option value ="02" <%= mes == 02 ? 'selected' : '' %> > Febrero</option>
+            <option value ="03" <%= mes == 03 ? 'selected' : '' %> > Marzo</option>
+            <option value ="04" <%= mes == 04 ? 'selected' : '' %> > Abril</option>
+            <option value ="05" <%= mes == 05 ? 'selected' : '' %> > Mayo</option>
+            <option value ="06" <%= mes == 06 ? 'selected' : '' %> > Junio</option>
+            <option value ="07" <%= mes == 07 ? 'selected' : '' %> > Julio</option>
+            <option value ="08" <%= mes == 08 ? 'selected' : '' %> > Agosto</option>
+            <option value ="09" <%= mes == 09 ? 'selected' : '' %> > Septiembre </option>
+            <option value ="10" <%= mes == 10 ? 'selected' : '' %> > Octubre </option>
+            <option value ="11" <%= mes == 11 ? 'selected' : '' %> > Noviembre</option>
+            <option value ="12" <%= mes == 12 ? 'selected' : '' %> > Diciembre</option>
+        </select>
+    
+    <!-- 
+        <select name="cars" id="fecha">
+            
+            <option value="2016"  <%#= anio == "2016" ? 'selected' : '' %> >2016</option>
+            <option value="2017">2017</option>
+            <option value="2018">2018</option>
+            <option value="2019">2019</option>
+            <option value="2020">2020</option>
+            <option value="2021">2021</option>
+            <option value="2022" selected>2022</option>
+        </select> -->
+        
       
-    </div>
-
-    <div style="height: 25px ;"></div>
-
     
-    <div class="contain" >
+        <!-- <button type="button" class="btn btn-xs btn-success" onclick= "">Actualizar</button> -->
+        <!-- <button type="button" class="btn btn-xs btn-success">Descargar</button> -->
+    
+        <button type="button" class="btn btn-xs btn-success" onclick= " window.location='../' + getElementById('anios').value + '&' + getElementById('meses').value " >Consultar</button>
 
-        <div class="chart-container" style="height:200px; width:700px; display: inline";>
-            <table id="dashboard">
-            <tr >
-                <th style="height: 20px;">Generación (MWh)</th>
-                <th>CMS Promedio ($/MWh)</th>
-                <th>Contratos (MWh)</th>
-            </tr>
-            <tr >
-                <td><%= cards[0].fountain_a_saliendo.toLocaleString() %></td>
-                <td><%= cards[0].cms.toLocaleString() %></td>
-                <td><%= EAR[0].EAR.toLocaleString() %></td>
-            </tr>
-            </table>
+    </form>
+
+
+    <!-- Validacion si el resultado de las tablas es vacio no cargar data -->
+    <% console.log(graficos.length) %> 
+    <% if(graficos.length > 0) { %>
+
+        <div class="grid-container" style="width:900px" >
+
+            <div class="grid-child purple"  style="height:300px; width:560px;">
+                <canvas id="myChart"></canvas>
+            </div>
+        
+            <div class="grid-child green"  style="height:300px; width:560px;">
+                <canvas id="myChart3"></canvas>
+            </div>
+        
         </div>
 
-        <div style="height: 50px ;"></div>
+        <div style="height: 10px ;"></div>
 
-        <div style="height:200px; width:700px; display: inline">
-            <table id="dashboard">
-            <tr >
-                <th style="background-color:white"></th>
-                <th>MWh</th>
-                <th>Miles USD </th>
-            </tr>
-            <tr >
-                <td style="background-color:MediumTurquoise">Ventas - MO</td>
-                <td style="background-color:MediumTurquoise"><%= cards[0].ocasional_venta.toLocaleString() %> </td>
-                <td style="background-color:MediumTurquoise"><%= cards[0].ocasional_credito.toLocaleString() %></td>
-            </tr>
-            <tr>
-                <td style="background-color: LightSlateGrey;" >Compras - MO</td>
-                <td style="background-color: LightSlateGrey;"><%= cards[0].ocasional_compra.toLocaleString() %></td>
-                <td style="background-color: LightSlateGrey;"> <%= cards[0].ocasional_debito.toLocaleString() %></td>
-            </tr>
-            </table>
+        
+        <div class="contain" >
+
+            <div class="chart-container" style="height:200px; width:700px; display: inline";>
+                <table id="dashboard">
+                <tr >
+                    <th style="height: 20px;">Generación (MWh)</th>
+                    <th>CMS Promedio ($/MWh)</th>
+                    <th>Contratos (MWh)</th>
+                </tr>
+                <tr >
+                    <td><%= cards[0].fountain_a_saliendo.toLocaleString() %></td>
+                    <td><%= cards[0].cms.toLocaleString() %></td>
+                    <td><%= EAR[0].EAR.toLocaleString() %></td>
+                </tr>
+                </table>
+            </div>
+
+            <div style="height: 15px ;"></div>
+
+            <div style="height:200px; width:700px; display: inline">
+                <table id="dashboard">
+                <tr >
+                    <th style="background-color:white"></th>
+                    <th>MWh</th>
+                    <th>Miles USD </th>
+                </tr>
+                <tr >
+                    <td style="background-color:MediumTurquoise">Ventas - MO</td>
+                    <td style="background-color:MediumTurquoise"><%= cards[0].ocasional_venta.toLocaleString() %> </td>
+                    <td style="background-color:MediumTurquoise"><%= cards[0].ocasional_credito.toLocaleString() %></td>
+                </tr>
+                <tr>
+                    <td style="background-color: LightSlateGrey;" >Compras - MO</td>
+                    <td style="background-color: LightSlateGrey;"><%= cards[0].ocasional_compra.toLocaleString() %></td>
+                    <td style="background-color: LightSlateGrey;"> <%= cards[0].ocasional_debito.toLocaleString() %></td>
+                </tr>
+                </table>
+            </div>
+
         </div>
 
-    </div>
+
+    <% } else { %> 
+
+        <div class="jumbotron" style="height: 40px; padding: 0; background-color:#f4f4f4; text-align: center; line-height: 40px;" >
+            <p style="font-size: 20px; margin-top: 15px; margin-left: 15px; font-family: Arial, Helvetica, sans-serif; font-weight: bold; color:#4daec9;">No existe data para el Año y mes seleccionados</p>
+        </div>
+
+    <% }  %> 
 
     <script>
 
