@@ -798,9 +798,9 @@ app.post('/upload', function(req, res) {
         }else{
             console.log(archivoCargado);
             console.log('uploads/'+archivoCargado)
-            data = leerExcelLiquidacion('uploadS/'+ archivoCargado)
+            data = leerExcelLiquidacion('uploads/'+ archivoCargado)
             //res.send(data);
-            res.send('Archivo cargado!');
+            //res.send('Archivo cargado!');
         }
         
     }) ;
@@ -872,7 +872,7 @@ app.post('/upload', function(req, res) {
             console.log(err);
         }
        
-    })().then(() => res.render('/'))
+    })().then(() => res.send(' Archivo Cargado!!'))
     sql.on('error', err => {
         console.log(err);        
     })   
