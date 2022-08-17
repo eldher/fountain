@@ -529,3 +529,18 @@ tb1 <- read_excel(file, sheet = "tb1")
 tb2 <- read_excel(file, sheet = "tb2")
 tb3 <- read_excel(file, sheet = "tb3")
 tb4 <- read_excel(file, sheet = "tb4")
+
+
+setwd("C:/Users/eld02/Documents/FOUNTAIN CORP/Fase 2/output2")
+
+tb1[is.na(tb1)] <- 0
+tb2[is.na(tb2)] <- 0
+tb3[is.na(tb3)] <- 0
+tb4[is.na(tb4)] <- 0
+
+
+write.table(tb1, "tb1.csv", row.names = F, quote = F, sep = ";" , fileEncoding = "UTF-16LE")
+write.table(tb2, "tb2.csv", row.names = F, quote = F, sep = ";" , fileEncoding = "UTF-16LE")
+write.table(tb3, "tb3.csv", row.names = F, quote = F, sep = ";" , fileEncoding = "UTF-16LE")
+write.table(tb4, "tb4.csv", row.names = F, quote = F, sep = ";" , fileEncoding = "UTF-16LE")
+

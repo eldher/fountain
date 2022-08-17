@@ -7,7 +7,7 @@ const ejs = require("ejs");
 const dbConfig_localhost = require("./dbConfig_localhost");
 const sql = require('mssql');
 const port = process.env.PORT || 3000
-
+const XSLX = require('xlsx')
 
 var bodyParser = require('body-parser');
 
@@ -756,6 +756,208 @@ router.get('/cargarDataPowerBi', function(req, res){
     res.render('cargarDataPowerBi')}
 );
 
+
+
+
+
+var multer = require('multer');
+ 
+var storage = multer.diskStorage({ //multers disk storage settings
+    destination: function (req, file, cb) {
+        cb(null, './uploads/')
+    },
+    filename: function (req, file, cb) {
+        //var datetimestamp = Date.now();
+        //cb(null, file.fieldname + '-' + datetimestamp + '.' + file.originalname.split('.')[file.originalname.split('.').length -1])
+        cb(null, file.originalname)
+    }
+});
+
+var upload = multer({ //multer settings
+                storage: storage
+            }).single('file');
+/** API path that will upload the files */
+
+
+
+
+app.post('/upload', function(req, res) {
+
+    var archivoCargado;
+    var data;
+    
+
+    // funcion para cargar con Multer en carpeta /uploads
+    upload(req,res,function(err){
+
+        archivoCargado = req.file.filename;
+     
+        if(err){
+            res.json({error_code:1,err_desc:err});
+            return;
+        }else{
+            console.log(archivoCargado);
+            console.log('uploads/'+archivoCargado)
+            data = leerExcelLiquidacion('uploadS/'+ archivoCargado)
+            //res.send(data);
+            res.send('Archivo cargado!');
+        }
+        
+    }) ;
+
+
+
+    //funcion para leer linea a linea el JSON
+    (async function () 
+    {
+        try {
+            let pool = await sql.connect(dbConfig_localhost)     
+
+                for ( i = 0; i < 10; i++) {
+                    // const queryString = "INSERT INTO insert_test (hora, subsistema) " + 
+                    //  "VALUES ('" +  data[i].hora + "', '"+ data[i].subsistema + " ') ";
+
+                    //  console.log(queryString);
+                    // let result = await pool.request()
+                    // .query(queryString)            
+                    
+                    let result = await pool.request()
+                    .input('fecha', sql.Date, data[i].fecha)
+                    .input('hora', sql.SmallInt, data[i].hora)
+                    .input('subsistema', sql.SmallInt, data[i].subsistema)
+                    .input('cms', sql.Float, data[i].cms)
+                    .input('fountain_a_bai230_27_e', sql.Float, data[i].fountain_a_bai230_27_e)
+                    .input('fountain_a_bai230_27_s', sql.SmallInt, data[i].fountain_a_bai230_27_s)
+                    .input('fountain_a_bai230_28b_e', sql.Float, data[i].fountain_a_bai230_28b_e)
+                    .input('fountain_a_bai230_28b_s', sql.Float, data[i].fountain_a_bai230_28b_s)
+                    .input('fountain_a_bfrio230_28_e', sql.Float, data[i].fountain_a_bfrio230_28_e)
+                    .input('fountain_a_bfrio230_28_s', sql.Float, data[i].fountain_a_bfrio230_28_s)
+                    .input('fountain_a_bfrio230_36_e', sql.Float, data[i].fountain_a_bfrio230_36_e)
+                    .input('fountain_a_bfrio230_36_s', sql.Float, data[i].fountain_a_bfrio230_36_s)
+                    .input('fountain_a_compra_mer_con', sql.SmallInt, data[i].fountain_a_compra_mer_con)
+                    .input('fountain_a_cons_exp', sql.SmallInt, data[i].fountain_a_cons_exp)
+                    .input('fountain_a_entrando', sql.SmallInt, data[i].fountain_a_entrando)
+                    .input('fountain_a_saliendo', sql.Float, data[i].fountain_a_saliendo)
+                    .input('fountain_a_vta_mer_con', sql.SmallInt, data[i].fountain_a_vta_mer_con)
+                    .input('fountain_a_vta_mer_opo', sql.SmallInt, data[i].fountain_a_vta_mer_opo)
+                    .input('fountain_a_perdida_real', sql.Float, data[i].fountain_a_perdida_real)
+                    .input('fountain_a_perdida_teorica', sql.Float, data[i].fountain_a_perdida_teorica)
+                    .input('fountain_a_perdida_total', sql.Float, data[i].fountain_a_perdida_total)
+                    .input('fountain_a_saliendo_bruto', sql.Float, data[i].fountain_a_saliendo_bruto)
+                    .input('fountain_a_supl_loc', sql.Float, data[i].fountain_a_supl_loc)
+                    .input('perdida_consumo', sql.SmallInt, data[i].perdida_consumo)
+                    .input('energia_asignada', sql.Float, data[i].energia_asignada)
+                    .input('suplido_pos_contratos', sql.Float, data[i].suplido_pos_contratos)
+                    .input('suplido_mo', sql.Float, data[i].suplido_mo)
+                    .input('suplido_mo_imp', sql.SmallInt, data[i].suplido_mo_imp)
+                    .input('consumo', sql.SmallInt, data[i].consumo)
+                    .input('ocasional_compra', sql.Float, data[i].ocasional_compra)
+                    .input('ocasional_venta', sql.Float, data[i].ocasional_venta)
+                    .input('ocasional_debito', sql.Float, data[i].ocasional_debito)
+                    .input('ocasional_credito', sql.Float, data[i].ocasional_credito)
+                    .input('ensa', sql.Float, data[i].ensa)
+                    .input('edemet', sql.Float, data[i].edemet)
+                    .input('edechi', sql.Float, data[i].edechi)
+                    .input('prog_exp', sql.SmallInt, data[i].prog_exp)
+                    .input('fecha_mes', sql.NVarChar ([50]), data[i].fecha_mes)
+                    .input('version', sql.NVarChar ([50]), data[i].version)
+                    .input('ajuste', sql.SmallInt, data[i].ajuste)
+                    .execute('insertarLiquidacion')
+
+                }
+
+
+
+        } catch (err) {            
+            console.log(err);
+        }
+       
+    })().then(() => res.render('/'))
+    sql.on('error', err => {
+        console.log(err);        
+    })   
+
+
+
+
+
+
+
+
+    // console.log('upload/'+archivoCargado)
+    // leerExcel('upload/'+archivoCargado)
+
+
+
+});
+
+
+
+
+
+
+//const XSLX = require('xlsx')
+
+function leerExcelLiquidacion(ruta){
+    const workbook = XSLX.readFile(ruta);
+    const workbookSheets = workbook.SheetNames;
+    //console.log(workbookSheets)
+    const sheet = workbookSheets[1];
+    var data = XSLX.utils.sheet_to_json(workbook.Sheets[sheet],  { range: 5 });
+    //console.log(data);
+
+
+    // pasar todas las keys a lowercase
+    for(var i = 0; i < data.length; i++){ 
+        for (var key in data[i]) {
+         if(key.toLowerCase() !== key){
+          data[i][key.toLowerCase()] = data[i][key];
+          delete data[i][key];
+         }
+        }
+       }
+    
+    //console.log(data);
+
+    for (var i = 0; i < data.length; i++) {
+        //console.log(data[i].Fecha);
+
+        var nMes = ''
+        splitted = data[i].fecha.split("/")
+        //console.log(splitted)
+
+        // splitted[0] es el mes
+        switch(splitted[0]){
+            case 'ene': nMes ='01'; break;
+            case 'feb': nMes ='02'; break;
+            case 'mar': nMes ='03'; break;
+            case 'abr': nMes ='04'; break;
+            case 'may': nMes ='05'; break;
+            case 'jun': nMes ='06'; break;
+            case 'jul': nMes ='07'; break;
+            case 'ago': nMes ='08'; break;
+            case 'sep': nMes ='09'; break;
+            case 'oct': nMes ='10'; break;
+            case 'nov': nMes ='11'; break;
+            case 'dic': nMes ='12'; break;
+        };
+
+
+
+        data[i].fecha = splitted[2] + '-' + nMes + '-' + splitted[1];
+        data[i].fecha_mes = splitted[2] + '-' + nMes
+        data[i].version = 'OficialTEST'
+        data[i].ajuste = 0
+        
+        //console.log(data[i].fecha);        
+    }   
+
+    //console.log(data);
+    return(data);
+
+}
+
+//leerExcel('public/Oficial_liquidacion_FOUNTAIN_01abr2022_30abr2022.xlsx')
 
 
 
