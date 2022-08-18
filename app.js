@@ -840,7 +840,7 @@ function leerExcelLiquidacion(ruta){
         data[i].fecha_carga = hoy.toISOString().slice(0, 19).replace('T', ' ')
 
 
-        console.log(data[i].fecha_carga);        
+        //console.log(data[i].fecha_carga);        
     }   
 
     //console.log(data);
