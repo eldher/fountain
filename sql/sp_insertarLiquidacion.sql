@@ -43,8 +43,8 @@ ALTER PROCEDURE insertarLiquidacion
 @prog_exp tinyint  = NULL,
 @fecha_mes nvarchar(50)  = NULL,
 @version nvarchar(50)  = NULL,
-@ajuste tinyint  = NULL
-
+@ajuste tinyint  = NULL,
+@fecha_carga datetime  = NULL
 
 
 AS 
@@ -93,7 +93,8 @@ INSERT INTO [dbo].[LiquidacionFountain]
            ,[prog_exp]
            ,[fecha_mes]
            ,[version]
-           ,[ajuste])
+           ,[ajuste]
+		   ,[fecha_carga])
      VALUES
            (@fecha,
 			@hora,
@@ -134,7 +135,8 @@ INSERT INTO [dbo].[LiquidacionFountain]
 			@prog_exp,
 			@fecha_mes,
 			@version,
-			@ajuste
+			@ajuste,
+			@fecha_carga
 )
 END
 
@@ -151,3 +153,12 @@ GO
 
 --delete from LiquidacionFountain where version = 'OficialTEST'
 --delete from LiquidacionFountain where version IS NULL
+
+
+
+-- ejecutar para instalar tabla
+--alter table [LiquidacionFountain]
+--add fecha_carga datetime NULL
+
+--alter table [LiquidacionFountain]
+--drop column fecha_carga 

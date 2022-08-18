@@ -830,10 +830,17 @@ function leerExcelLiquidacion(ruta){
 
         data[i].fecha = splitted[2] + '-' + nMes + '-' + splitted[1];
         data[i].fecha_mes = splitted[2] + '-' + nMes
-        data[i].version = 'OficialTEST'
+        data[i].version = 'Oficial'
         data[i].ajuste = 0
+        //data[i].fecha_carga = Date.now().toISOString().slice(0, 9).replace('T', ' ')
         
-        //console.log(data[i].fecha);        
+        let fecha_ts = Date.now()
+        let hoy = new Date(fecha_ts)
+
+        data[i].fecha_carga = hoy.toISOString().slice(0, 19).replace('T', ' ')
+
+
+        console.log(data[i].fecha_carga);        
     }   
 
     //console.log(data);
@@ -947,6 +954,7 @@ app.post('/upload', function(req, res) {
                 .input('fecha_mes', sql.NVarChar ([50]), data[i].fecha_mes)
                 .input('version', sql.NVarChar ([50]), data[i].version)
                 .input('ajuste', sql.SmallInt, data[i].ajuste)
+                .input('fecha_carga', sql.DateTime, data[i].fecha_carga)
                 .execute('insertarLiquidacion')
 
             }

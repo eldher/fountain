@@ -47,8 +47,23 @@ from [dbo].[LiquidacionFountain]
 where EOMONTH(fecha) = @fecha
 
 
-select cast(fecha as varchar) as fecha, sum(EAR) as EAR from INGRESOS_CONTRATOS 
+select cast(fecha as varchar) as fecha, sum(EAR) as EAR 
+into #temp
+from INGRESOS_CONTRATOS 
 where fecha = @fecha
 group by fecha
+
+
+declare @COUNT_RESULTS int;
+select @COUNT_RESULTS = count(*) from #temp
+
+IF @COUNT_RESULTS > 0 
+BEGIN
+select * from #temp
+END
+ELSE
+BEGIN
+select @fecha as fecha , 6000 as EAR
+END
 
 end
