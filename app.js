@@ -51,7 +51,7 @@ router.get('/',function(req,res){
             cards  = result.recordsets[1];
             EAR  = result.recordsets[2];
 
-            console.log(EAR);    
+            //console.log(EAR);    
         } catch (err) {            
             console.log(err);
         }
@@ -83,7 +83,7 @@ router.get('/:anio&:mes',function(req,res){
             cards  = result.recordsets[1];
             EAR  = result.recordsets[2];
 
-            console.log(EAR);    
+            //console.log(EAR);    
         } catch (err) {            
             console.log(err);
         }
@@ -780,123 +780,8 @@ var upload = multer({ //multer settings
 
 
 
+var data;
 
-app.post('/upload', function(req, res) {
-
-    var archivoCargado;
-    var data;
-    
-
-    // funcion para cargar con Multer en carpeta /uploads
-    upload(req,res,function(err){
-
-        archivoCargado = req.file.filename;
-     
-        if(err){
-            res.json({error_code:1,err_desc:err});
-            return;
-        }else{
-            console.log(archivoCargado);
-            console.log('uploads/'+archivoCargado)
-            data = leerExcelLiquidacion('uploads/'+ archivoCargado)
-            //res.send(data);
-            //res.send('Archivo cargado!');
-        }
-        
-    }) ;
-
-
-
-    //funcion para leer linea a linea el JSON
-    (async function () 
-    {
-        try {
-            let pool = await sql.connect(dbConfig_localhost)     
-
-                for ( i = 0; i < 10; i++) {
-                    // const queryString = "INSERT INTO insert_test (hora, subsistema) " + 
-                    //  "VALUES ('" +  data[i].hora + "', '"+ data[i].subsistema + " ') ";
-
-                    //  console.log(queryString);
-                    // let result = await pool.request()
-                    // .query(queryString)            
-                    
-                    let result = await pool.request()
-                    .input('fecha', sql.Date, data[i].fecha)
-                    .input('hora', sql.SmallInt, data[i].hora)
-                    .input('subsistema', sql.SmallInt, data[i].subsistema)
-                    .input('cms', sql.Float, data[i].cms)
-                    .input('fountain_a_bai230_27_e', sql.Float, data[i].fountain_a_bai230_27_e)
-                    .input('fountain_a_bai230_27_s', sql.SmallInt, data[i].fountain_a_bai230_27_s)
-                    .input('fountain_a_bai230_28b_e', sql.Float, data[i].fountain_a_bai230_28b_e)
-                    .input('fountain_a_bai230_28b_s', sql.Float, data[i].fountain_a_bai230_28b_s)
-                    .input('fountain_a_bfrio230_28_e', sql.Float, data[i].fountain_a_bfrio230_28_e)
-                    .input('fountain_a_bfrio230_28_s', sql.Float, data[i].fountain_a_bfrio230_28_s)
-                    .input('fountain_a_bfrio230_36_e', sql.Float, data[i].fountain_a_bfrio230_36_e)
-                    .input('fountain_a_bfrio230_36_s', sql.Float, data[i].fountain_a_bfrio230_36_s)
-                    .input('fountain_a_compra_mer_con', sql.SmallInt, data[i].fountain_a_compra_mer_con)
-                    .input('fountain_a_cons_exp', sql.SmallInt, data[i].fountain_a_cons_exp)
-                    .input('fountain_a_entrando', sql.SmallInt, data[i].fountain_a_entrando)
-                    .input('fountain_a_saliendo', sql.Float, data[i].fountain_a_saliendo)
-                    .input('fountain_a_vta_mer_con', sql.SmallInt, data[i].fountain_a_vta_mer_con)
-                    .input('fountain_a_vta_mer_opo', sql.SmallInt, data[i].fountain_a_vta_mer_opo)
-                    .input('fountain_a_perdida_real', sql.Float, data[i].fountain_a_perdida_real)
-                    .input('fountain_a_perdida_teorica', sql.Float, data[i].fountain_a_perdida_teorica)
-                    .input('fountain_a_perdida_total', sql.Float, data[i].fountain_a_perdida_total)
-                    .input('fountain_a_saliendo_bruto', sql.Float, data[i].fountain_a_saliendo_bruto)
-                    .input('fountain_a_supl_loc', sql.Float, data[i].fountain_a_supl_loc)
-                    .input('perdida_consumo', sql.SmallInt, data[i].perdida_consumo)
-                    .input('energia_asignada', sql.Float, data[i].energia_asignada)
-                    .input('suplido_pos_contratos', sql.Float, data[i].suplido_pos_contratos)
-                    .input('suplido_mo', sql.Float, data[i].suplido_mo)
-                    .input('suplido_mo_imp', sql.SmallInt, data[i].suplido_mo_imp)
-                    .input('consumo', sql.SmallInt, data[i].consumo)
-                    .input('ocasional_compra', sql.Float, data[i].ocasional_compra)
-                    .input('ocasional_venta', sql.Float, data[i].ocasional_venta)
-                    .input('ocasional_debito', sql.Float, data[i].ocasional_debito)
-                    .input('ocasional_credito', sql.Float, data[i].ocasional_credito)
-                    .input('ensa', sql.Float, data[i].ensa)
-                    .input('edemet', sql.Float, data[i].edemet)
-                    .input('edechi', sql.Float, data[i].edechi)
-                    .input('prog_exp', sql.SmallInt, data[i].prog_exp)
-                    .input('fecha_mes', sql.NVarChar ([50]), data[i].fecha_mes)
-                    .input('version', sql.NVarChar ([50]), data[i].version)
-                    .input('ajuste', sql.SmallInt, data[i].ajuste)
-                    .execute('insertarLiquidacion')
-
-                }
-
-
-
-        } catch (err) {            
-            console.log(err);
-        }
-       
-    })().then(() => res.send(' Archivo Cargado!!'))
-    sql.on('error', err => {
-        console.log(err);        
-    })   
-
-
-
-
-
-
-
-
-    // console.log('upload/'+archivoCargado)
-    // leerExcel('upload/'+archivoCargado)
-
-
-
-});
-
-
-
-
-
-
-//const XSLX = require('xlsx')
 
 function leerExcelLiquidacion(ruta){
     const workbook = XSLX.readFile(ruta);
@@ -905,7 +790,6 @@ function leerExcelLiquidacion(ruta){
     const sheet = workbookSheets[1];
     var data = XSLX.utils.sheet_to_json(workbook.Sheets[sheet],  { range: 5 });
     //console.log(data);
-
 
     // pasar todas las keys a lowercase
     for(var i = 0; i < data.length; i++){ 
@@ -956,6 +840,139 @@ function leerExcelLiquidacion(ruta){
     return(data);
 
 }
+
+
+
+
+
+
+app.post('/upload', function(req, res) {
+
+    //let archivoCargado = '';
+    //let data;
+    
+
+    // funcion para cargar con Multer en carpeta /uploads
+    // upload(req,res,function(err){
+
+    //     archivoCargado = req.file.filename;
+     
+    //     if(err){
+    //         res.json({error_code:1,err_desc:err});
+    //         return;
+    //     }else{
+    //         console.log(archivoCargado);
+    //         console.log('uploads/'+ archivoCargado)
+    //         data = leerExcelLiquidacion('uploads/'+ archivoCargado)
+    //         //res.send(data);
+    //         //res.send('Archivo cargado!');
+    //     }
+        
+    // }) ;
+
+
+
+    //funcion para leer linea a linea el JSON
+    (async function () 
+    {
+
+        upload(req,res,function(err){
+
+            var archivoCargado = req.file.filename;
+         
+            if(err){
+                res.json({error_code:1,err_desc:err});
+                return;
+            }else{
+                console.log(archivoCargado);
+                console.log('uploads/'+ archivoCargado)
+                data =  leerExcelLiquidacion('uploads/'+ archivoCargado)
+                //res.send(data);
+                //res.send('Archivo cargado!');
+            }
+            
+        }) ;
+
+
+        //let data = await leerExcelLiquidacion('uploads/'+ archivoCargado)
+
+        try {
+            let pool = await sql.connect(dbConfig_localhost);     
+            for ( i = 0; i < data.length; i++) {
+                // const queryString = "INSERT INTO insert_test (hora, subsistema) " + 
+                //  "VALUES ('" +  data[i].hora + "', '"+ data[i].subsistema + " ') ";
+
+                //  console.log(queryString);
+                // let result = await pool.request()
+                // .query(queryString)            
+                //console.log(data[i].fecha)
+                let result = await pool.request()
+                .input('fecha', sql.Date, data[i].fecha)
+                .input('hora', sql.SmallInt, data[i].hora)
+                .input('subsistema', sql.SmallInt, data[i].subsistema)
+                .input('cms', sql.Float, data[i].cms)
+                .input('fountain_a_bai230_27_e', sql.Float, data[i].fountain_a_bai230_27_e)
+                .input('fountain_a_bai230_27_s', sql.SmallInt, data[i].fountain_a_bai230_27_s)
+                .input('fountain_a_bai230_28b_e', sql.Float, data[i].fountain_a_bai230_28b_e)
+                .input('fountain_a_bai230_28b_s', sql.Float, data[i].fountain_a_bai230_28b_s)
+                .input('fountain_a_bfrio230_28_e', sql.Float, data[i].fountain_a_bfrio230_28_e)
+                .input('fountain_a_bfrio230_28_s', sql.Float, data[i].fountain_a_bfrio230_28_s)
+                .input('fountain_a_bfrio230_36_e', sql.Float, data[i].fountain_a_bfrio230_36_e)
+                .input('fountain_a_bfrio230_36_s', sql.Float, data[i].fountain_a_bfrio230_36_s)
+                .input('fountain_a_compra_mer_con', sql.SmallInt, data[i].fountain_a_compra_mer_con)
+                .input('fountain_a_cons_exp', sql.SmallInt, data[i].fountain_a_cons_exp)
+                .input('fountain_a_entrando', sql.SmallInt, data[i].fountain_a_entrando)
+                .input('fountain_a_saliendo', sql.Float, data[i].fountain_a_saliendo)
+                .input('fountain_a_vta_mer_con', sql.SmallInt, data[i].fountain_a_vta_mer_con)
+                .input('fountain_a_vta_mer_opo', sql.SmallInt, data[i].fountain_a_vta_mer_opo)
+                .input('fountain_a_perdida_real', sql.Float, data[i].fountain_a_perdida_real)
+                .input('fountain_a_perdida_teorica', sql.Float, data[i].fountain_a_perdida_teorica)
+                .input('fountain_a_perdida_total', sql.Float, data[i].fountain_a_perdida_total)
+                .input('fountain_a_saliendo_bruto', sql.Float, data[i].fountain_a_saliendo_bruto)
+                .input('fountain_a_supl_loc', sql.Float, data[i].fountain_a_supl_loc)
+                .input('perdida_consumo', sql.SmallInt, data[i].perdida_consumo)
+                .input('energia_asignada', sql.Float, data[i].energia_asignada)
+                .input('suplido_pos_contratos', sql.Float, data[i].suplido_pos_contratos)
+                .input('suplido_mo', sql.Float, data[i].suplido_mo)
+                .input('suplido_mo_imp', sql.SmallInt, data[i].suplido_mo_imp)
+                .input('consumo', sql.SmallInt, data[i].consumo)
+                .input('ocasional_compra', sql.Float, data[i].ocasional_compra)
+                .input('ocasional_venta', sql.Float, data[i].ocasional_venta)
+                .input('ocasional_debito', sql.Float, data[i].ocasional_debito)
+                .input('ocasional_credito', sql.Float, data[i].ocasional_credito)
+                .input('ensa', sql.Float, data[i].ensa)
+                .input('edemet', sql.Float, data[i].edemet)
+                .input('edechi', sql.Float, data[i].edechi)
+                .input('prog_exp', sql.SmallInt, data[i].prog_exp)
+                .input('fecha_mes', sql.NVarChar ([50]), data[i].fecha_mes)
+                .input('version', sql.NVarChar ([50]), data[i].version)
+                .input('ajuste', sql.SmallInt, data[i].ajuste)
+                .execute('insertarLiquidacion')
+
+            }
+
+        } catch (err) {            
+            console.log(err);
+        }
+       
+    })().then(() => res.send('<script type="text/javascript"> alert("Archivo Cargado!"); window.location="./cargarDataAplicacion";</script>') )
+    sql.on('error', err => {
+        console.log(err);        
+    }); 
+
+
+
+
+
+
+
+
+    // console.log('upload/'+archivoCargado)
+    // leerExcel('upload/'+archivoCargado)
+
+
+
+});
 
 //leerExcel('public/Oficial_liquidacion_FOUNTAIN_01abr2022_30abr2022.xlsx')
 
