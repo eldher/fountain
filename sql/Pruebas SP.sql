@@ -16,7 +16,7 @@ EXECUTE [dbo].[sp_ObtenerContratos]
 EXECUTE [dbo].[sp_ObtenerContratosPorFecha] N'2022-04-30'
 EXECUTE [dbo].[sp_EnergyBalance]
 
-EXEC [dbo].[sp_Dashboard] @anio=2022, @mes=7;
+EXEC [dbo].[sp_Dashboard] @anio=2022, @mes=6;
 
 EXECUTE [dbo].[sp_EnergyBalancePorFecha]  N'2022'
 
