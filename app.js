@@ -1024,9 +1024,7 @@ app.post('/upload', function(req, res) {
     const uploadPromise = () => {
         return new Promise((resolve, reject) => {
             
-            upload(req,res,function(err){
-            
-            
+            upload(req,res,function(err){                    
                 if(err){
                     console.log('Multer Error:' + err);
                     return reject(err)                                
