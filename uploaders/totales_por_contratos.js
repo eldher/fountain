@@ -1,30 +1,95 @@
 const XSLX = require('xlsx')
 
+
+function SerialDateToJSDate(serialDate, offsetUTC) {
+    return new Date(Date.UTC(0, 0, serialDate, offsetUTC));
+  }
+
 function leerExcelTotalesPorContratos(ruta){
 
     return new Promise((resolve, reject) => {
         const workbook = XSLX.readFile(ruta);   
         const workbookSheets = workbook.SheetNames;
-        //console.log(workbookSheets)
-        const sheet = workbookSheets[1];
+        console.log(workbookSheets)
+        //const sheet = workbookSheets[1];
+        console.log(ruta);
 
-        var data = XSLX.utils.sheet_to_json(workbook.Sheets[sheet],  { range: 10 });
+        var distribuidores = XSLX.utils.sheet_to_json(workbook.Sheets['TOTALESCONTRATOS'],  { range: "A11:D14" });
 
-        console.log('Cantidad de Registros a Transformar: '+ data.length)
+        var contratos = XSLX.utils.sheet_to_json(workbook.Sheets['TOTALESCONTRATOS'],  { range: 16 });
 
-        for(var i = 0; i < data.length; i++){ 
-            for (var key in data[i]) {
+        console.log('Cantidad de Registros a Transformar: '+ distribuidores.length)
+        console.log('Cantidad de Registros a Transformar: '+ contratos.length)
+
+
+        // pasar nombres de keys a minusculas de json distribuidores
+        for(var i = 0; i < distribuidores.length; i++){ 
+            for (var key in distribuidores[i]) {
             if(key.toLowerCase() !== key){
-            data[i][key.toLowerCase()] = data[i][key];
-            delete data[i][key];
+                distribuidores[i][key.toLowerCase()] = distribuidores[i][key];
+                delete distribuidores[i][key];  
+            }
+            }
+        }
+
+
+        // pasar nombres de keys a minusculas de json distribuidores
+        for(var i = 0; i < contratos.length; i++){ 
+            for (var key in contratos[i]) {
+            if(key.toLowerCase() !== key){
+                contratos[i][key.toLowerCase()] = contratos[i][key];
+            delete contratos[i][key];
             }
             }
         }
         
-        console.log('Cantidad de Registros a Cargar: '+ data.length)
 
-        if(data.length>0){
-            resolve(data);
+        // Eliminar los espacios y dejar underscore
+        contratos.forEach(function(e, i) {
+            // Iterate over the keys of object
+            Object.keys(e).forEach(function(key) {
+              
+              // Copy the value
+              var val = e[key],
+                newKey = key.replace(/\s+/g, '_');
+              
+              // Remove key-value from object
+              delete contratos[i][key];
+          
+              // Add value with new key
+              contratos[i][newKey] = val;
+            });
+          });
+
+        
+        // convertir fechas de formato Excel a JS
+        for (let i = 0; i < contratos.length; i++) {            
+            contratos[i].fecha = SerialDateToJSDate(contratos[i].fecha, 19).toISOString().slice(0, 19).replace('T', ' ')
+            let fecha_ts = Date.now()
+            let hoy = new Date(fecha_ts)
+            contratos[i].fecha_carga = hoy.toISOString().slice(0, 19).replace('T', ' ')
+        }
+
+
+
+        // luego de procesar las fechas de los contratos, se le coloca la fecha a los distribuidores
+
+        for (let i = 0; i < distribuidores.length; i++) {
+            distribuidores[i].fecha = contratos[0].fecha
+            distribuidores[i].fecha_carga = contratos[1].fecha_carga            
+        }
+
+
+
+
+        console.log('Cantidad de Registros a Cargar: '+ distribuidores.length)
+        console.log('Cantidad de Registros a Cargar: '+ contratos.length)
+
+        if(distribuidores.length>0){
+            resolve( {
+                distribuidores : distribuidores , 
+                contratos : contratos } 
+            );
         }
         else{
             reject('Error en la definicion del JSON para carga Liquidacion')
@@ -35,4 +100,4 @@ function leerExcelTotalesPorContratos(ruta){
 };
 
 
-module.exports.leerExcelTotalesPorContratos = leerExcelTotalesPorContratos();
+module.exports.leerExcelTotalesPorContratos = leerExcelTotalesPorContratos

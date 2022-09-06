@@ -9,7 +9,9 @@ const sql = require('mssql');
 const port = process.env.PORT || 3000
 const XSLX = require('xlsx')
 
-const uploaders = require('./uploaders/totales_por_contratos.js').default
+const totales_por_contratos = require('./uploaders/totales_por_contratos.js')
+const balance_de_potencia = require('./uploaders/balance_de_potencia.js')
+const servicios_auxiliares = require('./uploaders/servicios_auxiliares.js')
 
 
 var bodyParser = require('body-parser');
@@ -912,7 +914,8 @@ app.post('/upload_liquidacion_fountain', function(req, res) {
 
    
     let archivoCargado;
-   
+
+
     const uploadPromise = () => {
 
         return new Promise((resolve, reject) => {
@@ -1015,10 +1018,10 @@ app.post('/upload_liquidacion_fountain', function(req, res) {
 });
 
 
-
 app.post('/upload_totales_por_contratos', function(req, res){
-       
+    let data;   
     let archivoCargado;
+    console.log('Prueba');
    
     const uploadPromise = () => {
 
@@ -1050,12 +1053,105 @@ app.post('/upload_totales_por_contratos', function(req, res){
        // data = await leerExcelLiquidacion('uploads/' + archivoCargado)
         //console.log("Filas convertidas a JSON: " + data.length)
         archivoCargado = await uploadPromise(req,res)
-        let data = await  uploaders.leerExcelLiquidacion('uploads/'+ archivoCargado)
-        console.log(data)
+        data =  await totales_por_contratos.leerExcelTotalesPorContratos('uploads/'+ archivoCargado)
+        console.log(data.distribuidores  )
         
-    }
-    );
+   })().then(() => res.send(JSON.stringify(data,null, '\t')))
+
 });
+
+
+
+
+
+
+app.post('/upload_balance_de_potencia', function(req, res){
+    let data;   
+    let archivoCargado;
+   
+    const uploadPromise = () => {
+        return new Promise((resolve, reject) => {
+            upload(req,res,function(err){                    
+                if(err){
+                    console.log('Multer Error:' + err);
+                    return reject(err)                                
+                }else{
+                    archivoCargado = req.file.filename;
+                    console.log(archivoCargado);
+                    console.log('uploads/'+ archivoCargado)
+                    resolve(archivoCargado)
+                    // data =  leerExcelLiquidacion('uploads/'+ archivoCargado)
+                    //res.send(data);
+                    //res.send('Archivo cargado!');
+                }                
+            }) ;
+        });
+   }
+      
+    
+    //funcion para leer linea a linea el JSON
+    (async function () 
+    {
+       // data = await leerExcelLiquidacion('uploads/' + archivoCargado)
+        //console.log("Filas convertidas a JSON: " + data.length)
+        archivoCargado = await uploadPromise(req,res)
+        data =  await balance_de_potencia.leerExcelBalanceDePotencia('uploads/'+ archivoCargado)
+        //console.log(data)
+        
+   })().then(() => res.json((data)))
+
+});
+
+
+
+
+app.post('/upload_servicios_auxiliares', function(req, res){
+    let data;   
+    let archivoCargado;
+   
+    const uploadPromise = () => {
+        return new Promise((resolve, reject) => {
+            upload(req,res,function(err){                    
+                if(err){
+                    console.log('Multer Error:' + err);
+                    return reject(err)                                
+                }else{
+                    archivoCargado = req.file.filename;
+                    console.log(archivoCargado);
+                    console.log('uploads/'+ archivoCargado)
+                    resolve(archivoCargado)
+                    // data =  leerExcelLiquidacion('uploads/'+ archivoCargado)
+                    //res.send(data);
+                    //res.send('Archivo cargado!');
+                }                
+            }) ;
+        });
+   }
+      
+    
+    //funcion para leer linea a linea el JSON
+    (async function () 
+    {
+       // data = await leerExcelLiquidacion('uploads/' + archivoCargado)
+        //console.log("Filas convertidas a JSON: " + data.length)
+        archivoCargado = await uploadPromise(req,res)
+        data =  await servicios_auxiliares.leerExcelServiciosAuxiliares('uploads/'+ archivoCargado)
+        //console.log(data)
+        
+   })().then(() => res.json((data)))
+
+});
+
+
+
+
+
+
+
+
+
+
+
 
 
 
