@@ -9,6 +9,9 @@ const sql = require('mssql');
 const port = process.env.PORT || 3000
 const XSLX = require('xlsx')
 
+const uploaders = require('./uploaders/totales_por_contratos.js').default
+
+
 var bodyParser = require('body-parser');
 
 
@@ -783,82 +786,40 @@ var upload = multer({ //multer settings
 var data;
 
 
-// function leerExcelLiquidacion(ruta){
+// function leerExcelTotalesPorContratos(ruta){
 
-//     const workbook = XSLX.readFile(ruta);
-//     const workbookSheets = workbook.SheetNames;
-//     //console.log(workbookSheets)
-//     const sheet = workbookSheets[1];
-//     var data = XSLX.utils.sheet_to_json(workbook.Sheets[sheet],  { range: 5 });
-//     //console.log(data);
+//     return new Promise((resolve, reject) => {
+//         const workbook = XSLX.readFile(ruta);   
+//         const workbookSheets = workbook.SheetNames;
+//         //console.log(workbookSheets)
+//         const sheet = workbookSheets[1];
 
-//     // pasar todas las keys a lowercase
+//         var data = XSLX.utils.sheet_to_json(workbook.Sheets[sheet],  { range: 10 });
 
-//     console.log('Cantidad de Registros a Transformar: '+ data.length)
+//         console.log('Cantidad de Registros a Transformar: '+ data.length)
 
-//     for(var i = 0; i < data.length; i++){ 
-//         for (var key in data[i]) {
-//          if(key.toLowerCase() !== key){
-//           data[i][key.toLowerCase()] = data[i][key];
-//           delete data[i][key];
-//          }
+//         for(var i = 0; i < data.length; i++){ 
+//             for (var key in data[i]) {
+//             if(key.toLowerCase() !== key){
+//             data[i][key.toLowerCase()] = data[i][key];
+//             delete data[i][key];
+//             }
+//             }
 //         }
-//        }
-    
-//     //console.log(data);
-
-//     for (var i = 0; i < data.length; i++) {
-//         //console.log(data[i].Fecha);
-
-//         var nMes = ''
-//         splitted = data[i].fecha.split("/")
-//         //console.log(splitted)
-
-//         // splitted[0] es el mes
-//         switch(splitted[0]){
-//             case 'ene': nMes ='01'; break;
-//             case 'feb': nMes ='02'; break;
-//             case 'mar': nMes ='03'; break;
-//             case 'abr': nMes ='04'; break;
-//             case 'may': nMes ='05'; break;
-//             case 'jun': nMes ='06'; break;
-//             case 'jul': nMes ='07'; break;
-//             case 'ago': nMes ='08'; break;
-//             case 'sep': nMes ='09'; break;
-//             case 'oct': nMes ='10'; break;
-//             case 'nov': nMes ='11'; break;
-//             case 'dic': nMes ='12'; break;
-//         };
-
-
-
-//         data[i].fecha = splitted[2] + '-' + nMes + '-' + splitted[1];
-//         data[i].fecha_mes = splitted[2] + '-' + nMes
-//         data[i].version = 'Oficial'
-//         data[i].ajuste = 0
-//         //data[i].fecha_carga = Date.now().toISOString().slice(0, 9).replace('T', ' ')
         
-//         let fecha_ts = Date.now()
-//         let hoy = new Date(fecha_ts)
+//         console.log('Cantidad de Registros a Cargar: '+ data.length)
 
-//         data[i].fecha_carga = hoy.toISOString().slice(0, 19).replace('T', ' ')
+//         if(data.length>0){
+//             resolve(data);
+//         }
+//         else{
+//             reject('Error en la definicion del JSON para carga Liquidacion')
+//            //throw new Error();
+//         }
 
-
-//         //console.log(data[i].fecha_carga);        
-//     }   
-
-//     console.log('Cantidad de Registros a Cargar: '+ data.length)
-
-    
-//     if(data.length>0){
-//         return(data);
-//     }
-//     else{
-//         err = "No hay data en el JSON";
-//         return(err);
-//     }
+//     });
 // };
-
+  
 
 
 
@@ -873,6 +834,8 @@ function leerExcelLiquidacion(ruta){
         const workbookSheets = workbook.SheetNames;
         //console.log(workbookSheets)
         const sheet = workbookSheets[1];
+
+        // usar { range: 5} para saltarse las primeras filas del archivo
         var data = XSLX.utils.sheet_to_json(workbook.Sheets[sheet],  { range: 5 });
         //console.log(data);
 
@@ -880,6 +843,7 @@ function leerExcelLiquidacion(ruta){
 
         console.log('Cantidad de Registros a Transformar: '+ data.length)
 
+        // pasar los nombres de variables a lowercase
         for(var i = 0; i < data.length; i++){ 
             for (var key in data[i]) {
             if(key.toLowerCase() !== key){
@@ -893,7 +857,7 @@ function leerExcelLiquidacion(ruta){
 
         for (var i = 0; i < data.length; i++) {
             //console.log(data[i].Fecha);
-
+            //console.log(i)
             var nMes = ''
             splitted = data[i].fecha.split("/")
             //console.log(splitted)
@@ -915,7 +879,6 @@ function leerExcelLiquidacion(ruta){
             };
 
 
-
             data[i].fecha = splitted[2] + '-' + nMes + '-' + splitted[1];
             data[i].fecha_mes = splitted[2] + '-' + nMes
             data[i].version = 'Oficial'
@@ -926,7 +889,6 @@ function leerExcelLiquidacion(ruta){
             let hoy = new Date(fecha_ts)
 
             data[i].fecha_carga = hoy.toISOString().slice(0, 19).replace('T', ' ')
-
 
             //console.log(data[i].fecha_carga);        
         }   
@@ -940,88 +902,19 @@ function leerExcelLiquidacion(ruta){
             reject('Error en la definicion del JSON para carga Liquidacion')
            //throw new Error();
         }
-
-
-
     });
-
 
 };
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-app.post('/upload', function(req, res) {
+app.post('/upload_liquidacion_fountain', function(req, res) {
 
    
     let archivoCargado;
-    //let data;
-    
-
-    // funcion para cargar con Multer en carpeta /uploads
-    // upload(req,res,function(err){
-
-    //     archivoCargado = req.file.filename;
-     
-    //     if(err){
-    //         res.json({error_code:1,err_desc:err});
-    //         return;
-    //     }else{
-    //         console.log(archivoCargado);
-    //         console.log('uploads/'+ archivoCargado)
-    //         data = leerExcelLiquidacion('uploads/'+ archivoCargado)
-    //         //res.send(data);
-    //         //res.send('Archivo cargado!');
-    //     }
-        
-    // }) ;
-
-
-
-
-//     upload(req,res,function(err){
-     
-     
-//         if(err){
-//             console.log(err);
-//             return;
-//         }else{
-//             archivoCargado = req.file.filename;
-//             console.log(archivoCargado);
-//             console.log('uploads/'+ archivoCargado)
-//            // data =  leerExcelLiquidacion('uploads/'+ archivoCargado)
-//             //res.send(data);
-//             //res.send('Archivo cargado!');
-//         }
-        
-//    }) ;
-    
-
+   
     const uploadPromise = () => {
+
         return new Promise((resolve, reject) => {
             
             upload(req,res,function(err){                    
@@ -1119,19 +1012,50 @@ app.post('/upload', function(req, res) {
 
 
 
-
-
-
-
-
-    // console.log('upload/'+archivoCargado)
-    // leerExcel('upload/'+archivoCargado)
-
-
-
 });
 
-//leerExcel('public/Oficial_liquidacion_FOUNTAIN_01abr2022_30abr2022.xlsx')
+
+
+app.post('/upload_totales_por_contratos', function(req, res){
+       
+    let archivoCargado;
+   
+    const uploadPromise = () => {
+
+        return new Promise((resolve, reject) => {
+            
+            upload(req,res,function(err){                    
+                if(err){
+                    console.log('Multer Error:' + err);
+                    return reject(err)                                
+                }else{
+                    archivoCargado = req.file.filename;
+                    console.log(archivoCargado);
+                    console.log('uploads/'+ archivoCargado)
+                    resolve(archivoCargado)
+                    // data =  leerExcelLiquidacion('uploads/'+ archivoCargado)
+                    //res.send(data);
+                    //res.send('Archivo cargado!');
+                }
+                
+            }) ;
+
+        });
+   }
+      
+    
+    //funcion para leer linea a linea el JSON
+    (async function () 
+    {
+       // data = await leerExcelLiquidacion('uploads/' + archivoCargado)
+        //console.log("Filas convertidas a JSON: " + data.length)
+        archivoCargado = await uploadPromise(req,res)
+        let data = await  uploaders.leerExcelLiquidacion('uploads/'+ archivoCargado)
+        console.log(data)
+        
+    }
+    );
+});
 
 
 
@@ -1141,10 +1065,3 @@ app.listen(port, () => {
   })
 
 
-
-
-
-
-// app.listen(process.env.port || 3010 , function(){
-//     console.log("Server is running on localhost 3010");
-// });
