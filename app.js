@@ -12,6 +12,7 @@ const XSLX = require('xlsx')
 const totales_por_contratos = require('./uploaders/totales_por_contratos.js')
 const balance_de_potencia = require('./uploaders/balance_de_potencia.js')
 const servicios_auxiliares = require('./uploaders/servicios_auxiliares.js')
+const resumen_generacion = require('./uploaders/resumen_generacion.js')
 
 
 var bodyParser = require('body-parser');
@@ -1008,7 +1009,7 @@ app.post('/upload_liquidacion_fountain', function(req, res) {
             console.log(err);
         }
        
-    })().then(() => res.send('<script type="text/javascript"> alert("Archivo Cargado!"); window.location="./cargarDataAplicacion";</script>') )
+    })().then(() => res.send('<script type="text/javascript"> alert("Archivo de Liquidación Cargado!"); window.location="./cargarDataAplicacion";</script>') )
     sql.on('error', err => {
         console.log(err);        
     }); 
@@ -1055,8 +1056,40 @@ app.post('/upload_totales_por_contratos', function(req, res){
         archivoCargado = await uploadPromise(req,res)
         data =  await totales_por_contratos.leerExcelTotalesPorContratos('uploads/'+ archivoCargado)
         console.log(data.distribuidores  )
+
+        try {
+            let pool = await sql.connect(dbConfig_localhost);     
+            for ( i = 0; i < data.distribuidores.length; i++) {
+                // const queryString = "INSERT INTO insert_test (hora, subsistema) " + 
+                //  "VALUES ('" +  data[i].hora + "', '"+ data[i].subsistema + " ') ";
+
+                //  console.log(queryString);
+                // let result = await pool.request()
+                // .query(queryString)            
+                //console.log(data[i].fecha)
+                let result = await pool.request()
+                .input('Distribuidores', sql.NVarChar ([50]) , data.distribuidores[i].distribuidores)
+                .input('dmg', sql.Float, data.distribuidores[i].dmg)
+                .input('dmg_s', sql.Float, data.distribuidores[i].dmg_s)
+                .input('dmm_s', sql.Float, data.distribuidores[i].dmm_s)
+                .input('fecha', sql.DateTime2, data.distribuidores[i].fecha)
+                .input('fecha_carga', sql.DateTime, data.distribuidores[i].fecha_carga)
+                .execute('insertarContratos')
+            }
+
+        } catch (err) {            
+            console.log(err);
+        }
+       
+    })().then(() => res.send('<script type="text/javascript"> alert("Archivo de Totales por Contrato Cargado!"); window.location="./cargarDataAplicacion";</script>') )
+    sql.on('error', err => {
+        console.log(err);        
+    }); 
+
+
+
         
-   })().then(() => res.send(JSON.stringify(data,null, '\t')))
+   //})().then(() => res.send(JSON.stringify(data,null, '\t')))
 
 });
 
@@ -1141,6 +1174,54 @@ app.post('/upload_servicios_auxiliares', function(req, res){
    })().then(() => res.json((data)))
 
 });
+
+
+
+
+
+app.post('/upload_resumen_generacion', function(req, res){
+    let data;   
+    let archivoCargado;
+   
+    const uploadPromise = () => {
+        return new Promise((resolve, reject) => {
+            upload(req,res,function(err){                    
+                if(err){
+                    console.log('Multer Error:' + err);
+                    return reject(err)                                
+                }else{
+                    archivoCargado = req.file.filename;
+                    console.log(archivoCargado);
+                    console.log('uploads/'+ archivoCargado)
+                    resolve(archivoCargado)
+                    // data =  leerExcelLiquidacion('uploads/'+ archivoCargado)
+                    //res.send(data);
+                    //res.send('Archivo cargado!');
+                }                
+            }) ;
+        });
+   }
+      
+    
+    //funcion para leer linea a linea el JSON
+    (async function () 
+    {
+       // data = await leerExcelLiquidacion('uploads/' + archivoCargado)
+        //console.log("Filas convertidas a JSON: " + data.length)
+        archivoCargado = await uploadPromise(req,res)
+        data =  await resumen_generacion.leerExcelResumenGeneracion('uploads/'+ archivoCargado)
+        //console.log(data)
+        
+   })().then(() => res.json((data)))
+
+}
+);
+
+
+
+
+
+
 
 
 
