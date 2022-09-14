@@ -71,7 +71,7 @@ GO
 
 
 
---select * from [dbo].BalancesPotencia	order by 1, fecha_carga
+--select * from [dbo].BalancesPotencia	order by fecha_carga
 
 --select distinct * 
 --into BalancesPotenciaBackup

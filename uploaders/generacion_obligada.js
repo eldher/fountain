@@ -4,7 +4,7 @@ function SerialDateToJSDate(serialDate, offsetUTC) {
     return new Date(Date.UTC(0, 0, serialDate, offsetUTC));
   }
 
-function leerExcelServiciosAuxiliares(ruta){
+function leerExcelGeneracionObligada(ruta){
 
     return new Promise((resolve, reject) => {
         const workbook = XSLX.readFile(ruta);   
@@ -15,24 +15,26 @@ function leerExcelServiciosAuxiliares(ruta){
 
         var data = XSLX.utils.sheet_to_json(
             // se coloca el nombre de la hoja a leer
-            workbook.Sheets['Cobro_Reserva'], 
+            workbook.Sheets['K'], 
             // se colocan los overriden nombre de las columnas
             {header:[
-                "empresas_acreedoras",
-                "secundaria_mw",
-                "operativa_mw",
-                "secundaria_usd",
-                "operativa_usd",
-                "total_usd",
-            ], range:10 }
+                "fecha",
+                "hora",
+                "subsistema",
+                "unidad_obligada",
+                "energia_mw",
+                "sobre_costo_real",
+                "agente_responsable",
+                "agente",                
+            ], range:11 }
         );
          
         
-        let extraccionFecha = XSLX.utils.sheet_to_json( workbook.Sheets['Resumen'], { header: ["fecha_archivo"] , range : 'A1:A1'} );
+        // let extraccionFecha = XSLX.utils.sheet_to_json( workbook.Sheets['Resumen'], { header: ["fecha_archivo"] , range : 'A1:A1'} );
 
-        console.log('Cantidad de Registros a Transformar: '+ data.length)
+        // console.log('Cantidad de Registros a Transformar: '+ data.length)
 
-        console.log(extraccionFecha)
+        // console.log(extraccionFecha)
 
 
 
@@ -42,7 +44,7 @@ function leerExcelServiciosAuxiliares(ruta){
         
         for (let i = 0; i < data.length; i++) {      
             // convertir fechas de formato Excel a JS
-            data[i].fecha = SerialDateToJSDate(extraccionFecha[0].fecha_archivo, -24) //.toISOString().slice(0, 19).replace('T', ' ')  
+            data[i].fecha = SerialDateToJSDate(data[i].fecha, -24).toISOString().slice(0, 19).replace('T', ' ')  
             // agregar la fecha de carga
 
             let test = new Date(data[i].fecha)
@@ -66,4 +68,4 @@ function leerExcelServiciosAuxiliares(ruta){
 };
 
 
-module.exports.leerExcelServiciosAuxiliares = leerExcelServiciosAuxiliares
+module.exports.leerExcelGeneracionObligada = leerExcelGeneracionObligada

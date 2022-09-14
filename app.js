@@ -12,6 +12,7 @@ const XSLX = require('xlsx')
 const totales_por_contratos = require('./uploaders/totales_por_contratos.js')
 const balance_de_potencia = require('./uploaders/balance_de_potencia.js')
 const servicios_auxiliares = require('./uploaders/servicios_auxiliares.js')
+const generacion_obligada = require('./uploaders/generacion_obligada.js')
 const resumen_generacion = require('./uploaders/resumen_generacion.js')
 
 
@@ -1229,11 +1230,147 @@ app.post('/upload_servicios_auxiliares', function(req, res){
         //console.log("Filas convertidas a JSON: " + data.length)
         archivoCargado = await uploadPromise(req,res)
         data =  await servicios_auxiliares.leerExcelServiciosAuxiliares('uploads/'+ archivoCargado)
-        //console.log(data)
+
+        try {
+
+
+            let pool = await sql.connect(dbConfig_localhost);     
+            
+            // insertar info por Distribuidores
+
+            for ( i = 0; i < data.length; i++) {
+                let result = await pool.request()
+
+                .input('empresas_acreedoras', sql.NVarChar ([100]), data[i].empresas_acreedoras)
+                .input('secundaria_mw', sql.Float, data[i].secundaria_mw)
+                .input('operativa_mw', sql.Float, data[i].operativa_mw)
+                .input('secundaria_usd', sql.Float, data[i].secundaria_usd)
+                .input('operativa_usd', sql.Float, data[i].operativa_usd)
+                .input('total_usd', sql.Float, data[i].total_usd)
+                .input('fecha_mes', sql.NVarChar ([100]), data[i].fecha_mes)
+                .input('version', sql.NVarChar ([100]), data[i].version)
+                .input('fecha_carga', sql.DateTime, data[i].fecha_carga)
+
+                .execute('insertarServiciosAuxiliares')
+            }
+
+            //insertar info en SQL por Contratos
+
+        } catch (err) {            
+            console.log(err);
+
+            
+        }
+
         
-   })().then(() => res.json((data)))
+   })().then(() => res.send('<script type="text/javascript"> alert("Archivo de Servicios Auxiliares Cargado!"); window.location="./cargarDataAplicacion";</script>') )
+        
+   //})().then(() => res.json((data)))
 
 });
+
+
+
+app.post('/upload_generacion_obligada', function(req, res){
+    let data;   
+    let archivoCargado;
+   
+    const uploadPromise = () => {
+        return new Promise((resolve, reject) => {
+            upload(req,res,function(err){                    
+                if(err){
+                    console.log('Multer Error:' + err);
+                    return reject(err)                                
+                }else{
+                    archivoCargado = req.file.filename;
+                    console.log(archivoCargado);
+                    console.log('uploads/'+ archivoCargado)
+                    resolve(archivoCargado)
+                    // data =  leerExcelLiquidacion('uploads/'+ archivoCargado)
+                    //res.send(data);
+                    //res.send('Archivo cargado!');
+                }                
+            }) ;
+        });
+   }
+      
+    
+    //funcion para leer linea a linea el JSON
+    (async function () 
+    {
+       // data = await leerExcelLiquidacion('uploads/' + archivoCargado)
+        //console.log("Filas convertidas a JSON: " + data.length)
+        archivoCargado = await uploadPromise(req,res)
+        data =  await generacion_obligada.leerExcelGeneracionObligada('uploads/'+ archivoCargado)
+
+        try {
+
+
+            let pool = await sql.connect(dbConfig_localhost);     
+            
+            // insertar info por Distribuidores
+
+            for ( i = 0; i < data.length; i++) {
+                let result = await pool.request()
+
+                .input('fecha', sql.Date, data[i].fecha)
+                .input('hora', sql.SmallInt, data[i].hora)
+                .input('subsistema', sql.NVarChar ([100]), data[i].subsistema)
+                .input('unidad_obligada', sql.NVarChar ([100]), data[i].unidad_obligada)
+                .input('energia_mw', sql.Float, data[i].energia_mw)
+                .input('sobre_costo_real', sql.Float, data[i].sobre_costo_real)
+                .input('agente_responsable', sql.NVarChar ([100]), data[i].agente_responsable)
+                .input('agente', sql.NVarChar ([100]), data[i].agente)
+                .input('fecha_mes', sql.NVarChar ([100]), data[i].fecha_mes)
+                .input('version', sql.NVarChar ([100]), data[i].version)
+                .input('fecha_carga', sql.DateTime, data[i].fecha_carga)
+                
+
+                .execute('insertarGeneracionObligada')
+            }
+
+            //insertar info en SQL por Contratos
+
+        } catch (err) {            
+            console.log(err);            
+        }
+
+        
+   })().then(() => res.send('<script type="text/javascript"> alert("Archivo de Generación Obligada Cargado!"); window.location="./cargarDataAplicacion";</script>') )
+        
+   //})().then(() => res.json((data)))
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1271,25 +1408,54 @@ app.post('/upload_resumen_generacion', function(req, res){
         archivoCargado = await uploadPromise(req,res)
         data =  await resumen_generacion.leerExcelResumenGeneracion('uploads/'+ archivoCargado)
         //console.log(data)
+
         
-   })().then(() => res.json((data)))
-
-}
-);
+        try {
 
 
+            let pool = await sql.connect(dbConfig_localhost);     
+            
+            // insertar info por Distribuidores
 
+            for ( i = 0; i < data.length; i++) {
+                let result = await pool.request()
 
+                .input('fecha', sql.Date, data[i].fecha)
+                .input('LAP_GB_G1', sql.Float, data[i].LAP_GB_G1)
+                .input('LAP_GB_G2', sql.Float, data[i].LAP_GB_G2)
+                .input('LAP_GB_G3', sql.Float, data[i].LAP_GB_G3)
+                .input('LAP_GB_G4', sql.Float, data[i].LAP_GB_G4)
+                .input('LAP_BRUTA_TOTAL', sql.Float, data[i].LAP_BRUTA_TOTAL)
+                .input('LAP_CONSUMO_TOTAL', sql.Float, data[i].LAP_CONSUMO_TOTAL)
+                .input('LAP_NETA_TOTAL', sql.Float, data[i].LAP_NETA_TOTAL)
+                .input('spacer1', sql.NVarChar, data[i].spacer1)
+                .input('SAL_GB_G1', sql.Float, data[i].SAL_GB_G1)
+                .input('SAL_GB_G2', sql.Float, data[i].SAL_GB_G2)
+                .input('SAL_GB_G3', sql.Float, data[i].SAL_GB_G3)
+                .input('SAL_BRUTA_TOTAL', sql.Float, data[i].SAL_BRUTA_TOTAL)
+                .input('SAL_CONSUMO_TOTAL', sql.Float, data[i].SAL_CONSUMO_TOTAL)
+                .input('SAL_NETA_TOTAL', sql.Float, data[i].SAL_NETA_TOTAL)
+                .input('DAILY_NET', sql.Float, data[i].DAILY_NET)
+                .input('fecha_cierre', sql.Date, data[i].fecha_cierre)
+                .input('fecha_carga', sql.DateTime, data[i].fecha_carga)
+                
+                
 
+                .execute('insertarResumenesGeneracion')
+            }
 
+            //insertar info en SQL por Contratos
 
+        } catch (err) {            
+            console.log(err);            
+        }
 
+        
+   })().then(() => res.send('<script type="text/javascript"> alert("Archivo de Resumen Generación!"); window.location="./cargarDataAplicacion";</script>') )
+        
+  // })().then(() => res.json((data)))
 
-
-
-
-
-
+});
 
 
 
@@ -1299,6 +1465,5 @@ app.post('/upload_resumen_generacion', function(req, res){
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
-  })
-
+  });
 
