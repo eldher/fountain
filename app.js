@@ -1058,15 +1058,13 @@ app.post('/upload_totales_por_contratos', function(req, res){
         console.log(data.distribuidores  )
 
         try {
-            let pool = await sql.connect(dbConfig_localhost);     
-            for ( i = 0; i < data.distribuidores.length; i++) {
-                // const queryString = "INSERT INTO insert_test (hora, subsistema) " + 
-                //  "VALUES ('" +  data[i].hora + "', '"+ data[i].subsistema + " ') ";
 
-                //  console.log(queryString);
-                // let result = await pool.request()
-                // .query(queryString)            
-                //console.log(data[i].fecha)
+
+            let pool = await sql.connect(dbConfig_localhost);     
+            
+            // insertar info por Distribuidores
+
+            for ( i = 0; i < data.distribuidores.length; i++) {
                 let result = await pool.request()
                 .input('Distribuidores', sql.NVarChar ([50]) , data.distribuidores[i].distribuidores)
                 .input('dmg', sql.Float, data.distribuidores[i].dmg)
@@ -1077,8 +1075,37 @@ app.post('/upload_totales_por_contratos', function(req, res){
                 .execute('insertarContratos')
             }
 
+            // insertar info en SQL por Contratos
+
+            for ( i = 0; i < data.contratos.length; i++) {
+    
+                if (i <= 10) {
+                    console.log(data.contratos[i])
+                }
+                
+                let result = await pool.request()
+                .input('fecha', sql.Date,  data.contratos[i].fecha)
+                .input('hora', sql.SmallInt,  data.contratos[i].hora)
+                .input('nombre_contrato', sql.NVarChar,  data.contratos[i].nombre_contrato)
+                .input('tipo_contrato', sql.NVarChar,  data.contratos[i].tipo_contrato)
+                .input('consumo', sql.SmallInt,  data.contratos[i].consumo)
+                .input('suplido', sql.Float,  data.contratos[i].suplido)
+                .input('potencia_contratada', sql.Float,  data.contratos[i].potencia_contratada)
+                .input('mwh_contrato', sql.Float,  data.contratos[i].mwh_contrato)
+                .input('empresa', sql.VarChar ([20]),  data.contratos[i].empresa)
+                .input('fecha_carga', sql.DateTime,  data.contratos[i].fecha_carga)
+                .execute('insertarContratos2')
+            }
+
+
+
+
+
+
         } catch (err) {            
             console.log(err);
+
+
         }
        
     })().then(() => res.send('<script type="text/javascript"> alert("Archivo de Totales por Contrato Cargado!"); window.location="./cargarDataAplicacion";</script>') )
@@ -1130,8 +1157,41 @@ app.post('/upload_balance_de_potencia', function(req, res){
         archivoCargado = await uploadPromise(req,res)
         data =  await balance_de_potencia.leerExcelBalanceDePotencia('uploads/'+ archivoCargado)
         //console.log(data)
+
+        try {
+
+
+            let pool = await sql.connect(dbConfig_localhost);     
+            
+            // insertar info por Distribuidores
+
+            for ( i = 0; i < data.length; i++) {
+                let result = await pool.request()
+                .input('fecha', sql.Date, data[i].fecha)
+                .input('codigo_de_empresa', sql.NVarChar ([100]), data[i].codigo_de_empresa)
+                .input('nombre_de_la_oferta', sql.NVarChar ([100]), data[i].nombre_de_la_oferta)
+                .input('oferta_en_usdkw_mes', sql.Float, data[i].oferta_en_usdkw_mes)
+                .input('disponible_mw', sql.Float, data[i].disponible_mw)
+                .input('colocado_mw', sql.Float, data[i].colocado_mw)
+                .input('faltante_mw', sql.Float, data[i].faltante_mw)
+                .input('precio_del_mw_usd', sql.Float, data[i].precio_del_mw_usd)
+                .input('credito_en_usd', sql.Float, data[i].credito_en_usd)
+                .input('fecha_mes', sql.NVarChar ([100]), data[i].fecha_mes)
+                .input('version', sql.NVarChar ([100]), data[i].version)        
+                .input('fecha_carga', sql.DateTime, data[i].fecha_carga)        
+                .execute('insertarBalancesPotencia')
+            }
+
+            // insertar info en SQL por Contratos
+
+        } catch (err) {            
+            console.log(err);
+
+            
+        }
+
         
-   })().then(() => res.json((data)))
+   })().then(() => res.send('<script type="text/javascript"> alert("Archivo de Balances de Potencia Cargado!"); window.location="./cargarDataAplicacion";</script>') )
 
 });
 

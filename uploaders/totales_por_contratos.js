@@ -64,7 +64,9 @@ function leerExcelTotalesPorContratos(ruta){
         
         // convertir fechas de formato Excel a JS
         for (let i = 0; i < contratos.length; i++) {            
-            contratos[i].fecha = SerialDateToJSDate(contratos[i].fecha, 19).toISOString().slice(0, 19).replace('T', ' ')
+            contratos[i].fecha = SerialDateToJSDate(contratos[i].fecha, -24 ).toISOString().slice(0, 19).replace('T', ' ')
+
+
             let fecha_ts = Date.now()
             let hoy = new Date(fecha_ts)
             contratos[i].fecha_carga = hoy.toISOString().slice(0, 19).replace('T', ' ')

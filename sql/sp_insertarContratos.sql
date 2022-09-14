@@ -1,3 +1,5 @@
+-- Definicion de los datos
+-- exec sp_help TotalesContratos
 
 -- SETUP:
 -- agregar fecha a la tabla
@@ -45,7 +47,7 @@ VALUES
 END
 GO
 
--- select * from [dbo].[TotalesContratos]
+-- select * from [dbo].[TotalesContratos] order by fecha
 
 
---delete from  [dbo].[TotalesContratos] where fecha_carga = '2022-09-12 19:28:09.000'
+--delete from  [dbo].[TotalesContratos] where fecha > '2022-03-31' 

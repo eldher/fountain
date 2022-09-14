@@ -44,7 +44,7 @@ function leerExcelServiciosAuxiliares(ruta){
         
         for (let i = 0; i < data.length; i++) {      
             // convertir fechas de formato Excel a JS
-            data[i].fecha = SerialDateToJSDate(extraccionFecha, 19) //.toISOString().slice(0, 19).replace('T', ' ')  
+            data[i].fecha = SerialDateToJSDate(extraccionFecha, -24) //.toISOString().slice(0, 19).replace('T', ' ')  
             // agregar la fecha de carga
             data[i].fecha_carga = hoy.toISOString().slice(0, 19).replace('T', ' ')
         }

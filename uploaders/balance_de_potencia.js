@@ -25,9 +25,7 @@ function leerExcelBalanceDePotencia(ruta){
                 "colocado_mw",
                 "faltante_mw",
                 "precio_del_mw_usd",
-                "credito_en_usd",
-                "fecha_mes",
-                "version"
+                "credito_en_usd"
             ], range:7 }
         );
           
@@ -66,9 +64,20 @@ function leerExcelBalanceDePotencia(ruta){
         
         for (let i = 0; i < data.length; i++) {      
             // convertir fechas de formato Excel a JS
-            data[i].fecha = SerialDateToJSDate(data[i].fecha, 19).toISOString().slice(0, 19).replace('T', ' ')  
+            data[i].fecha = SerialDateToJSDate(data[i].fecha, -24).toISOString().slice(0, 19).replace('T', ' ')  
+
+            
+            
+            //agregar fecha_mes
+            let test = new Date(data[i].fecha)
+            data[i].fecha_mes = test.getFullYear() + "-" + test.getMonth()
+
+            // cambiar este parametro a input desde formulario
+            data[i].version = 'Oficial'
+
             // agregar la fecha de carga
             data[i].fecha_carga = hoy.toISOString().slice(0, 19).replace('T', ' ')
+
         }
 
 
