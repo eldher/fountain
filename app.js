@@ -1351,31 +1351,6 @@ app.post('/upload_generacion_obligada', function(req, res){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 app.post('/upload_resumen_generacion', function(req, res){
     let data;   
     let archivoCargado;
@@ -1453,7 +1428,7 @@ app.post('/upload_resumen_generacion', function(req, res){
         
    })().then(() => res.send('<script type="text/javascript"> alert("Archivo de Resumen Generación!"); window.location="./cargarDataAplicacion";</script>') )
         
-  // })().then(() => res.json((data)))
+  //})().then(() => res.json((data)))
 
 });
 

@@ -40,12 +40,26 @@ function LimpiarUltimasFilas(data){
         if (data[index].fecha == "Days") { data.splice(index, 1); }
     }
 
+    var index = data.length;
+    while (index--) {
+        if (data[index].fecha == "") { data.splice(index, 1); }
+    }
+
+    var index = data.length;
+    while (index--) {
+        if (data[index].fecha == "0") { data.splice(index, 1); }
+    }
+
+    
+
+
 
     // eliminar entradas vacias del excel
     var index = data.length;
     while (index--) {
         if (data[index].LAP_BRUTA_TOTAL == 0) { data.splice(index, 1); }
     }
+
 
     return(data)
 
@@ -113,7 +127,7 @@ function leerExcelResumenGeneracion(ruta){
         var Diciembre = XSLX.utils.sheet_to_json(workbook.Sheets['Diciembre'], {header: ResumenHeaders, range:4 });
          
     
-        console.log(Enero)
+        console.log(Mayo)
 
 
 
@@ -132,7 +146,8 @@ function leerExcelResumenGeneracion(ruta){
 
 
 
-        
+        console.log(Mayo)
+
 
         Enero     = Formatear(Enero      ); 
         Febrero   = Formatear(Febrero    );
@@ -147,6 +162,8 @@ function leerExcelResumenGeneracion(ruta){
         Noviembre = Formatear(Noviembre  );
         Diciembre = Formatear(Diciembre  );
 
+
+        console.log(Mayo)
 
 
         let UnionMensual = []
@@ -166,7 +183,7 @@ function leerExcelResumenGeneracion(ruta){
     
 
 
-        console.log(UnionMensual)
+        //console.log(UnionMensual)
 
 
 
