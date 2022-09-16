@@ -53,4 +53,4 @@ GO
 --delete from  [dbo].[TotalesContratos] where fecha > '2022-03-31' 
 
 
-SELECT * FROM [dbo].[LiquidacionFountain] ORDER BY fecha_carga
+--SELECT * FROM [dbo].[LiquidacionFountain] ORDER BY fecha_carga

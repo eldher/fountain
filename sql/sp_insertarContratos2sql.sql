@@ -13,12 +13,12 @@
 --GO
 
 
-CREATE PROCEDURE insertarContratos2
+ALTER PROCEDURE insertarContratos2
 
 @fecha date  = NULL,
 @hora tinyint  = NULL,
-@nombre_contrato nvarchar  = NULL,
-@tipo_contrato nvarchar  = NULL,
+@nombre_contrato nvarchar(100)  = NULL,
+@tipo_contrato nvarchar(100)  = NULL,
 @consumo tinyint  = NULL,
 @suplido float  = NULL,
 @potencia_contratada float  = NULL,
@@ -58,7 +58,8 @@ VALUES
 )
 
 END
-GO
+
+
 
 -- select *from [dbo].TotalesContratos2 order by fecha
 

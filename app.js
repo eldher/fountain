@@ -1087,8 +1087,8 @@ app.post('/upload_totales_por_contratos', function(req, res){
                 let result = await pool.request()
                 .input('fecha', sql.Date,  data.contratos[i].fecha)
                 .input('hora', sql.SmallInt,  data.contratos[i].hora)
-                .input('nombre_contrato', sql.NVarChar,  data.contratos[i].nombre_contrato)
-                .input('tipo_contrato', sql.NVarChar,  data.contratos[i].tipo_contrato)
+                .input('nombre_contrato', sql.NVarChar ([100]),  data.contratos[i].nombre_contrato)
+                .input('tipo_contrato', sql.NVarChar ([100]),  data.contratos[i].tipo_contrato)
                 .input('consumo', sql.SmallInt,  data.contratos[i].consumo)
                 .input('suplido', sql.Float,  data.contratos[i].suplido)
                 .input('potencia_contratada', sql.Float,  data.contratos[i].potencia_contratada)
@@ -1100,6 +1100,8 @@ app.post('/upload_totales_por_contratos', function(req, res){
 
 
 
+            let actualizar_contratos = await pool.request()
+            .execute('insertarContratos2_INSERT_INTO_CONTRATOS')
 
 
 

@@ -34,18 +34,97 @@ Select @fecha_mes = CONCAT(YEAR(@fecha_cierre),'-',MONTH(@fecha_cierre))
 
 
 --ALTER TABLE TotalesContratos2 ADD empresa varchar(20);
+--ALTER TABLE TotalesContratos2 DROP COLUMN empresa 
+
+update TotalesContratos2
+set empresa =  
+case 
+when nombre_contrato LIKE '%ELEKTRA%' then 'ENSA'
+when nombre_contrato LIKE '%ENSA%' then 'ENSA'
+when nombre_contrato LIKE '%EDEMET%' then 'EDEMET'
+when nombre_contrato LIKE '%EDECHI%' then 'EDECHI'
+end
+--select * from TotalesContratos2 order by fecha_carga
 
 
-----ALTER TABLE TotalesContratos2 DROP COLUMN empresa 
 
---update TotalesContratos2
---set empresa =  
---case 
---when nombre_contrato LIKE '%ELEKTRA%' then 'ENSA'
---when nombre_contrato LIKE '%ENSA%' then 'ENSA'
---when nombre_contrato LIKE '%EDEMET%' then 'EDEMET'
---when nombre_contrato LIKE '%EDECHI%' then 'EDECHI'
---end
+
+--------------------------------------------------------------------------
+--                      SECCION 2 -- TABLA MENSUAL
+--------------------------------------------------------------------------
+
+
+-- save in temp table first
+drop table if exists #temp_dia
+select 
+fecha
+,avg(cast(subsistema as int)     ) as subsistema
+,avg(cms                         ) as cms
+,sum(fountain_a_bai230_27_e      ) as fountain_a_bai230_27_e     
+,sum(fountain_a_bai230_27_s		 ) as fountain_a_bai230_27_s		
+,sum(fountain_a_bai230_28b_e	 ) as fountain_a_bai230_28b_e	
+,sum(fountain_a_bai230_28b_s	 ) as fountain_a_bai230_28b_s	
+,sum(fountain_a_bfrio230_28_e	 ) as fountain_a_bfrio230_28_e	
+,sum(fountain_a_bfrio230_28_s	 ) as fountain_a_bfrio230_28_s	
+,sum(fountain_a_bfrio230_36_e	 ) as fountain_a_bfrio230_36_e	
+,sum(fountain_a_bfrio230_36_s	 ) as fountain_a_bfrio230_36_s	
+,sum(fountain_a_compra_mer_con	 ) as fountain_a_compra_mer_con	
+,sum(fountain_a_cons_exp		 ) as fountain_a_cons_exp		
+,sum(fountain_a_entrando		 ) as fountain_a_entrando		
+,sum(fountain_a_saliendo		 ) as fountain_a_saliendo		
+,sum(fountain_a_vta_mer_con		 ) as fountain_a_vta_mer_con		
+,sum(fountain_a_vta_mer_opo		 ) as fountain_a_vta_mer_opo		
+,sum(fountain_a_perdida_real	 ) as fountain_a_perdida_real	
+,sum(fountain_a_perdida_teorica	 ) as fountain_a_perdida_teorica	
+,sum(fountain_a_perdida_total	 ) as fountain_a_perdida_total	
+,sum(fountain_a_saliendo_bruto	 ) as fountain_a_saliendo_bruto	
+,sum(fountain_a_supl_loc		 ) as fountain_a_supl_loc		
+,sum(perdida_consumo			 ) as perdida_consumo			
+,sum(energia_asignada			 ) as energia_asignada			
+,sum(suplido_pos_contratos		 ) as suplido_pos_contratos		
+,sum(suplido_mo					 ) as suplido_mo					
+,sum(suplido_mo_imp				 ) as suplido_mo_imp				
+,sum(consumo					 ) as consumo					
+,sum(ocasional_compra			 ) as ocasional_compra			
+,sum(ocasional_venta			 ) as ocasional_venta			
+,sum(ocasional_debito			 ) as ocasional_debito			
+,sum(ocasional_credito			 ) as ocasional_credito			
+,sum(ensa						 ) as ensa						
+,sum(edemet						 ) as edemet						
+,sum(edechi						 ) as edechi						
+,sum(prog_exp					 ) as prog_exp					
+,version
+into #temp_dia
+from (select distinct * from LiquidacionFountain) a
+where a.version = 'Oficial'
+group by a.fecha, a.version
+
+-- select * from #temp_dia
+
+-- Validacion data de liquidacion
+--select EOMONTH(fecha) , version
+--,sum(ensa						 ) as ensa						
+--,sum(edemet						 ) as edemet						
+--,sum(edechi						 ) as edechi
+--from LiquidacionFountain
+--group by EOMONTH(fecha), version
+--order by 1,2
+
+
+--------------------------------------------------------------------------
+--                       CREACION preliminar_fountain_dia  - Agrega Columnas de sumarizacion
+--------------------------------------------------------------------------
+
+
+drop table if exists preliminar_fountain_dia
+select *
+,total_gen_compras = fountain_a_supl_loc + ocasional_compra - fountain_a_bfrio230_36_e + (fountain_a_bfrio230_36_e - fountain_a_entrando)
+,ventas_totales = energia_asignada + ocasional_venta + (suplido_pos_contratos - suplido_mo)  
+,energy_balance_check = round(energia_asignada + ocasional_venta + (suplido_pos_contratos - suplido_mo) - (fountain_a_supl_loc + ocasional_compra - fountain_a_bfrio230_36_e + (fountain_a_bfrio230_36_e - fountain_a_entrando)),2)
+into preliminar_fountain_dia
+from #temp_dia
+
+--	select * from preliminar_fountain_dia
 
 
 
@@ -55,18 +134,18 @@ Select @fecha_mes = CONCAT(YEAR(@fecha_cierre),'-',MONTH(@fecha_cierre))
 --------------------------------------------------------------------------
 
 
---drop table if exists TotalEnergia
---select fecha, empresa , energia
---into TotalEnergia
---from
---(
---	select
---	EOMONTH(fecha) as fecha , sum(EDEMET) as EDEMET, sum(ENSA) as ENSA, SUM(EDECHI) as EDECHI
---	from [preliminar_fountain_dia]
---	group by EOMONTH(fecha)
---) P
---UNPIVOT 
---	(energia  FOR empresa IN ([EDEMET],[ENSA],[EDECHI]))AS UNPVT;
+drop table if exists TotalEnergia
+select fecha, empresa , energia
+into TotalEnergia
+from
+(
+	select
+	EOMONTH(fecha) as fecha , sum(EDEMET) as EDEMET, sum(ENSA) as ENSA, SUM(EDECHI) as EDECHI
+	from [preliminar_fountain_dia]
+	group by EOMONTH(fecha)
+) P
+UNPIVOT 
+	(energia  FOR empresa IN ([EDEMET],[ENSA],[EDECHI]))AS UNPVT;
 
 --select * from TotalEnergia
 
@@ -82,8 +161,6 @@ Select @fecha_mes = CONCAT(YEAR(@fecha_cierre),'-',MONTH(@fecha_cierre))
 --select * from contratos_fecha
 
 
-
-
 --------------------------------------------------------------------------
 -- #PRECIOS                  CREACION TABLA DE CONTRATOS CON PRECIOS POR MWH
 --------------------------------------------------------------------------
@@ -96,8 +173,6 @@ Select @fecha_mes = CONCAT(YEAR(@fecha_cierre),'-',MONTH(@fecha_cierre))
 --into #precios
 --from contratos_fecha a
 --left join tipo_precio b on a.fecha_cierre = b.fecha_cierre and a.categoria_precio = b.categoria_precio
-
-
 
 
 --ALTER TABLE #precios ADD empresa varchar(20);
@@ -182,95 +257,34 @@ left join TotalEnergia c on a.fecha = c.fecha and a.empresa = c.empresa
 left join tipo_precio d on a.fecha = d.fecha_cierre and a.categoria_precio = d.categoria_precio
 order by 1,2
 
-
-
-
---------------------------------------------------------------------------
---                      SECCION 2 -- TABLA MENSUAL
---------------------------------------------------------------------------
-
-
--- save in temp table first
-drop table if exists #temp_dia
-select 
-fecha
-,avg(cast(subsistema as int)     ) as subsistema
-,avg(cms                         ) as cms
-,sum(fountain_a_bai230_27_e      ) as fountain_a_bai230_27_e     
-,sum(fountain_a_bai230_27_s		 ) as fountain_a_bai230_27_s		
-,sum(fountain_a_bai230_28b_e	 ) as fountain_a_bai230_28b_e	
-,sum(fountain_a_bai230_28b_s	 ) as fountain_a_bai230_28b_s	
-,sum(fountain_a_bfrio230_28_e	 ) as fountain_a_bfrio230_28_e	
-,sum(fountain_a_bfrio230_28_s	 ) as fountain_a_bfrio230_28_s	
-,sum(fountain_a_bfrio230_36_e	 ) as fountain_a_bfrio230_36_e	
-,sum(fountain_a_bfrio230_36_s	 ) as fountain_a_bfrio230_36_s	
-,sum(fountain_a_compra_mer_con	 ) as fountain_a_compra_mer_con	
-,sum(fountain_a_cons_exp		 ) as fountain_a_cons_exp		
-,sum(fountain_a_entrando		 ) as fountain_a_entrando		
-,sum(fountain_a_saliendo		 ) as fountain_a_saliendo		
-,sum(fountain_a_vta_mer_con		 ) as fountain_a_vta_mer_con		
-,sum(fountain_a_vta_mer_opo		 ) as fountain_a_vta_mer_opo		
-,sum(fountain_a_perdida_real	 ) as fountain_a_perdida_real	
-,sum(fountain_a_perdida_teorica	 ) as fountain_a_perdida_teorica	
-,sum(fountain_a_perdida_total	 ) as fountain_a_perdida_total	
-,sum(fountain_a_saliendo_bruto	 ) as fountain_a_saliendo_bruto	
-,sum(fountain_a_supl_loc		 ) as fountain_a_supl_loc		
-,sum(perdida_consumo			 ) as perdida_consumo			
-,sum(energia_asignada			 ) as energia_asignada			
-,sum(suplido_pos_contratos		 ) as suplido_pos_contratos		
-,sum(suplido_mo					 ) as suplido_mo					
-,sum(suplido_mo_imp				 ) as suplido_mo_imp				
-,sum(consumo					 ) as consumo					
-,sum(ocasional_compra			 ) as ocasional_compra			
-,sum(ocasional_venta			 ) as ocasional_venta			
-,sum(ocasional_debito			 ) as ocasional_debito			
-,sum(ocasional_credito			 ) as ocasional_credito			
-,sum(ensa						 ) as ensa						
-,sum(edemet						 ) as edemet						
-,sum(edechi						 ) as edechi						
-,sum(prog_exp					 ) as prog_exp					
-,version
-into #temp_dia
-from (select distinct * from LiquidacionFountain) a
-where a.version = 'Oficial'
-group by a.fecha, a.version
-
--- Validacion data de liquidacion
---select EOMONTH(fecha) , version
---,sum(ensa						 ) as ensa						
---,sum(edemet						 ) as edemet						
---,sum(edechi						 ) as edechi
---from LiquidacionFountain
---group by EOMONTH(fecha), version
---order by 1,2
-
-
---------------------------------------------------------------------------
---                       CREACION preliminar_fountain_dia  - Agrega Columnas de sumarizacion
---------------------------------------------------------------------------
-
-
-drop table if exists preliminar_fountain_dia
-select *
-,total_gen_compras = fountain_a_supl_loc + ocasional_compra - fountain_a_bfrio230_36_e + (fountain_a_bfrio230_36_e - fountain_a_entrando)
-,ventas_totales = energia_asignada + ocasional_venta + (suplido_pos_contratos - suplido_mo)  
-,energy_balance_check = round(energia_asignada + ocasional_venta + (suplido_pos_contratos - suplido_mo) - (fountain_a_supl_loc + ocasional_compra - fountain_a_bfrio230_36_e + (fountain_a_bfrio230_36_e - fountain_a_entrando)),2)
-into preliminar_fountain_dia
-from #temp_dia
-
-
 --select * from preliminar_fountain_dia
 --select * from #temp_dia
 
+
+--declare @fecha_cierre date
+--set @fecha_cierre = '2022-05-31'
+
+
 declare @precio_perdida decimal(10,2);
-select  @precio_perdida = (select MAX(precio) as precio from DetallePerdidas ) -- where EOMONTH(fecha) = @fecha_cierre )
+select  @precio_perdida = (
+	select MAX(precio) as precio  
+	from DetallePerdidas
+	where fecha_fin = @fecha_cierre
+	group by fecha_fin
+) -- where EOMONTH(fecha) = @fecha_cierre )
 
+--select @precio_perdida
 
+--select * from [dbo].[DetallePerdidas] order by fecha_fin
 --select distinct EOMONTH(fecha) as fecha ,
 --AVG(precio)  as precio  
 --from DetallePerdidas
 --group by  EOMONTH(fecha) 
 
+
+
+--declare @fecha_cierre date
+--set @fecha_cierre = '2022-05-31'
 
 declare @compensacion_potencia decimal(10,2);
 select @compensacion_potencia = ( 
@@ -281,22 +295,34 @@ select @compensacion_potencia = (
 	and version = 'Oficial'
 	)
 
+--select @compensacion_potencia
 
 
-
+--declare @fecha_cierre date
+--set @fecha_cierre = '2022-05-31'
 
 declare @servicios_auxiliares decimal(10,2);
 select @servicios_auxiliares  = (
 	select total_usd from ServiciosAuxiliares
 	where empresas_acreedoras = 'FOUNTAIN_A'
-	AND fecha_mes = '2021-12'
+	AND fecha_mes = CONCAT(YEAR(@fecha_cierre),'-',MONTH(@fecha_cierre))
 	and version = 'Oficial'
 )
 
+--select @servicios_auxiliares
+--select * from ServiciosAuxiliares
+
+--update ServiciosAuxiliares set fecha_mes = '2022-2' where fecha_mes = '2022-02'
+--update ServiciosAuxiliares set fecha_mes = '2022-2' where fecha_mes = '2022-02'
+--update ServiciosAuxiliares set fecha_mes = '2022-1' where fecha_mes = '2022-01'
+--update ServiciosAuxiliares set fecha_mes = '2022-5' where fecha_mes = '2022-05'
+--update ServiciosAuxiliares set fecha_mes = '2022-3' where fecha_mes = '2022-03'
 
 
 
 
+--declare @fecha_cierre date
+--set @fecha_cierre = '2022-04-30'
 
 declare @ingresos_contratos decimal(10,2);
 select @ingresos_contratos = 
@@ -306,7 +332,7 @@ select @ingresos_contratos =
 	where fecha = @fecha_cierre
 	and ingreso_precio_contado IS NOT NULL
 ) 
-
+--select @ingresos_contratos
 
 
 
@@ -355,8 +381,6 @@ cms_promedio = ISNULL(cms_promedio,0)
 ,generacion_obligada = ISNULL(generacion_obligada, 0)
 ,servicios_auxiliares = ISNULL(servicios_auxiliares, 0)
 ,compensacion_potencia = ISNULL(compensacion_potencia , 0)
-
-
 
 ,ingreso_total_neto = isnull((ventas_energia_mercado_ocasional + ingresos_por_contratos + credito_energia_perdida_transmision
 + sasd + generacion_obligada + servicios_auxiliares + compensacion_potencia + SAERLP

@@ -33,7 +33,7 @@ function leerExcelTotalesPorContratos(ruta){
         }
 
 
-        // pasar nombres de keys a minusculas de json distribuidores
+        // pasar nombres de keys a minusculas de json contratos
         for(var i = 0; i < contratos.length; i++){ 
             for (var key in contratos[i]) {
             if(key.toLowerCase() !== key){
