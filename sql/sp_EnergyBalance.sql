@@ -5,6 +5,8 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
+--USE FOUNTAIN5
+
 -- =============================================
 -- Author:		Eldher
 -- =============================================
@@ -23,8 +25,8 @@ EOMONTH(a.fecha) as fecha
 ,sum(fountain_a_saliendo) as fountain_a_saliendo
 ,sum(ocasional_compra) as ocasional_compra
 ,sum(ocasional_venta) as ocasional_venta
-,avg(CASE WHEN ocasional_compra <> 0 THEN cms ELSE NULL END) as avg_purchase_price
-,avg(CASE WHEN ocasional_venta <> 0 THEN cms ELSE NULL END) as avg_sale_price
+,avg(CASE WHEN ocasional_compra <> 0 THEN cms ELSE 0 END) as avg_purchase_price
+,avg(CASE WHEN ocasional_venta <> 0 THEN cms ELSE 0 END) as avg_sale_price
 ,sum(suplido_pos_contratos - suplido_mo) as transmission_losses
 ,sum(fountain_a_bfrio230_36_s) as fhpc_generation_smec
 into #energy_balance 
@@ -32,6 +34,8 @@ from [dbo].[LiquidacionFountain] a
 group by EOMONTH(a.fecha) 
 order by EOMONTH(a.fecha) 
 
+
+--select * from #energy_balance order by fecha
 
 
 -- tabla 1 
@@ -41,13 +45,13 @@ cast(a.fecha as varchar) as fecha
 ,a.fountain_a_saliendo as fhpc_generation
 ,a.ocasional_compra as spot_energy_purchases
 ,a.avg_purchase_price 
-,(b.EAR + a.ocasional_venta + a.transmission_losses)/1000 as total_gwh_1
+,(ISNULL(b.EAR,0) + ISNULL(a.ocasional_venta,0) + ISNULL(a.transmission_losses,0))/1000 as total_gwh_1
 ,a.ocasional_venta as spot_energy_sales
 ,a.avg_sale_price
-,b.EAR as ppa_sales
+,ISNULL(b.EAR,0) as ppa_sales
 ,a.transmission_losses
 ,0 as exports
-,(b.EAR + a.ocasional_venta + a.transmission_losses)/1000 as total_gwh_2
+,(ISNULL(b.EAR,0) + ISNULL(a.ocasional_venta,0) + ISNULL(a.transmission_losses,0))/1000 as total_gwh_2
 ,fhpc_generation_smec
 into #tabla1
 from #energy_balance a 
@@ -55,6 +59,9 @@ left join 	(select fecha, sum(EAR) as EAR from INGRESOS_CONTRATOS group by fecha
 where YEAR(a.fecha) = 2022
 order by a.fecha
 
+--select * from #tabla1 order by fecha
+
+--select * from INGRESOS_CONTRATOS
 
 
 -- tabla1 con totales
@@ -82,12 +89,12 @@ select
 cast(a.fecha as varchar) as fecha
 ,a.fountain_a_saliendo as delivered_cnd
 ,a.ocasional_compra as spot_energy_purchases
-,(b.EAR + a.ocasional_venta + a.transmission_losses)/1000 as total_gwh_1
-,b.EAR as ppa_sales
+,(ISNULL(b.EAR,0) + ISNULL(a.ocasional_venta,0) + ISNULL(a.transmission_losses,0))/1000 as total_gwh_1
+,ISNULL(b.EAR,0) as ppa_sales
 ,a.ocasional_venta as spot_energy_sales
 ,a.transmission_losses
 ,0 as exports
-,(b.EAR + a.ocasional_venta + a.transmission_losses)/1000 as total_gwh_2
+,(ISNULL(b.EAR,0) + ISNULL(a.ocasional_venta,0) + ISNULL(a.transmission_losses,0))/1000 as total_gwh_2
 into #tabla2
 from #energy_balance a 
 left join 	(select fecha, sum(EAR) as EAR from INGRESOS_CONTRATOS group by fecha) b  on a.fecha = b.fecha
@@ -124,12 +131,13 @@ select
 cast(a.fecha as varchar) as fecha
 ,a.fountain_a_saliendo/1000 as delivered_cnd
 ,a.ocasional_compra/1000 as spot_energy_purchases
-,(b.EAR + a.ocasional_venta + a.transmission_losses)/1000 as total_gwh_1
-,b.EAR/1000 as ppa_sales
+--,(b.EAR + a.ocasional_venta + a.transmission_losses)/1000 as total_gwh_1
+,(ISNULL(b.EAR,0) + ISNULL(a.ocasional_venta,0) + ISNULL(a.transmission_losses,0))/1000 as total_gwh_1
+,ISNULL(b.EAR,0) as ppa_sales
 ,a.ocasional_venta/1000 as spot_energy_sales
 ,a.transmission_losses/1000 as transmission_losses
 ,0 as exports
-,(b.EAR + a.ocasional_venta + a.transmission_losses)/1000 as total_gwh_2
+,(ISNULL(b.EAR,0) + ISNULL(a.ocasional_venta,0) + ISNULL(a.transmission_losses,0))/1000 as total_gwh_2
 into #tabla3
 from #energy_balance a 
 left join 	(select fecha, sum(EAR) as EAR from INGRESOS_CONTRATOS group by fecha) b  on a.fecha = b.fecha

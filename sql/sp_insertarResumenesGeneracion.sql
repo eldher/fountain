@@ -84,10 +84,12 @@ VALUES
 )
 
 END
-GO
-use FOUNTAIN5
 
 
-select fecha_carga, fecha, fecha_cierre , * from [dbo].resumenes_generacion order by 1,2
+--GO
+--use FOUNTAIN5
+
+
+--select fecha_carga, fecha, fecha_cierre , * from [dbo].resumenes_generacion order by 1,2
 
 -- delete from  [dbo].resumenes_generacion where fecha_carga = '2022-09-12 19:28:09.000'

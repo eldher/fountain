@@ -53,9 +53,7 @@ END
 GO
 
 --delete from INGRESOS_CONTRATOS where EOMONTH(fecha) = '2022-06-30'
-
 --delete from TotalesContratos2 where EOMONTH(fecha) = '2022-06-30'
---delete from TotalesContratos2 where fecha_carga is not null
 --delete from Contratos where EOMONTH(fecha) = '2022-06-30'
 
 

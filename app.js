@@ -687,22 +687,30 @@ app.get('/energyBalance/', function(req, res){
 app.get('/energyBalance/:anio', function(req, res){
     //console.log('modificar contratos');
     
+    let result;
+
     (async function () 
     {
 
         try {
             let pool = await sql.connect(dbConfig_localhost)  
-
             let query_anios = await pool.request()
             .query('select distinct anio from tb1')
-            anios = query_anios.recordsets[0];
+            anios = query_anios.recordsets[0];   
 
+            if (req.params.anio < '2022') {
+                result = await pool.request()
+                .input('anio', req.params.anio)
+                .execute('sp_EnergyBalancePorFecha')
+            }
+            else{
+                result = await pool.request()
+                .execute('sp_EnergyBalance')
+            }
 
-
-   
-            let result = await pool.request()
-            .input('anio', req.params.anio)
-            .execute('sp_EnergyBalancePorFecha')
+            // let result = await pool.request()
+            // .input('anio', req.params.anio)
+            // .execute('sp_EnergyBalancePorFecha')
             energyBalance = result.recordsets;
             tabla_eb1  = result.recordsets[0];
             tabla_eb2  = result.recordsets[1];
@@ -712,6 +720,8 @@ app.get('/energyBalance/:anio', function(req, res){
         } catch (err) {            
             console.log(err);
         }
+
+
 
        
        

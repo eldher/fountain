@@ -9,7 +9,7 @@ GO
 
 USE FOUNTAIN5
 
-EXECUTE [dbo].[sp_EjecutarCierre] N'2022-05-31'
+EXECUTE [dbo].[sp_EjecutarCierre] N'2022-07-31'
 EXECUTE [dbo].[sp_ObtenerContratoCategoria] N'2022-05-31'
 EXECUTE [dbo].[sp_ObtenerContratoCategoriaConTotal] N'2022-04-30'
 EXECUTE [dbo].[sp_ObtenerContratos]
