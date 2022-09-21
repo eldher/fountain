@@ -60,6 +60,13 @@ function LimpiarUltimasFilas(data){
         if (data[index].LAP_BRUTA_TOTAL == 0) { data.splice(index, 1); }
     }
 
+    var index = data.length;
+    while (index--) {
+       
+        if(  typeof data[index]?.LAP_BRUTA_TOTAL == 'undefined')  { data.splice(index, 1); }
+    }
+
+
 
     return(data)
 

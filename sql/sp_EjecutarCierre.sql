@@ -36,14 +36,14 @@ Select @fecha_mes = CONCAT(YEAR(@fecha_cierre),'-',MONTH(@fecha_cierre))
 --ALTER TABLE TotalesContratos2 ADD empresa varchar(20);
 --ALTER TABLE TotalesContratos2 DROP COLUMN empresa 
 
-update TotalesContratos2
-set empresa =  
-case 
-when nombre_contrato LIKE '%ELEKTRA%' then 'ENSA'
-when nombre_contrato LIKE '%ENSA%' then 'ENSA'
-when nombre_contrato LIKE '%EDEMET%' then 'EDEMET'
-when nombre_contrato LIKE '%EDECHI%' then 'EDECHI'
-end
+--update TotalesContratos2
+--set empresa =  
+--case 
+--when nombre_contrato LIKE '%ELEKTRA%' then 'ENSA'
+--when nombre_contrato LIKE '%ENSA%' then 'ENSA'
+--when nombre_contrato LIKE '%EDEMET%' then 'EDEMET'
+--when nombre_contrato LIKE '%EDECHI%' then 'EDECHI'
+--end
 --select * from TotalesContratos2 order by fecha_carga
 
 

@@ -1429,6 +1429,8 @@ app.post('/upload_resumen_generacion', function(req, res){
                 
 
                 .execute('insertarResumenesGeneracion')
+
+                
             }
 
             //insertar info en SQL por Contratos

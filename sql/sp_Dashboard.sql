@@ -22,6 +22,8 @@ select @fecha = EOMONTH(DATEFROMPARTS(@anio, @mes, 01) )
 
 
 
+
+
 select 
 cast(fecha as varchar) as fecha
 ,sum(fountain_a_supl_loc) as fountain_a_supl_loc
@@ -47,11 +49,27 @@ from [dbo].[LiquidacionFountain]
 where EOMONTH(fecha) = @fecha
 
 
-select cast(fecha as varchar) as fecha, sum(EAR) as EAR 
+-- se solicito cambio de EAR a Energia Asignada desde liquidacion
+
+
+drop table if exists #temp
+
+select
+cast(EOMONTH(fecha) as varchar) as fecha
+,sum(energia_asignada) as EAR 
 into #temp
-from INGRESOS_CONTRATOS 
-where fecha = @fecha
-group by fecha
+from [dbo].[LiquidacionFountain]
+where EOMONTH(fecha)  = @fecha
+group by EOMONTH(fecha) 
+
+
+
+
+--select cast(fecha as varchar) as fecha, sum(EAR) as EAR 
+--into #temp
+--from INGRESOS_CONTRATOS 
+--where fecha = @fecha
+--group by fecha
 
 
 declare @COUNT_RESULTS int;
