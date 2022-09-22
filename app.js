@@ -278,7 +278,9 @@ router.get('/modificarContratos', function(req, res, next){
                    'format(b.precio_base_usd_mwh, \'c\', \'en-US\') as precio_base_usd_mwh  , format(b.cargo_transmicion_seguimiento_electrico, \'c\', \'en-US\') as cargo_transmicion_seguimiento_electrico , ' + 
                    'format(b.precio,  \'c\', \'en-US\')  as precio ' +
                    'from CONTRATOS a ' +
-                   'left join tipo_precio b on a.fecha = b.fecha_cierre and a.categoria_precio = b.categoria_precio ' )
+                   'left join tipo_precio b on a.fecha = b.fecha_cierre and a.categoria_precio = b.categoria_precio ' +
+                   'order by fecha ASC'
+                   )
             contratos = result.recordsets[0];
             // console.log(contratos.length);
 
@@ -314,7 +316,7 @@ router.get('/modificarContratos/:id', function(req, res, next){
                     ',format(b.precio,  \'c\', \'en-US\')  as precio ' +       
                     'from CONTRATOS a ' + 
                     'left join tipo_precio b on a.fecha = b.fecha_cierre and a.categoria_precio = b.categoria_precio ' +                   
-                    'where a.id =' + req.params.id )
+                    'where a.id =' + req.params.id  + ' order by fecha ASC') 
             
             
             contratos = result.recordsets[0];
@@ -365,7 +367,7 @@ router.get('/modificarPrecios', function(req, res, next){
             ',cast(precio_base_usd_mwh as decimal(10,3)) as precio_base_usd_mwh ' +
             ',cast(cargo_transmicion_seguimiento_electrico as decimal(10,3)) as cargo_transmicion_seguimiento_electrico ' +
             ',cast(precio as decimal(10,3)) as precio ' + 
-            'from tipo_precio')
+            'from tipo_precio order by fecha_cierre asc')
        
             precios = result.recordsets[0];
             console.log(precios.length);
