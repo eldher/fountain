@@ -174,7 +174,8 @@ router.get('/cierre/:fecha', function(req, res, next){
 
 
             let result3 = await pool.request()
-            .query('SET LANGUAGE Spanish; select distinct cast(fecha as varchar) as fecha ,DATENAME(MONTH, fecha) as mes ,YEAR(fecha) as anio from INGRESOS_CONTRATOS')
+            //.query('SET LANGUAGE Spanish; select distinct cast(fecha as varchar) as fecha ,DATENAME(MONTH, fecha) as mes ,YEAR(fecha) as anio from INGRESOS_CONTRATOS')
+            .query('SET LANGUAGE Spanish; select distinct cast(fecha_cierre as varchar) as fecha ,DATENAME(MONTH, fecha_cierre) as mes ,YEAR(fecha_cierre) as anio from tipo_precio')
             fechas = result3.recordsets[0];
 
 
@@ -279,7 +280,7 @@ router.get('/modificarContratos', function(req, res, next){
                    'format(b.precio,  \'c\', \'en-US\')  as precio ' +
                    'from CONTRATOS a ' +
                    'left join tipo_precio b on a.fecha = b.fecha_cierre and a.categoria_precio = b.categoria_precio ' +
-                   'order by fecha ASC'
+                   ' order by fecha ASC'
                    )
             contratos = result.recordsets[0];
             // console.log(contratos.length);

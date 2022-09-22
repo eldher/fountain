@@ -1,12 +1,10 @@
-USE [FOUNTAIN5]
-GO
-
-/****** Object:  StoredProcedure [dbo].[sp_ObtenerContratoCategoriaConTotal]    Script Date: 6/27/2022 3:37:49 PM ******/
+/****** Object:  StoredProcedure [dbo].[sp_ObtenerContratoCategoriaConTotal]    Script Date: 9/22/2022 6:12:42 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 
@@ -38,7 +36,7 @@ potencia_contratada , dmm_s, energia, EAR,
 ingreso_precio_contado
 into #corto_plazo_1
 from INGRESOS_CONTRATOS
-where categoria_precio = 'Energia Corto Plazo I'
+where lower(categoria_precio) in  ('energia corto plazo i', 'energía corto plazo i')
 and ingreso_precio_contado IS NOT NULL
 and fecha = @fecha;
 
@@ -77,7 +75,7 @@ potencia_contratada , dmm_s, energia, EAR,
 ingreso_precio_contado
 into #corto_plazo_2
 from INGRESOS_CONTRATOS
-where categoria_precio = 'Energia Corto Plazo II'
+where lower(categoria_precio) in  ('energia corto plazo ii', 'energía corto plazo ii')
 and ingreso_precio_contado IS NOT NULL
 and fecha = @fecha;
 
@@ -118,7 +116,7 @@ potencia_contratada , dmm_s, energia, EAR,
 ingreso_precio_contado
 into #largo_plazo
 from INGRESOS_CONTRATOS
-where categoria_precio = 'Energia Largo Plazo'
+where lower(categoria_precio) in  ('energia largo plazo')
 and ingreso_precio_contado IS NOT NULL
 and fecha = @fecha;
 
@@ -249,5 +247,8 @@ drop table #potencia_2;
 END;
 
 
+
+
+GO
 
 

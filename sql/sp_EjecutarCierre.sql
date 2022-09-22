@@ -1,11 +1,10 @@
-
-
-/****** Object:  StoredProcedure [dbo].[sp_EjecutarCierre]    Script Date: 6/27/2022 3:27:10 PM ******/
+/****** Object:  StoredProcedure [dbo].[sp_EjecutarCierre]    Script Date: 9/22/2022 3:58:55 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 -- =============================================
 -- Author:		Eldher
@@ -241,11 +240,11 @@ a.fecha
 ,d.precio_base_usd_mwh
 ,d.cargo_transmicion_seguimiento_electrico
 ,d.precio_base_usd_mwh +  d.cargo_transmicion_seguimiento_electrico as precio
-,dmg     = IIF(a.categoria_precio LIKE '%Energia%', b.dmg , NULL) 
-,dmg_s   = IIF(a.categoria_precio LIKE '%Energia%', b.dmg_s , NULL)  
-,dmm_s   = IIF(a.categoria_precio LIKE '%Energia%', b.dmm_s , NULL)  
-,energia = IIF(a.categoria_precio LIKE '%Energia%', c.energia , NULL) 
-,EAR     = IIF(a.categoria_precio LIKE '%Energia%' , (a.potencia_contratada/b.dmm_s)*energia , 0 ) 
+,dmg     = IIF(LOWER(a.categoria_precio) LIKE '%energia%' or LOWER(a.categoria_precio) LIKE '%energía%', b.dmg , NULL) 
+,dmg_s   = IIF(LOWER(a.categoria_precio) LIKE '%energia%' or LOWER(a.categoria_precio) LIKE '%energía%', b.dmg_s , NULL)  
+,dmm_s   = IIF(LOWER(a.categoria_precio) LIKE '%energia%' or LOWER(a.categoria_precio) LIKE '%energía%', b.dmm_s , NULL)  
+,energia = IIF(LOWER(a.categoria_precio) LIKE '%energia%' or LOWER(a.categoria_precio) LIKE '%energía%', c.energia , NULL) 
+,EAR     = IIF(LOWER(a.categoria_precio) LIKE '%energia%' or LOWER(a.categoria_precio) LIKE '%energía%', (a.potencia_contratada/b.dmm_s)*energia , 0 ) 
 ,ingreso_precio_contado = 
 	IIF(a.categoria_precio LIKE '%Energia%', 
 	(a.potencia_contratada/b.dmm_s)*energia*(d.precio_base_usd_mwh +  d.cargo_transmicion_seguimiento_electrico) , 
