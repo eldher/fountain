@@ -19,7 +19,20 @@
     <div class="form-group row">
         <label for="fecha" class="col-sm-2 col-form-label">Fecha</label>
         <div class="col-sm-6">
-            <select class="form-control" id="fecha" name="fecha" >
+
+            <select class="form-control" name="fecha" id="fecha">
+                <%# console.log(fechas)%>
+                <% for(var i = 0; i < fechas.length; i++) { %>
+        
+                    <option value= <%= fechas[i].fecha %>  >  <%= fechas[i].mes_y_anio %>   </option>
+        
+                <% } %>
+
+            </select>
+
+
+
+            <!-- <select class="form-control" id="fecha" name="fecha" >
                 <option value ="2021-11-30">Noviembre 2021</option>
                 <option value ="2021-12-31">Diciembre 2021</option>
                 <option value ="2022-01-31">Enero 2022</option>
@@ -30,7 +43,7 @@
                 <option value ="2022-06-30">Junio 2022</option>
                 <option value ="2022-07-31">Julio 2022</option>
                 <option value ="2022-08-31">Agosto 2022</option>
-            </select>
+            </select> -->
         </div>
     </div>
 

@@ -1,9 +1,10 @@
-/****** Object:  StoredProcedure [dbo].[sp_ObtenerContratoCategoriaConTotal]    Script Date: 9/22/2022 6:12:42 PM ******/
+/****** Object:  StoredProcedure [dbo].[sp_ObtenerContratoCategoriaConTotal]    Script Date: 9/23/2022 2:10:33 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 
@@ -36,7 +37,7 @@ potencia_contratada , dmm_s, energia, EAR,
 ingreso_precio_contado
 into #corto_plazo_1
 from INGRESOS_CONTRATOS
-where lower(categoria_precio) in  ('energia corto plazo i', 'energÃ­a corto plazo i')
+where lower(categoria_precio) in  ('energia corto plazo i', 'energía corto plazo i')
 and ingreso_precio_contado IS NOT NULL
 and fecha = @fecha;
 
@@ -75,7 +76,7 @@ potencia_contratada , dmm_s, energia, EAR,
 ingreso_precio_contado
 into #corto_plazo_2
 from INGRESOS_CONTRATOS
-where lower(categoria_precio) in  ('energia corto plazo ii', 'energÃ­a corto plazo ii')
+where lower(categoria_precio) in  ('energia corto plazo ii', 'energía corto plazo ii')
 and ingreso_precio_contado IS NOT NULL
 and fecha = @fecha;
 
@@ -116,7 +117,7 @@ potencia_contratada , dmm_s, energia, EAR,
 ingreso_precio_contado
 into #largo_plazo
 from INGRESOS_CONTRATOS
-where lower(categoria_precio) in  ('energia largo plazo')
+where lower(categoria_precio) in  ('energia largo plazo', 'energía largo plazo')
 and ingreso_precio_contado IS NOT NULL
 and fecha = @fecha;
 

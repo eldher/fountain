@@ -174,8 +174,17 @@ router.get('/cierre/:fecha', function(req, res, next){
 
 
             let result3 = await pool.request()
+
+            .query('SET LANGUAGE Spanish; ' +
+            'select distinct ' +
+            'cast(EOMONTH(fecha) as varchar) as fecha ' +
+            ",concat( DATENAME(MONTH, EOMONTH(fecha)) ,\' \', cast(YEAR(EOMONTH(fecha)) as varchar)) as  mes_y_anio  " +
+            'from [dbo].[LiquidacionFountain] order by 1 ') 
+            
             //.query('SET LANGUAGE Spanish; select distinct cast(fecha as varchar) as fecha ,DATENAME(MONTH, fecha) as mes ,YEAR(fecha) as anio from INGRESOS_CONTRATOS')
-            .query('SET LANGUAGE Spanish; select distinct cast(fecha_cierre as varchar) as fecha ,DATENAME(MONTH, fecha_cierre) as mes ,YEAR(fecha_cierre) as anio from tipo_precio')
+            //.query('SET LANGUAGE Spanish; select distinct cast(fecha_cierre as varchar) as fecha ,DATENAME(MONTH, fecha_cierre) as mes ,YEAR(fecha_cierre) as anio from tipo_precio')
+
+
             fechas = result3.recordsets[0];
 
 
@@ -445,7 +454,12 @@ router.get('/agregarContrato/', function(req, res, next){
             // console.log(contratos.length);
 
             let result3 = await pool.request()
-            .query("SET LANGUAGE Spanish; select  \'\' as fecha, '' as mes, '' as anio  UNION ALL select distinct cast(fecha as varchar) as fecha ,DATENAME(MONTH, fecha) as mes ,cast(YEAR(fecha) as varchar) as anio from INGRESOS_CONTRATOS");
+            //.query("SET LANGUAGE Spanish; select  \'\' as fecha, '' as mes, '' as anio  UNION ALL select distinct cast(fecha as varchar) as fecha ,DATENAME(MONTH, fecha) as mes ,cast(YEAR(fecha) as varchar) as anio from INGRESOS_CONTRATOS");
+            .query('SET LANGUAGE Spanish; ' +
+            'select distinct ' +
+            'cast(EOMONTH(fecha) as varchar) as fecha ' +
+            ",concat( DATENAME(MONTH, EOMONTH(fecha)) ,\' \', cast(YEAR(EOMONTH(fecha)) as varchar)) as  mes_y_anio  " +
+            'from [dbo].[LiquidacionFountain] order by 1 ') 
             fechas = result3.recordsets[0];
 
             let result4 = await pool.request()
@@ -484,7 +498,12 @@ router.get('/agregarPrecio/', function(req, res, next){
             // console.log(contratos.length);
 
             let result3 = await pool.request()
-            .query("SET LANGUAGE Spanish; select  \'\' as fecha, '' as mes, '' as anio  UNION ALL select distinct cast(fecha as varchar) as fecha ,DATENAME(MONTH, fecha) as mes ,cast(YEAR(fecha) as varchar) as anio from INGRESOS_CONTRATOS");
+            //.query("SET LANGUAGE Spanish; select  \'\' as fecha, '' as mes, '' as anio  UNION ALL select distinct cast(fecha as varchar) as fecha ,DATENAME(MONTH, fecha) as mes ,cast(YEAR(fecha) as varchar) as anio from INGRESOS_CONTRATOS");
+            .query('SET LANGUAGE Spanish; ' +
+                'select distinct ' +
+                'cast(EOMONTH(fecha) as varchar) as fecha ' +
+                ",concat( DATENAME(MONTH, EOMONTH(fecha)) ,\' \', cast(YEAR(EOMONTH(fecha)) as varchar)) as  mes_y_anio  " +
+                'from [dbo].[LiquidacionFountain] order by 1 ') 
             fechas = result3.recordsets[0];
 
         } catch (err) {            

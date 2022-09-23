@@ -16,7 +16,7 @@
      
         <% for(var i = 0; i < fechas.length; i++) { %>
 
-            <option value= <%= fechas[i].fecha %>   <%= fechas[i].fecha == fecha ? 'selected' : ''  %>     >  <%= fechas[i].mes  + ' ' + fechas[i].anio   %>   </option>
+            <option value= <%= fechas[i].fecha %>   <%= fechas[i].fecha == fecha ? 'selected' : ''  %>     >  <%= fechas[i].mes_y_anio    %>   </option>
 
         
           <!-- <option value="2021-10-31">Octubre 2021</option>
