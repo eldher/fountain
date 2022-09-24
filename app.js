@@ -180,7 +180,7 @@ router.get('/cierre/:fecha', function(req, res, next){
             'cast(EOMONTH(fecha) as varchar) as fecha ' +
             ",concat( DATENAME(MONTH, EOMONTH(fecha)) ,\' \', cast(YEAR(EOMONTH(fecha)) as varchar)) as  mes_y_anio  " +
             'from [dbo].[LiquidacionFountain] order by 1 ') 
-            
+
             //.query('SET LANGUAGE Spanish; select distinct cast(fecha as varchar) as fecha ,DATENAME(MONTH, fecha) as mes ,YEAR(fecha) as anio from INGRESOS_CONTRATOS')
             //.query('SET LANGUAGE Spanish; select distinct cast(fecha_cierre as varchar) as fecha ,DATENAME(MONTH, fecha_cierre) as mes ,YEAR(fecha_cierre) as anio from tipo_precio')
 
@@ -1135,6 +1135,8 @@ app.post('/upload_totales_por_contratos', function(req, res){
             let actualizar_contratos = await pool.request()
             .execute('insertarContratos2_INSERT_INTO_CONTRATOS')
 
+            console.log(actualizar_contratos.returnValue)
+
 
 
         } catch (err) {            
@@ -1470,6 +1472,66 @@ app.post('/upload_resumen_generacion', function(req, res){
 
 
 
+
+
+app.get('/agregarDetallePerdida/:accion/:fecha/:precio', function(req, res){
+
+
+    let DetallePerdidas;
+    let fechas;
+
+    (async function (){
+
+        try {
+            let pool = await sql.connect(dbConfig_localhost)
+            let result = await pool.request()
+            .query('select * from [dbo].[DetallePerdidas] order by fecha')
+            let DetallePerdidas = result.recordsets[0];
+
+            let result2 = await pool.request()
+            .query('SET LANGUAGE Spanish; ' +
+            'select distinct ' +
+            'cast(EOMONTH(fecha) as varchar) as fecha ' +
+            ",concat( DATENAME(MONTH, EOMONTH(fecha)) ,\' \', cast(YEAR(EOMONTH(fecha)) as varchar)) as  mes_y_anio  " +
+            'from [dbo].[LiquidacionFountain] order by 1 ') 
+
+            fechas = result2.recordsets[0];           
+            
+        } catch (error) {
+            
+        }
+    })();
+
+
+    if(req.params.accion == "mostrar"){   
+        res.render('agregarDetallePerdida/mostrar/0/0', DetallePerdidas, fechas)
+    }
+
+    if(req.params.accion == "agregar"){ 
+        (async function (){
+            try {               
+                const queryString = "INSERT INTO [dbo].[DetallePerdidas] (fecha, precio) " + "VALUES ('" +  req.params.fecha + "', '"+ req.params.precio + "' )";
+                let pool = await sql.connect(dbConfig_localhost)
+                let result = await pool.request().query(queryString)
+            } catch (error) {
+                console.log(error)
+            }
+        })().then(() => res.render('agregarDetallePerdida/mostrar/0/0', DetallePerdidas, fechas))
+    }
+
+    if(req.params.accion == "modificar"){ 
+        (async function (){
+            try {               
+                const queryString = "UPDATE [dbo].[DetallePerdidas] SET precio = "+ req.params.precio + " where fecha = " + req.params.fecha  ;
+                let pool = await sql.connect(dbConfig_localhost)
+                let result = await pool.request().query(queryString)
+            } catch (error) {
+                console.log(error)
+            }
+        })().then(() => res.render('agregarDetallePerdida/mostrar/0/0', DetallePerdidas, fechas))
+     }
+
+});
 
 
 
