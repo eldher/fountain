@@ -1474,7 +1474,7 @@ app.post('/upload_resumen_generacion', function(req, res){
 
 
 
-app.get('/agregarDetallePerdida/:accion/:fecha/:precio', function(req, res){
+router.get('/agregarDetallePerdida/:fecha', function(req, res){
 
 
     let DetallePerdidas;
@@ -1485,8 +1485,94 @@ app.get('/agregarDetallePerdida/:accion/:fecha/:precio', function(req, res){
         try {
             let pool = await sql.connect(dbConfig_localhost)
             let result = await pool.request()
-            .query('select * from [dbo].[DetallePerdidas] order by fecha')
-            let DetallePerdidas = result.recordsets[0];
+            .query('select cast(cast(fecha_fin as date) as varchar) as fecha_fin,  cast(precio as decimal(13,2)) as precio from [dbo].[DetallePerdidas] order by fecha_fin')
+            DetallePerdidas = result.recordset;
+
+            //console.log(DetallePerdidas)
+
+            let result2 = await pool.request()
+            .query('SET LANGUAGE Spanish; ' +
+            'select distinct ' +
+            'cast(EOMONTH(fecha) as varchar) as fecha ' +
+            ",concat( DATENAME(MONTH, EOMONTH(fecha)) ,\' \', cast(YEAR(EOMONTH(fecha)) as varchar)) as  mes_y_anio  " +
+            'from [dbo].[LiquidacionFountain]'+ 
+            'where EOMONTH(fecha) NOT IN (select fecha_fin from DetallePerdidas) order by 1') 
+
+            fechas = result2.recordset;           
+
+            //console.log(fechas)
+            
+        } catch (error) {
+            
+        }
+    })().then(() => {  
+        res.render('agregarDetallePerdida' , { DetallePerdidas, fechas, fecha: req.params.fecha } ) ;
+    }
+        
+);   
+
+    
+});
+
+
+app.post('/guardarDetallePerdida', function(req, res){
+
+
+    const accion = req.body.accion
+    const fecha = req.body.fecha;
+    const precio = req.body.precio;
+ 
+
+    if(accion == "agregar"){ 
+        (async function (){
+            try {               
+                const queryString = "INSERT INTO [dbo].[DetallePerdidas] (fecha_fin, precio) " + "VALUES ('" +  fecha + "', '"+ precio + "' )";
+
+                console.log(queryString);
+                let pool = await sql.connect(dbConfig_localhost)
+                let result = await pool.request().query(queryString)
+            } catch (error) {
+                console.log(error)
+            }
+        })().then(() => res.send('<script type="text/javascript"> alert("Detalle de Pérdida Agregado!"); window.location="./agregarDetallePerdida/0";</script>') )
+    }
+    
+    
+    if(accion== "modificar"){ 
+        (async function (){
+            try {               
+                const queryString = "UPDATE [dbo].[DetallePerdidas] SET precio = "+ precio + " where fecha_fin = '" + fecha +"'" ;
+                console.log(queryString);
+                let pool = await sql.connect(dbConfig_localhost)
+                let result = await pool.request().query(queryString)
+            } catch (error) {
+                console.log(error)
+            }
+        })().then(() => res.send('<script type="text/javascript"> alert("Detalle de Pérdida Modificado!"); window.location="./agregarDetallePerdida/0";</script>') )
+     }
+
+
+});
+
+
+
+
+
+router.post('/agregarDetallePerdida/:fecha/:precio', function(req, res){
+
+
+    let DetallePerdidas;
+    let fechas;
+
+    (async function (){
+
+        try {
+            let pool = await sql.connect(dbConfig_localhost)
+            let result = await pool.request()
+            .query('select cast(cast(fecha_fin as date) as varchar) as fecha_fin,  cast(precio as decimal(13,2)) as precio from [dbo].[DetallePerdidas] order by fecha_fin')
+            DetallePerdidas = result.recordset;
+
+            console.log(DetallePerdidas)
 
             let result2 = await pool.request()
             .query('SET LANGUAGE Spanish; ' +
@@ -1495,43 +1581,42 @@ app.get('/agregarDetallePerdida/:accion/:fecha/:precio', function(req, res){
             ",concat( DATENAME(MONTH, EOMONTH(fecha)) ,\' \', cast(YEAR(EOMONTH(fecha)) as varchar)) as  mes_y_anio  " +
             'from [dbo].[LiquidacionFountain] order by 1 ') 
 
-            fechas = result2.recordsets[0];           
+            fechas = result2.recordset;           
+
+            console.log(fechas)
             
         } catch (error) {
             
         }
-    })();
-
-
-    if(req.params.accion == "mostrar"){   
-        res.render('agregarDetallePerdida/mostrar/0/0', DetallePerdidas, fechas)
+    })().then(() => {
+    
+    
+        if(req.params.accion == "mostrar"){   
+            res.render('agregarDetallePerdida' , { DetallePerdidas, fechas } ) ;///mostrar/0/0',  )
+        }
+            
+            
+        
+        
     }
+        
+);   
 
-    if(req.params.accion == "agregar"){ 
-        (async function (){
-            try {               
-                const queryString = "INSERT INTO [dbo].[DetallePerdidas] (fecha, precio) " + "VALUES ('" +  req.params.fecha + "', '"+ req.params.precio + "' )";
-                let pool = await sql.connect(dbConfig_localhost)
-                let result = await pool.request().query(queryString)
-            } catch (error) {
-                console.log(error)
-            }
-        })().then(() => res.render('agregarDetallePerdida/mostrar/0/0', DetallePerdidas, fechas))
-    }
-
-    if(req.params.accion == "modificar"){ 
-        (async function (){
-            try {               
-                const queryString = "UPDATE [dbo].[DetallePerdidas] SET precio = "+ req.params.precio + " where fecha = " + req.params.fecha  ;
-                let pool = await sql.connect(dbConfig_localhost)
-                let result = await pool.request().query(queryString)
-            } catch (error) {
-                console.log(error)
-            }
-        })().then(() => res.render('agregarDetallePerdida/mostrar/0/0', DetallePerdidas, fechas))
-     }
-
+    
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
