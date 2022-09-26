@@ -1,9 +1,13 @@
-/****** Object:  StoredProcedure [dbo].[sp_EjecutarCierre]    Script Date: 9/22/2022 3:58:55 PM ******/
+USE [FOUNTAIN5]
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_EjecutarCierre]    Script Date: 9/25/2022 8:22:29 AM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 -- =============================================
@@ -298,13 +302,13 @@ select @compensacion_potencia = (
 
 
 --declare @fecha_cierre date
---set @fecha_cierre = '2022-05-31'
+--set @fecha_cierre = '2022-02-28'
 
 declare @servicios_auxiliares decimal(10,2);
 select @servicios_auxiliares  = (
 	select total_usd from ServiciosAuxiliares
-	where empresas_acreedoras = 'FOUNTAIN_A'
-	AND fecha_mes = CONCAT(YEAR(@fecha_cierre),'-',MONTH(@fecha_cierre))
+	where lower(empresas_acreedoras) like  '%fountain%'
+	AND fecha_mes = CONCAT(YEAR(@fecha_cierre),'-',format(MONTH(@fecha_cierre),'00'))
 	and version = 'Oficial'
 )
 
@@ -368,7 +372,7 @@ where EOMONTH(fecha) =  @fecha_cierre
 drop table if exists resumen
 
 select 
-cms_promedio = ISNULL(cms_promedio,0)
+cms_promedio = cast(ISNULL(cms_promedio,0) as decimal(13,2))
 ,energia_generada = ISNULL(energia_generada,0)
 ,compras_energia_mercado_ocasional = ISNULL(compras_energia_mercado_ocasional,0)
 ,ventas_energia_mercado_ocasional = ISNULL(ventas_energia_mercado_ocasional, 0)
@@ -381,12 +385,19 @@ cms_promedio = ISNULL(cms_promedio,0)
 ,servicios_auxiliares = ISNULL(servicios_auxiliares, 0)
 ,compensacion_potencia = ISNULL(compensacion_potencia , 0)
 
-,ingreso_total_neto = isnull((ventas_energia_mercado_ocasional + ingresos_por_contratos + credito_energia_perdida_transmision
-+ sasd + generacion_obligada + servicios_auxiliares + compensacion_potencia + SAERLP
-- compras_energia_mercado_ocasional - debito_energia_perdida_transmision), 0)
+,ingreso_total_neto = 
+isnull(ventas_energia_mercado_ocasional,0) + 
+isnull(ingresos_por_contratos, 0) + 
+isnull(credito_energia_perdida_transmision,0) +
+isnull(sasd,0) + 
+isnull(generacion_obligada,0) + 
+isnull(servicios_auxiliares,0) + 
+isnull(compensacion_potencia,0) + 
+isnull(SAERLP,0) -
+isnull(compras_energia_mercado_ocasional, 0) - 
+isnull(debito_energia_perdida_transmision, 0)
 into resumen
-from
-#prev
+from #prev
 
 select * from resumen
 
@@ -395,3 +406,8 @@ END;
 GO
 
 
+
+--use FOUNTAIN5
+--execute [dbo].[sp_EjecutarCierre]N'2022-06-30'
+
+	

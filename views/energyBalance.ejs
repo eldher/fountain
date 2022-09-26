@@ -67,16 +67,16 @@ function numberWithCommas(x) {
             for ( var i=0 ; i <tabla_eb1.length ; i++) { %>
                 <tr>
                     <td><%= tabla_eb1[i].fecha %></td>
-                    <td><%= tabla_eb1[i].fhpc_generation.toLocaleString() %></td>
-                    <td><%= tabla_eb1[i].spot_energy_purchases.toLocaleString() %></td>
-                    <td><%= tabla_eb1[i].avg_purchase_price.toLocaleString() %></td>
-                    <td><%= tabla_eb1[i].total_gwh_1.toLocaleString() %></td>
-                    <td><%= tabla_eb1[i].spot_energy_sales.toLocaleString() %></td>
-                    <td><%= tabla_eb1[i].avg_sale_price.toLocaleString() %></td>
-                    <td><%= tabla_eb1[i].ppa_sales.toLocaleString() %></td>
-                    <td><%= tabla_eb1[i].transmission_losses.toLocaleString() %></td>
-                    <td><%= tabla_eb1[i].exports.toLocaleString() %></td>
-                    <td><%= tabla_eb1[i].total_gwh_2.toLocaleString() %></td>                    
+                    <td class="num"><%= tabla_eb1[i].fhpc_generation.toLocaleString() %></td>
+                    <td class="num"><%= tabla_eb1[i].spot_energy_purchases.toLocaleString() %></td>
+                    <td class="num"><%= tabla_eb1[i].avg_purchase_price.toLocaleString() %></td>
+                    <td class="num"><%= tabla_eb1[i].total_gwh_1.toLocaleString() %></td>
+                    <td class="num"><%= tabla_eb1[i].spot_energy_sales.toLocaleString() %></td>
+                    <td class="num"><%= tabla_eb1[i].avg_sale_price.toLocaleString() %></td>
+                    <td class="num"><%= tabla_eb1[i].ppa_sales.toLocaleString() %></td>
+                    <td class="num"><%= tabla_eb1[i].transmission_losses.toLocaleString() %></td>
+                    <td class="num"><%= tabla_eb1[i].exports.toLocaleString() %></td>
+                    <td class="num"><%= tabla_eb1[i].total_gwh_2.toLocaleString() %></td>                    
                 </tr>
             <% } } %>
     </table>
@@ -102,14 +102,14 @@ function numberWithCommas(x) {
             for ( var i=0 ; i <tabla_eb2.length ; i++) { %>
                 <tr>
                     <td><%= tabla_eb2[i].fecha %></td>
-                    <td><%= tabla_eb2[i].delivered_cnd.toLocaleString() %></td>
-                    <td><%= tabla_eb2[i].spot_energy_purchases.toLocaleString() %></td>
-                    <td><%= tabla_eb2[i].total_gwh_1.toLocaleString() %></td>
-                    <td><%= tabla_eb2[i].ppa_sales.toLocaleString() %></td>
-                    <td><%= tabla_eb2[i].spot_energy_sales.toLocaleString() %></td>
-                    <td><%= tabla_eb2[i].transmission_losses.toLocaleString() %></td>
-                    <td><%= tabla_eb2[i].exports.toLocaleString() %></td>
-                    <td><%= tabla_eb2[i].total_gwh_2.toLocaleString() %></td>
+                    <td class="num"><%= tabla_eb2[i].delivered_cnd.toLocaleString() %></td>
+                    <td class="num"><%= tabla_eb2[i].spot_energy_purchases.toLocaleString() %></td>
+                    <td class="num"><%= tabla_eb2[i].total_gwh_1.toLocaleString() %></td>
+                    <td class="num"><%= tabla_eb2[i].ppa_sales.toLocaleString() %></td>
+                    <td class="num"><%= tabla_eb2[i].spot_energy_sales.toLocaleString() %></td>
+                    <td class="num"><%= tabla_eb2[i].transmission_losses.toLocaleString() %></td>
+                    <td class="num"><%= tabla_eb2[i].exports.toLocaleString() %></td>
+                    <td class="num"><%= tabla_eb2[i].total_gwh_2.toLocaleString() %></td>
                     
                 </tr>
             <% } } %>
@@ -136,14 +136,14 @@ function numberWithCommas(x) {
             for ( var i=0 ; i <tabla_eb3.length ; i++) { %>
                 <tr>
                     <td><%= tabla_eb3[i].fecha %></td>
-                    <td><%= tabla_eb3[i].delivered_cnd.toLocaleString() %></td>
-                    <td><%= tabla_eb3[i].spot_energy_purchases.toLocaleString() %></td>
-                    <td><%= tabla_eb3[i].total_gwh_1.toLocaleString() %></td>
-                    <td><%= tabla_eb3[i].ppa_sales.toLocaleString() %></td>
-                    <td><%= tabla_eb3[i].spot_energy_sales.toLocaleString() %></td>
-                    <td><%= tabla_eb3[i].transmission_losses.toLocaleString() %></td>
-                    <td><%= tabla_eb2[i].exports.toLocaleString() %></td>
-                    <td><%= tabla_eb3[i].total_gwh_2.toLocaleString() %></td>                    
+                    <td class="num"><%= tabla_eb3[i].delivered_cnd.toLocaleString() %></td>
+                    <td class="num"><%= tabla_eb3[i].spot_energy_purchases.toLocaleString() %></td>
+                    <td class="num"><%= tabla_eb3[i].total_gwh_1.toLocaleString() %></td>
+                    <td class="num"><%= tabla_eb3[i].ppa_sales.toLocaleString() %></td>
+                    <td class="num"><%= tabla_eb3[i].spot_energy_sales.toLocaleString() %></td>
+                    <td class="num"><%= tabla_eb3[i].transmission_losses.toLocaleString() %></td>
+                    <td class="num"><%= tabla_eb2[i].exports.toLocaleString() %></td>
+                    <td class="num"><%= tabla_eb3[i].total_gwh_2.toLocaleString() %></td>                    
                 </tr>
             <% } } %>
     </table>
@@ -169,13 +169,13 @@ function numberWithCommas(x) {
             for ( var i=0 ; i <tabla_eb4.length ; i++) { %>
                 <tr>
                     <td><%= tabla_eb4[i].fecha %></td>
-                    <td><%= tabla_eb4[i].fhcp_gross_enery_gop.toLocaleString() %></td>
-                    <td><%= tabla_eb4[i].fhcp_enery_gop.toLocaleString() %></td>
-                    <td><%= tabla_eb4[i].fhpc_generation_cnd.toLocaleString() %></td>
-                    <td><%= tabla_eb4[i].fhpc_generation_smec.toLocaleString() %></td>
-                    <td><%= tabla_eb4[i].losses_smec.toLocaleString() %></td>
-                    <td><%= tabla_eb4[i].losses_gop.toLocaleString() %></td>
-                    <td><%= tabla_eb4[i].losses_gross_generation_gop.toLocaleString() %></td>
+                    <td class="num"><%= tabla_eb4[i].fhcp_gross_enery_gop.toLocaleString() %></td>
+                    <td class="num"><%= tabla_eb4[i].fhcp_enery_gop.toLocaleString() %></td>
+                    <td class="num"><%= tabla_eb4[i].fhpc_generation_cnd.toLocaleString() %></td>
+                    <td class="num"><%= tabla_eb4[i].fhpc_generation_smec.toLocaleString() %></td>
+                    <td class="num"><%= tabla_eb4[i].losses_smec.toLocaleString() %></td>
+                    <td class="num"><%= tabla_eb4[i].losses_gop.toLocaleString() %></td>
+                    <td class="num"><%= tabla_eb4[i].losses_gross_generation_gop.toLocaleString() %></td>
                   
                 </tr>
             <% } } %>

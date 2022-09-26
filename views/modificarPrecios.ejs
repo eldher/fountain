@@ -20,9 +20,9 @@
                     <td><%= precios[i].id %></td>
                     <td><%= precios[i].fecha %></td>
                     <td><%= precios[i].categoria_precio %></td>
-                    <td><%= precios[i].precio_base_usd_mwh %></td>
-                    <td><%= precios[i].cargo_transmicion_seguimiento_electrico %></td>
-                    <td><%= precios[i].precio %></td>
+                    <td class="num"><%= precios[i].precio_base_usd_mwh %></td>
+                    <td class="num"><%= precios[i].cargo_transmicion_seguimiento_electrico %></td>
+                    <td class="num"><%= precios[i].precio %></td>
                     <td><button class="btn btn-xs btn-success"  onclick= " window.location = '../modificarPrecios/<%= precios[i].id %>'" > Modificar Precio  </button></td> 
                 </tr>
             <% } } %>
