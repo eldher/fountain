@@ -14,7 +14,7 @@ GO
 -- =============================================
 -- Author:		Eldher
 -- =============================================
-CREATE PROCEDURE [dbo].[sp_ObtenerContratosPorFecha]
+ALTER PROCEDURE [dbo].[sp_ObtenerContratosPorFecha]
 @fecha DATE
 AS
 
@@ -36,11 +36,11 @@ format(EAR, '#,0.00') as EAR,
 format(ingreso_precio_contado, 'c', 'en-US') as ingreso_precio_contado
 from [dbo].[INGRESOS_CONTRATOS]
 where fecha = @fecha
+order by 1
 
 
 END
 
 
 GO
-
 

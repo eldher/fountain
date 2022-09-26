@@ -224,7 +224,7 @@ router.get('/contratos', function(req, res, next){
             let result = await pool.request()
             .execute('sp_ObtenerContratos');
             contratos = result.recordsets[0];            
-            console.log(contratos.length);
+            console.log('Cantidad de Contratos: ' + contratos.length);
 
             let result3 = await pool.request()
             .query('SET LANGUAGE Spanish; select \'\' as fecha, \'\' as mes, \'\' as anio  UNION ALL select distinct cast(fecha as varchar) as fecha ,DATENAME(MONTH, fecha) as mes ,cast(YEAR(fecha) as varchar) as anio from INGRESOS_CONTRATOS');
@@ -1088,7 +1088,7 @@ app.post('/upload_totales_por_contratos', function(req, res){
         //console.log("Filas convertidas a JSON: " + data.length)
         archivoCargado = await uploadPromise(req,res)
         data =  await totales_por_contratos.leerExcelTotalesPorContratos('uploads/'+ archivoCargado)
-        console.log(data.distribuidores  )
+        //console.log(data.distribuidores  )
 
         try {
 
@@ -1113,7 +1113,7 @@ app.post('/upload_totales_por_contratos', function(req, res){
             for ( i = 0; i < data.contratos.length; i++) {
     
                 if (i <= 10) {
-                    console.log(data.contratos[i])
+                   // console.log(data.contratos[i])
                 }
                 
                 let result = await pool.request()
@@ -1135,7 +1135,7 @@ app.post('/upload_totales_por_contratos', function(req, res){
             let actualizar_contratos = await pool.request()
             .execute('insertarContratos2_INSERT_INTO_CONTRATOS')
 
-            console.log(actualizar_contratos.returnValue)
+            console.log('Filas insertadas: ' + actualizar_contratos.rowsAffected)
 
 
 
@@ -1145,7 +1145,7 @@ app.post('/upload_totales_por_contratos', function(req, res){
 
         }
        
-    })().then(() => res.send('<script type="text/javascript"> alert("Archivo de Totales por Contrato Cargado!"); window.location="./cargarDataAplicacion";</script>') )
+    })().then(() => res.send('<script type="text/javascript"> alert("Archivo de Totales por Contrato Cargado!"); window.location="./cierre/2022-07-31";</script>') )
     sql.on('error', err => {
         console.log(err);        
     }); 

@@ -14,7 +14,7 @@ GO
 -- =============================================
 -- Author:		Eldher
 -- =============================================
-CREATE PROCEDURE [dbo].[sp_ObtenerContratos]
+ALTER PROCEDURE [dbo].[sp_ObtenerContratos]
 AS
 BEGIN
 
@@ -34,6 +34,7 @@ format(energia, '#,0.00') as energia,
 format(EAR, '#,0.00') as EAR,
 format(ingreso_precio_contado, 'c', 'en-US') as ingreso_precio_contado
 from [dbo].[INGRESOS_CONTRATOS]
+order by 1
 
 
 END

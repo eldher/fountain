@@ -18,8 +18,8 @@ function leerExcelTotalesPorContratos(ruta){
 
         var contratos = XSLX.utils.sheet_to_json(workbook.Sheets['TOTALESCONTRATOS'],  { range: 16 });
 
-        console.log('Cantidad de Registros a Transformar: '+ distribuidores.length)
-        console.log('Cantidad de Registros a Transformar: '+ contratos.length)
+        //console.log('Cantidad de Registros a Transformar: '+ distribuidores.length)
+        //console.log('Cantidad de Registros a Transformar: '+ contratos.length)
 
 
         // pasar nombres de keys a minusculas de json distribuidores
@@ -84,8 +84,8 @@ function leerExcelTotalesPorContratos(ruta){
 
 
 
-        console.log('Cantidad de Registros a Cargar: '+ distribuidores.length)
-        console.log('Cantidad de Registros a Cargar: '+ contratos.length)
+        //console.log('Cantidad de Registros a Cargar: '+ distribuidores.length)
+        //console.log('Cantidad de Registros a Cargar: '+ contratos.length)
 
         if(distribuidores.length>0){
             resolve( {
