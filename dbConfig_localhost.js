@@ -24,10 +24,11 @@ var dbConfig_localhost ={
     server: 'fountaincorp.database.windows.net',
     database: 'FOUNTAIN5',
     port : 1433,
+    requestTimeout: 300000 ,
     pool: {
         max:10,
         min: 0,
-        idleTimeoutMillis: 3000
+        idleTimeoutMillis: 300000
     },
     options:{
         encrypt: true,
@@ -36,6 +37,7 @@ var dbConfig_localhost ={
         //enableArithPort: true,
         //instancename : ''
     }
+
 };
 
 

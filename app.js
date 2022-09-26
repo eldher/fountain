@@ -1569,7 +1569,7 @@ router.post('/agregarDetallePerdida/:fecha/:precio', function(req, res){
         try {
             let pool = await sql.connect(dbConfig_localhost)
             let result = await pool.request()
-            .query('select cast(cast(fecha_fin as date) as varchar) as fecha_fin,  cast(precio as decimal(13,2)) as precio from [dbo].[DetallePerdidas] order by fecha_fin')
+            .query('select cast(cast(fecha_fin as date) as varchar) as fecha_fin,  cast(precio as decimal(13,4)) as precio from [dbo].[DetallePerdidas] order by fecha_fin')
             DetallePerdidas = result.recordset;
 
             console.log(DetallePerdidas)

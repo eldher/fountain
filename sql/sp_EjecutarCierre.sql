@@ -1,12 +1,11 @@
-USE [FOUNTAIN5]
-GO
-
-/****** Object:  StoredProcedure [dbo].[sp_EjecutarCierre]    Script Date: 9/25/2022 8:22:29 AM ******/
+/****** Object:  StoredProcedure [dbo].[sp_EjecutarCierre]    Script Date: 9/26/2022 3:00:04 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
+
 
 
 
@@ -20,7 +19,6 @@ AS
 BEGIN
 
 DECLARE @fecha_mes varchar(20);
-
 
 
 Select @fecha_mes = CONCAT(YEAR(@fecha_cierre),'-',MONTH(@fecha_cierre))
@@ -244,11 +242,11 @@ a.fecha
 ,d.precio_base_usd_mwh
 ,d.cargo_transmicion_seguimiento_electrico
 ,d.precio_base_usd_mwh +  d.cargo_transmicion_seguimiento_electrico as precio
-,dmg     = IIF(LOWER(a.categoria_precio) LIKE '%energia%' or LOWER(a.categoria_precio) LIKE '%energÃ­a%', b.dmg , NULL) 
-,dmg_s   = IIF(LOWER(a.categoria_precio) LIKE '%energia%' or LOWER(a.categoria_precio) LIKE '%energÃ­a%', b.dmg_s , NULL)  
-,dmm_s   = IIF(LOWER(a.categoria_precio) LIKE '%energia%' or LOWER(a.categoria_precio) LIKE '%energÃ­a%', b.dmm_s , NULL)  
-,energia = IIF(LOWER(a.categoria_precio) LIKE '%energia%' or LOWER(a.categoria_precio) LIKE '%energÃ­a%', c.energia , NULL) 
-,EAR     = IIF(LOWER(a.categoria_precio) LIKE '%energia%' or LOWER(a.categoria_precio) LIKE '%energÃ­a%', (a.potencia_contratada/b.dmm_s)*energia , 0 ) 
+,dmg     = IIF(LOWER(a.categoria_precio) LIKE '%energia%' or LOWER(a.categoria_precio) LIKE '%energía%', b.dmg , NULL) 
+,dmg_s   = IIF(LOWER(a.categoria_precio) LIKE '%energia%' or LOWER(a.categoria_precio) LIKE '%energía%', b.dmg_s , NULL)  
+,dmm_s   = IIF(LOWER(a.categoria_precio) LIKE '%energia%' or LOWER(a.categoria_precio) LIKE '%energía%', b.dmm_s , NULL)  
+,energia = IIF(LOWER(a.categoria_precio) LIKE '%energia%' or LOWER(a.categoria_precio) LIKE '%energía%', c.energia , NULL) 
+,EAR     = IIF(LOWER(a.categoria_precio) LIKE '%energia%' or LOWER(a.categoria_precio) LIKE '%energía%', (a.potencia_contratada/b.dmm_s)*energia , 0 ) 
 ,ingreso_precio_contado = 
 	IIF(a.categoria_precio LIKE '%Energia%', 
 	(a.potencia_contratada/b.dmm_s)*energia*(d.precio_base_usd_mwh +  d.cargo_transmicion_seguimiento_electrico) , 
@@ -268,7 +266,7 @@ order by 1,2
 --set @fecha_cierre = '2022-05-31'
 
 
-declare @precio_perdida decimal(10,2);
+declare @precio_perdida decimal(20,4);
 select  @precio_perdida = (
 	select MAX(precio) as precio  
 	from DetallePerdidas
@@ -289,7 +287,7 @@ select  @precio_perdida = (
 --declare @fecha_cierre date
 --set @fecha_cierre = '2022-05-31'
 
-declare @compensacion_potencia decimal(10,2);
+declare @compensacion_potencia decimal(20,4);
 select @compensacion_potencia = ( 
 	select sum(credito_en_usd) 
 	from BalancesPotencia
@@ -304,7 +302,7 @@ select @compensacion_potencia = (
 --declare @fecha_cierre date
 --set @fecha_cierre = '2022-02-28'
 
-declare @servicios_auxiliares decimal(10,2);
+declare @servicios_auxiliares decimal(20,4);
 select @servicios_auxiliares  = (
 	select total_usd from ServiciosAuxiliares
 	where lower(empresas_acreedoras) like  '%fountain%'
@@ -324,13 +322,12 @@ select @servicios_auxiliares  = (
 
 
 
---declare @fecha_cierre date
---set @fecha_cierre = '2022-04-30'
+--declare @fecha_cierre date  = '2021-12-31'
 
-declare @ingresos_contratos decimal(10,2);
+declare @ingresos_contratos decimal(20,4)
 select @ingresos_contratos = 
 (
-	select sum(ingreso_precio_contado)  as ingreso
+	select sum(cast(ingreso_precio_contado as  decimal(10,4)) )  as ingreso
 	from INGRESOS_CONTRATOS
 	where fecha = @fecha_cierre
 	and ingreso_precio_contado IS NOT NULL
@@ -406,8 +403,3 @@ END;
 GO
 
 
-
---use FOUNTAIN5
---execute [dbo].[sp_EjecutarCierre]N'2022-06-30'
-
-	
