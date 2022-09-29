@@ -9,6 +9,8 @@ GO
 
 USE FOUNTAIN5
 
+
+EXECUTE [dbo].[insertarContratos2_INSERT_INTO_CONTRATOS]
 EXECUTE [dbo].[sp_EjecutarCierre] N'2022-07-31'
 EXECUTE [dbo].[sp_ObtenerContratoCategoria] N'2022-05-31'
 EXECUTE [dbo].[sp_ObtenerContratoCategoriaConTotal] N'2022-04-30'
@@ -24,6 +26,7 @@ EXECUTE [dbo].[sp_EnergyBalancePorFecha]  N'2022'
 
 exec sp_executesql @statement=N'SET LANGUAGE Spanish; select '''' as fecha, '''' as mes, '''' as anio  UNION ALL select distinct cast(fecha as varchar) as fecha ,DATENAME(MONTH, fecha) as mes ,cast(YEAR(fecha) as varchar) as anio from INGRESOS_CONTRATOS'
 
+use fountain5
 select distinct * from [dbo].[tipo_precio]
 
 

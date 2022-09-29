@@ -1,9 +1,12 @@
-/****** Object:  StoredProcedure [dbo].[sp_EjecutarCierre]    Script Date: 9/26/2022 3:00:04 PM ******/
+/****** Object:  StoredProcedure [dbo].[sp_EjecutarCierre]    Script Date: 9/28/2022 10:48:51 AM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
+
+
 
 
 
@@ -248,7 +251,7 @@ a.fecha
 ,energia = IIF(LOWER(a.categoria_precio) LIKE '%energia%' or LOWER(a.categoria_precio) LIKE '%energía%', c.energia , NULL) 
 ,EAR     = IIF(LOWER(a.categoria_precio) LIKE '%energia%' or LOWER(a.categoria_precio) LIKE '%energía%', (a.potencia_contratada/b.dmm_s)*energia , 0 ) 
 ,ingreso_precio_contado = 
-	IIF(a.categoria_precio LIKE '%Energia%', 
+	IIF(LOWER(a.categoria_precio) LIKE '%energia%' or LOWER(a.categoria_precio) LIKE '%energía%', 
 	(a.potencia_contratada/b.dmm_s)*energia*(d.precio_base_usd_mwh +  d.cargo_transmicion_seguimiento_electrico) , 
 	potencia_contratada*(d.precio_base_usd_mwh +  d.cargo_transmicion_seguimiento_electrico)*1000  )
 into INGRESOS_CONTRATOS 
@@ -306,9 +309,31 @@ declare @servicios_auxiliares decimal(20,4);
 select @servicios_auxiliares  = (
 	select total_usd from ServiciosAuxiliares
 	where lower(empresas_acreedoras) like  '%fountain%'
-	AND fecha_mes = CONCAT(YEAR(@fecha_cierre),'-',format(MONTH(@fecha_cierre),'00'))
+	AND fecha_mes = CONCAT(YEAR(@fecha_cierre),'-',MONTH(@fecha_cierre))
 	and version = 'Oficial'
 )
+
+
+
+--declare @fecha_cierre as date = '2021-10-31'
+
+
+declare @generacion_obligada decimal(20,4)
+select @generacion_obligada = 
+(
+	select sum(sobre_costo_real) as sobre_costo_real 
+	from [dbo].[GeneracionObligada] 
+	where  lower(agente) like  '%fountain%'
+	AND fecha_mes = CONCAT(YEAR(@fecha_cierre),'-',MONTH(@fecha_cierre))
+	and version = 'Oficial'
+)
+
+--select @generacion_obligada
+
+	--select * 
+	--from [dbo].[GeneracionObligada] 
+	--where  lower(agente) like  '%fountain%'
+
 
 --select @servicios_auxiliares
 --select * from ServiciosAuxiliares
@@ -327,7 +352,7 @@ select @servicios_auxiliares  = (
 declare @ingresos_contratos decimal(20,4)
 select @ingresos_contratos = 
 (
-	select sum(cast(ingreso_precio_contado as  decimal(10,4)) )  as ingreso
+	select sum(cast(ingreso_precio_contado as  decimal(20,4)) )  as ingreso
 	from INGRESOS_CONTRATOS
 	where fecha = @fecha_cierre
 	and ingreso_precio_contado IS NOT NULL
@@ -351,7 +376,7 @@ cms_promedio							= avg(cms)
 ,debito_energia_perdida_transmision		= 0
 ,credito_energia_perdida_transmision	= (sum(suplido_pos_contratos) - sum(suplido_mo))*@precio_perdida
 ,sasd									= 0
-,generacion_obligada					= 0 
+,generacion_obligada					= @generacion_obligada 
 ,servicios_auxiliares					= @servicios_auxiliares
 ,compensacion_potencia					= ISNULL(@compensacion_potencia,0) 
 into #prev
@@ -369,7 +394,7 @@ where EOMONTH(fecha) =  @fecha_cierre
 drop table if exists resumen
 
 select 
-cms_promedio = cast(ISNULL(cms_promedio,0) as decimal(13,2))
+cms_promedio = cast(ISNULL(cms_promedio,0) as decimal(20,2))
 ,energia_generada = ISNULL(energia_generada,0)
 ,compras_energia_mercado_ocasional = ISNULL(compras_energia_mercado_ocasional,0)
 ,ventas_energia_mercado_ocasional = ISNULL(ventas_energia_mercado_ocasional, 0)
@@ -403,3 +428,4 @@ END;
 GO
 
 
+--EXEC sp_EjecutarCierre N'2021-10-31'

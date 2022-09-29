@@ -44,9 +44,10 @@ function leerExcelServiciosAuxiliares(ruta){
             // convertir fechas de formato Excel a JS
             data[i].fecha = SerialDateToJSDate(extraccionFecha[0].fecha_archivo, -24) //.toISOString().slice(0, 19).replace('T', ' ')  
             // agregar la fecha de carga
-
+            console.log(data[i].fecha)
             let test = new Date(data[i].fecha)
-            data[i].fecha_mes = test.getFullYear() + "-" + test.getMonth()
+            console.log(test)
+            data[i].fecha_mes = test.getFullYear() + "-" + (test.getMonth() + 1)
             data[i].version = 'Oficial'
 
             data[i].fecha_carga = hoy.toISOString().slice(0, 19).replace('T', ' ')
@@ -56,6 +57,7 @@ function leerExcelServiciosAuxiliares(ruta){
         console.log('Cantidad de Registros a Cargar: '+ data.length)
 
         if(data.length>0){
+            console.log(data[0].fecha_mes)
             resolve(data);
         }
         else{
