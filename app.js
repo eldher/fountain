@@ -364,6 +364,46 @@ router.get('/modificarContratos/:id', function(req, res, next){
 
 
 
+router.get('/eliminarContratos/:id', function(req, res, next){
+
+    let contratoBorrar 
+
+    console.log('eliminar contrato: ' + req.params.id);
+    (async function () 
+    {
+        try {
+            let pool = await sql.connect(dbConfig_localhost)     
+
+
+            let result1 = await pool.request()
+            .query('select cast(fecha as varchar(10)) as fecha, nombre_contrato from [dbo].[CONTRATOS] where id =' + req.params.id)
+            contratoBorrar = result1.recordsets[0];
+      
+
+            console.log(contratoBorrar)
+
+            let result2 = await pool.request()
+            .query('delete from [dbo].[CONTRATOS] where id =' + req.params.id)  
+
+        } catch (err) {            
+            console.log(err);
+        }
+
+
+
+       
+    })().then(() => res.send('<script type="text/javascript"> alert("Contrato '+ contratoBorrar[0].nombre_contrato + '  ' + contratoBorrar[0].fecha + ' Eliminado!"); window.location="../modificarPrecios";</script>'))
+    
+    sql.on('error', err => {
+        console.log(err);        
+    })   
+});
+
+
+
+
+
+
 
 
 router.get('/modificarPrecios', function(req, res, next){
@@ -432,6 +472,46 @@ router.get('/modificarPrecios/:id', function(req, res, next){
         console.log(err);        
     })   
 });
+
+
+
+
+router.get('/eliminarPrecios/:id', function(req, res, next){
+
+    let precioBorrar 
+
+    console.log('eliminar precio:' + req.params.id);
+    (async function () 
+    {
+        try {
+            let pool = await sql.connect(dbConfig_localhost)     
+
+
+            let result1 = await pool.request()
+            .query('select cast(fecha_cierre as varchar(10)) as fecha_cierre, categoria_precio from tipo_precio where id =' + req.params.id)
+            precioBorrar = result1.recordsets[0];
+      
+
+            console.log(precioBorrar)
+
+            let result2 = await pool.request()
+            .query('delete from tipo_precio where id =' + req.params.id)  
+
+        } catch (err) {            
+            console.log(err);
+        }
+
+
+
+       
+    })().then(() => res.send('<script type="text/javascript"> alert("Precio '+ precioBorrar[0].categoria_precio + '  ' + precioBorrar[0].fecha_cierre + ' Eliminado!"); window.location="../modificarPrecios";</script>'))
+    
+    sql.on('error', err => {
+        console.log(err);        
+    })   
+});
+
+
 
 
 
@@ -608,8 +688,13 @@ app.post('/guardarPrecio', function(req, res){
 
    if(accion == 'agregar'){
 
-        const queryString = "INSERT INTO tipo_precio (id, fecha_cierre, categoria_precio, precio_base_usd_mwh, cargo_transmicion_seguimiento_electrico, precio ) " + 
-        "VALUES ('" +  id + "', '"+ fecha + "', '"+ categoria_precio + "', '"+precio_base_usd_mwh+"', '"+cargo_transmicion_seguimiento_electrico +"', '"+ precio + "')";
+        // // modificado para quitar el max id, usando el identity de sql server se evita problemas de duplicacion
+        // const queryString = "INSERT INTO tipo_precio (id, fecha_cierre, categoria_precio, precio_base_usd_mwh, cargo_transmicion_seguimiento_electrico, precio ) " + 
+        // "VALUES ('" +  id + "', '"+ fecha + "', '"+ categoria_precio + "', '"+precio_base_usd_mwh+"', '"+cargo_transmicion_seguimiento_electrico +"', '"+ precio + "')";
+
+
+        const queryString = "INSERT INTO tipo_precio (fecha_cierre, categoria_precio, precio_base_usd_mwh, cargo_transmicion_seguimiento_electrico, precio ) " + 
+        "VALUES ('"+ fecha + "', '"+ categoria_precio + "', '"+precio_base_usd_mwh+"', '"+cargo_transmicion_seguimiento_electrico +"', '"+ precio + "')";
 
         console.log(queryString);
         

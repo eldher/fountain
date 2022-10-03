@@ -48,7 +48,7 @@ function leerExcelGeneracionObligada(ruta){
             // agregar la fecha de carga
 
             let test = new Date(data[i].fecha)
-            data[i].fecha_mes = test.getFullYear() + "-" + test.getMonth()
+            data[i].fecha_mes = test.getFullYear() + "-" + (test.getMonth() + 1)
             data[i].version = 'Oficial'
 
             data[i].fecha_carga = hoy.toISOString().slice(0, 19).replace('T', ' ')

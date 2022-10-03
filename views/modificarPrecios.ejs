@@ -23,7 +23,8 @@
                     <td class="num"><%= precios[i].precio_base_usd_mwh %></td>
                     <td class="num"><%= precios[i].cargo_transmicion_seguimiento_electrico %></td>
                     <td class="num"><%= precios[i].precio %></td>
-                    <td><button class="btn btn-xs btn-success"  onclick= " window.location = '../modificarPrecios/<%= precios[i].id %>'" > Modificar Precio  </button></td> 
+                    <td><button class="btn btn-xs btn-success"  onclick= " window.location = '../modificarPrecios/<%= precios[i].id %>'" >Modificar</button></td> 
+                    <td><button class="btn btn-xs btn-warning"  onclick= " window.location = '../eliminarPrecios/<%= precios[i].id %>'" >Eliminar</button></td> 
                 </tr>
             <% } } %>
     </table>

@@ -1,15 +1,16 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<title> <%= title %> </title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
-<link rel="stylesheet" href="/styles.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
- 
+  <title>
+    <%= title %>
+  </title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
 
@@ -18,19 +19,20 @@
 
 
 
-<meta http-equiv='cache-control' content='no-cache'>
-<meta http-equiv='expires' content='0'>
-<meta http-equiv='pragma' content='no-cache'>
+
+  <meta http-equiv='cache-control' content='no-cache'>
+  <meta http-equiv='expires' content='0'>
+  <meta http-equiv='pragma' content='no-cache'>
 
 
 
 
 
-<style>
-body { 
-  padding-top: 65px; 
-}
-</style>
+  <style>
+    body {
+      padding-top: 65px;
+    }
+  </style>
 
 
 </head>
@@ -39,56 +41,63 @@ body {
 
 <body>
 
-<!-- Fixed navbar -->
-<nav class="navbar navbar-inverse navbar-fixed-top">
-  <div class="container">
-    <div class="navbar-header">
+  <!-- Fixed navbar -->
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
 
-      <a class="navbar-brand" href="/">Dashboard</a>
+        <a class="navbar-brand" href="/">Dashboard</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="/cierre/2021-12-31">Ingresos Mensuales </a></li>
+          <li><a href="/contratos">Ingresos por Contratos</a></li>
+
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+              aria-expanded="false">Energy Balance <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="/energyBalance/2022">Ver Reporte</a></li>
+            </ul>
+          </li>
+
+
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+              aria-expanded="false">Contratos <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="/agregarContrato">Agregar</a></li>
+              <li><a href="/modificarContratos">Modificar</a></li>
+            </ul>
+          </li>
+
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+              aria-expanded="false">Categorias Precios <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="/agregarPrecio">Agregar</a></li>
+              <li><a href="/modificarPrecios">Modificar</a></li>
+            </ul>
+          </li>
+
+
+
+
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+              aria-expanded="false">Cargar Data <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="/cargarDataAplicacion">Para Aplicación</a></li>
+              <li><a href="/agregarDetallePerdida/0">Detalle de Pérdidas</a></li>
+              <li><a href="/cargarDataPowerBi">Para Dashboard PowerBi</a></li>
+
+            </ul>
+          </li>
+
+
+
+        </ul>
+      </div>
+      <!--/.nav-collapse -->
     </div>
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-        <li><a href="/cierre/2021-12-31">Ingresos Mensuales </a></li>
-        <li><a href="/contratos">Ingresos por Contratos</a></li>
-
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Contratos <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="/agregarContrato">Agregar</a></li>
-            <li><a href="/modificarContratos">Modificar</a></li>
-          </ul>
-        </li>
-
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Categorias Precios <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="/agregarPrecio">Agregar</a></li>
-            <li><a href="/modificarPrecios">Modificar</a></li>
-          </ul>
-        </li>
-
-
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Energy Balance <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="/energyBalance/2022">Ver Reporte</a></li>
-
-          </ul>
-        </li>
-
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Cargar Data <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="/cargarDataAplicacion">Para Aplicación</a></li>
-            <li><a href="/agregarDetallePerdida/0">Detalle de Pérdidas</a></li>
-            <li><a href="/cargarDataPowerBi">Para Dashboard PowerBi</a></li>
-
-          </ul>
-        </li>
-
-
-
-      </ul>
-    </div><!--/.nav-collapse -->
-  </div>
-</nav>
+  </nav>
