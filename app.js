@@ -14,7 +14,7 @@ const balance_de_potencia = require('./uploaders/balance_de_potencia.js')
 const servicios_auxiliares = require('./uploaders/servicios_auxiliares.js')
 const generacion_obligada = require('./uploaders/generacion_obligada.js')
 const resumen_generacion = require('./uploaders/resumen_generacion.js')
-
+const valores_negativos = require('./uploaders/valores_negativos.js')
 
 var bodyParser = require('body-parser');
 
@@ -1554,6 +1554,90 @@ app.post('/upload_resumen_generacion', function(req, res){
   //})().then(() => res.json((data)))
 
 });
+
+
+
+
+
+app.post('/upload_valores_negativos', function(req, res){
+    let data;   
+    let archivoCargado;
+   
+    const uploadPromise = () => {
+        return new Promise((resolve, reject) => {
+            upload(req,res,function(err){                    
+                if(err){
+                    console.log('Multer Error:' + err);
+                    return reject(err)                                
+                }else{
+                    archivoCargado = req.file.filename;
+                    console.log(archivoCargado);
+                    console.log('uploads/'+ archivoCargado)
+                    resolve(archivoCargado)
+                    // data =  leerExcelLiquidacion('uploads/'+ archivoCargado)
+                    //res.send(data);
+                    //res.send('Archivo cargado!');
+                }                
+            }) ;
+        });
+   }
+      
+    
+    //funcion para leer linea a linea el JSON
+    (async function () 
+    {
+       // data = await leerExcelLiquidacion('uploads/' + archivoCargado)
+        //console.log("Filas convertidas a JSON: " + data.length)
+        archivoCargado = await uploadPromise(req,res)
+        data =  await valores_negativos.leerExcelValoresNegativos('uploads/'+ archivoCargado)
+        //console.log(data)
+
+        
+        try {
+
+
+            let pool = await sql.connect(dbConfig_localhost);     
+            
+            // insertar info por Distribuidores
+
+            for ( i = 0; i < data.length; i++) {
+                let result = await pool.request()
+
+                .input('fecha', sql.Date, data[i].fecha)
+                .input('sasd', sql.Float, data[i].sasd)
+                .input('generacion_obligada', sql.Float, data[i].generacion_obligada)
+                .input('servicios_auxiliares', sql.Float, data[i].servicios_auxiliares)
+                .input('compensacion_de_potencia', sql.Float, data[i].compensacion_de_potencia)
+                .execute('insertarValoresNegativos')
+            }
+
+            //insertar info en SQL por Contratos
+
+        } catch (err) {            
+            console.log(err);            
+        }
+
+        
+   })().then(() => res.send('<script type="text/javascript"> alert("Archivo de Valores Negativos!"); window.location="./cargarDataAplicacion";</script>') )
+        
+  //})().then(() => res.json((data)))
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
