@@ -4,7 +4,7 @@ function SerialDateToJSDate(serialDate, offsetUTC) {
     return new Date(Date.UTC(0, 0, serialDate, offsetUTC));
   }
 
-function leerExcelValoresNegativos(ruta){
+function leerExcelSasd(ruta){
 
     return new Promise((resolve, reject) => {
         const workbook = XSLX.readFile(ruta);   
@@ -15,34 +15,52 @@ function leerExcelValoresNegativos(ruta){
 
         var data = XSLX.utils.sheet_to_json(
             // se coloca el nombre de la hoja a leer
-            workbook.Sheets['data'], 
+            workbook.Sheets['Total'], 
             // se colocan los overriden nombre de las columnas
             {header:[
-                "fecha",
-                "sasd",
-                "generacion_obligada",
-                "servicios_auxiliares",
-                "compensacion_de_potencia"                
-            ], range: 1 }
+                "AGENTE_DEUDOR",
+                "ACP",
+                "ACPGEN",
+                "AES",
+                "CELSIACENT",
+                "CELSIABLM",
+                "EGESA",
+                "ENERGYST",
+                "ESEPSA",
+                "GANA",
+                "GENA",
+                "JINRO",
+                "KANAN",
+                "PANAM",
+                "PEDREGAL",
+                "SPARKLEPW",
+                "TOTAL",                           
+            ], range: 'B3:R650' }
         );
-         
-        
+
         console.log('Cantidad de Registros a Transformar: '+ data.length)
 
+        
+        let extraccionFecha = XSLX.utils.sheet_to_json( workbook.Sheets['CONSUMOS'],  {header:["fecha"], range: 'A2:A2' });
+        let fecha = SerialDateToJSDate(extraccionFecha[0].fecha, 0) //.toISOString().slice(0, 19).replace('T', ' ')  
+
+        console.log(extraccionFecha);
+        console.log('Cantidad de Registros a Transformar: '+ data.length)
+        
         let fecha_ts = Date.now()
         let hoy = new Date(fecha_ts)
 
         
         for (let i = 0; i < data.length; i++) {      
             // convertir fechas de formato Excel a JS
-            data[i].fecha = SerialDateToJSDate(data[i].fecha, -24).toISOString().slice(0, 19).replace('T', ' ')  
+            data[i].fecha = fecha
+            
             // agregar la fecha de carga
 
             let test = new Date(data[i].fecha)
-            console.log(test)
+            //console.log(test)
             data[i].fecha_mes = test.getFullYear() + "-" + (test.getMonth() + 1)
             data[i].version = 'Oficial'
-
             data[i].fecha_carga = hoy.toISOString().slice(0, 19).replace('T', ' ')
         }
 
@@ -61,4 +79,4 @@ function leerExcelValoresNegativos(ruta){
 };
 
 
-module.exports.leerExcelValoresNegativos = leerExcelValoresNegativos;
+module.exports.leerExcelSasd = leerExcelSasd;

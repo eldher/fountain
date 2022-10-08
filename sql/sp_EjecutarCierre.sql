@@ -1,9 +1,10 @@
-/****** Object:  StoredProcedure [dbo].[sp_EjecutarCierre]    Script Date: 9/28/2022 10:48:51 AM ******/
+/****** Object:  StoredProcedure [dbo].[sp_EjecutarCierre]    Script Date: 10/8/2022 4:23:32 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 
@@ -361,6 +362,38 @@ select @ingresos_contratos =
 
 
 
+
+declare @sasd decimal(20,4)
+select @sasd = 
+(
+	select total from sasd
+	where AGENTE_DEUDOR like 'FOUNTAIN'
+	and fecha = @fecha_cierre
+
+) 
+
+
+
+
+declare @saerlp decimal(20,4)
+select @saerlp = 
+(
+	select sum(FOUNTAIN) 
+	from SAERLP
+	where fecha = @fecha_cierre
+) 
+
+
+
+
+declare @valores_negativos decimal(20,4)
+select @valores_negativos = 
+(
+	select  sasd + generacion_obligada + servicios_auxiliares + compensacion_de_potencia as valoresnegativos
+	from [dbo].[ValoresNegativos] 
+	where fecha = @fecha_cierre
+)
+
 --------------------------------------------------------------------------
 --                       CREACION #preV
 --------------------------------------------------------------------------
@@ -372,13 +405,14 @@ cms_promedio							= avg(cms)
 ,compras_energia_mercado_ocasional		= sum(ocasional_debito) 
 ,ventas_energia_mercado_ocasional		= sum(ocasional_credito) 
 ,ingresos_por_contratos					= ISNULL(@ingresos_contratos,0)
-,SAERLP									= 0
+,SAERLP									= @saerlp
 ,debito_energia_perdida_transmision		= 0
 ,credito_energia_perdida_transmision	= (sum(suplido_pos_contratos) - sum(suplido_mo))*@precio_perdida
-,sasd									= 0
+,sasd									= @sasd
 ,generacion_obligada					= @generacion_obligada 
 ,servicios_auxiliares					= @servicios_auxiliares
 ,compensacion_potencia					= ISNULL(@compensacion_potencia,0) 
+,valores_negativos						= ISNULL(@valores_negativos,0) 
 into #prev
 from preliminar_fountain_dia
 where EOMONTH(fecha) =  @fecha_cierre
@@ -417,7 +451,8 @@ isnull(servicios_auxiliares,0) +
 isnull(compensacion_potencia,0) + 
 isnull(SAERLP,0) -
 isnull(compras_energia_mercado_ocasional, 0) - 
-isnull(debito_energia_perdida_transmision, 0)
+isnull(debito_energia_perdida_transmision, 0) -
+isnull(valores_negativos, 0)
 into resumen
 from #prev
 
@@ -428,4 +463,7 @@ END;
 GO
 
 
---EXEC sp_EjecutarCierre N'2021-10-31'
+--EXEC sp_EjecutarCierre N'2021-12-31'
+
+
+

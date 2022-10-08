@@ -15,6 +15,8 @@ const servicios_auxiliares = require('./uploaders/servicios_auxiliares.js')
 const generacion_obligada = require('./uploaders/generacion_obligada.js')
 const resumen_generacion = require('./uploaders/resumen_generacion.js')
 const valores_negativos = require('./uploaders/valores_negativos.js')
+const sasd = require('./uploaders/sasd.js')
+const saerlp = require('./uploaders/saerlp.js')
 
 var bodyParser = require('body-parser');
 
@@ -885,6 +887,7 @@ router.get('/cargarDataPowerBi', function(req, res){
 
 
 var multer = require('multer');
+const { leerExcelSaerlp } = require("./uploaders/saerlp");
  
 var storage = multer.diskStorage({ //multers disk storage settings
     destination: function (req, file, cb) {
@@ -1619,6 +1622,198 @@ app.post('/upload_valores_negativos', function(req, res){
 
         
    })().then(() => res.send('<script type="text/javascript"> alert("Archivo de Valores Negativos!"); window.location="./cargarDataAplicacion";</script>') )
+        
+  //})().then(() => res.json((data)))
+
+});
+
+
+
+
+
+
+
+
+
+app.post('/upload_sasd', function(req, res){
+    let data;   
+    let archivoCargado;
+   
+    const uploadPromise = () => {
+        return new Promise((resolve, reject) => {
+            upload(req,res,function(err){                    
+                if(err){
+                    console.log('Multer Error:' + err);
+                    return reject(err)                                
+                }else{
+                    archivoCargado = req.file.filename;
+                    console.log(archivoCargado);
+                    console.log('uploads/'+ archivoCargado)
+                    resolve(archivoCargado)
+                    // data =  leerExcelLiquidacion('uploads/'+ archivoCargado)
+                    //res.send(data);
+                    //res.send('Archivo cargado!');
+                }                
+            }) ;
+        });
+   }
+      
+    
+    //funcion para leer linea a linea el JSON
+    (async function () 
+    {
+       // data = await leerExcelLiquidacion('uploads/' + archivoCargado)
+        //console.log("Filas convertidas a JSON: " + data.length)
+        archivoCargado = await uploadPromise(req,res)
+        data =  await sasd.leerExcelSasd('uploads/'+ archivoCargado)
+        //console.log(data)
+
+        
+        try {
+
+
+            let pool = await sql.connect(dbConfig_localhost);     
+            
+            // insertar info por Distribuidores
+
+            for ( i = 0; i < data.length; i++) {
+                let result = await pool.request()
+
+                .input('fecha', sql.Date, data[i].fecha)
+                .input('AGENTE_DEUDOR', sql.NVarChar ([100]), data[i].AGENTE_DEUDOR)
+                .input('ACP', sql.Float, data[i].ACP)
+                .input('ACPGEN', sql.Float, data[i].ACPGEN)
+                .input('AES', sql.Float, data[i].AES)
+                .input('CELSIACENT', sql.Float, data[i].CELSIACENT)
+                .input('CELSIABLM', sql.Float, data[i].CELSIABLM)
+                .input('EGESA', sql.Float, data[i].EGESA)
+                .input('ENERGYST', sql.Float, data[i].ENERGYST)
+                .input('ESEPSA', sql.Float, data[i].ESEPSA)
+                .input('GANA', sql.Float, data[i].GANA)
+                .input('GENA', sql.Float, data[i].GENA)
+                .input('JINRO', sql.Float, data[i].JINRO)
+                .input('KANAN', sql.Float, data[i].KANAN)
+                .input('PANAM', sql.Float, data[i].PANAM)
+                .input('PEDREGAL', sql.Float, data[i].PEDREGAL)
+                .input('SPARKLEPW', sql.Float, data[i].SPARKLEPW)
+                .input('TOTAL', sql.Float, data[i].TOTAL)
+                .input('version', sql.VarChar ([20]), data[i].version)
+                .input('fecha_mes', sql.VarChar ([20]), data[i].fecha_mes)
+                .input('fecha_carga', sql.DateTime, data[i].fecha_carga)
+
+                .execute('insertarSASD')
+            }
+
+            //insertar info en SQL por Contratos
+
+        } catch (err) {            
+            console.log(err);            
+        }
+
+        
+   })().then(() => res.send('<script type="text/javascript"> alert("Archivo de SASD Cargado!"); window.location="./cargarDataAplicacion";</script>') )
+        
+  //})().then(() => res.json((data)))
+
+});
+
+
+
+
+
+
+
+app.post('/upload_saerlp', function(req, res){
+    let data;   
+    let archivoCargado;
+   
+    const uploadPromise = () => {
+        return new Promise((resolve, reject) => {
+            upload(req,res,function(err){                    
+                if(err){
+                    console.log('Multer Error:' + err);
+                    return reject(err)                                
+                }else{
+                    archivoCargado = req.file.filename;
+                    console.log(archivoCargado);
+                    console.log('uploads/'+ archivoCargado)
+                    resolve(archivoCargado)
+                    // data =  leerExcelLiquidacion('uploads/'+ archivoCargado)
+                    //res.send(data);
+                    //res.send('Archivo cargado!');
+                }                
+            }) ;
+        });
+   }
+      
+    
+    //funcion para leer linea a linea el JSON
+    (async function () 
+    {
+       // data = await leerExcelLiquidacion('uploads/' + archivoCargado)
+        //console.log("Filas convertidas a JSON: " + data.length)
+        archivoCargado = await uploadPromise(req,res)
+        data =  await saerlp.leerExcelSaerlp('uploads/'+ archivoCargado)
+        //console.log(data)
+
+        
+        try {
+
+
+            let pool = await sql.connect(dbConfig_localhost);     
+            
+            // insertar info por Distribuidores
+
+            for ( i = 0; i < data.length; i++) {
+                let result = await pool.request()
+
+                .input('fecha', sql.Date, data[i].fecha)
+                .input('DEUDORES', sql.NVarChar ([100]), data[i].DEUDORES)
+                .input('ACP', sql.Float, data[i].ACP)
+                .input('ACPGEN', sql.Float, data[i].ACPGEN)
+                .input('AES', sql.Float, data[i].AES)
+                .input('ALTOVALLE', sql.Float, data[i].ALTOVALLE)
+                .input('CALDERA', sql.Float, data[i].CALDERA)
+                .input('CELSIACENT', sql.Float, data[i].CELSIACENT)
+                .input('CELSIABLM', sql.Float, data[i].CELSIABLM)
+                .input('CELSIABON', sql.Float, data[i].CELSIABON)
+                .input('DESHIDCORP', sql.Float, data[i].DESHIDCORP)
+                .input('EISA', sql.Float, data[i].EISA)
+                .input('ENERGYST', sql.Float, data[i].ENERGYST)
+                .input('ESEPSA', sql.Float, data[i].ESEPSA)
+                .input('FORTUNA', sql.Float, data[i].FORTUNA)
+                .input('FOUNTAIN', sql.Float, data[i].FOUNTAIN)
+                .input('GENA', sql.Float, data[i].GENA)
+                .input('GENISA', sql.Float, data[i].GENISA)
+                .input('GENPED', sql.Float, data[i].GENPED)
+                .input('HBOQUERON', sql.Float, data[i].HBOQUERON)
+                .input('HBTOTUMA', sql.Float, data[i].HBTOTUMA)
+                .input('HIBERICA', sql.Float, data[i].HIBERICA)
+                .input('HIDRO', sql.Float, data[i].HIDRO)
+                .input('HTERIBE', sql.Float, data[i].HTERIBE)
+                .input('IDEALPMA', sql.Float, data[i].IDEALPMA)
+                .input('JINRO', sql.Float, data[i].JINRO)
+                .input('P_ANCHO', sql.Float, data[i].P_ANCHO)
+                .input('PANAM', sql.Float, data[i].PANAM)
+                .input('PEDREGAL', sql.Float, data[i].PEDREGAL)
+                .input('RCHICO', sql.Float, data[i].RCHICO)
+                .input('SFRAN', sql.Float, data[i].SFRAN)
+                .input('version', sql.VarChar ([20]), data[i].version)
+                .input('fecha_mes', sql.VarChar ([20]), data[i].fecha_mes)
+                .input('fecha_carga', sql.DateTime, data[i].fecha_carga)
+                
+
+                .execute('insertarSAERLP')
+            }
+
+            //insertar info en SQL por Contratos
+
+        } catch (err) {            
+            console.log(err);            
+        }
+
+        
+   })().then(() => res.send('<script type="text/javascript"> alert("Archivo de SASD Cargado!"); window.location="./cargarDataAplicacion";</script>') )
         
   //})().then(() => res.json((data)))
 

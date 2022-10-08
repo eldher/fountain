@@ -2,7 +2,7 @@
 --GO
 
 
-CREATE PROCEDURE insertarValoresNegativos
+ALTER PROCEDURE insertarValoresNegativos
 
 @fecha date  = NULL,
 @sasd float  = NULL,
@@ -30,6 +30,9 @@ VALUES
 ,@servicios_auxiliares
 ,@compensacion_de_potencia
 )
+
+
+
 
 END
 GO
