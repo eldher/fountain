@@ -4,7 +4,7 @@ function SerialDateToJSDate(serialDate, offsetUTC) {
     return new Date(Date.UTC(0, 0, serialDate, offsetUTC));
   }
 
-function leerExcelGeneracionObligada(ruta){
+function leerExcelGeneracionObligada(ruta, version){
 
     return new Promise((resolve, reject) => {
         const workbook = XSLX.readFile(ruta);   
@@ -49,7 +49,7 @@ function leerExcelGeneracionObligada(ruta){
 
             let test = new Date(data[i].fecha)
             data[i].fecha_mes = test.getFullYear() + "-" + (test.getMonth() + 1)
-            data[i].version = 'Oficial'
+            data[i].version = version
 
             data[i].fecha_carga = hoy.toISOString().slice(0, 19).replace('T', ' ')
         }

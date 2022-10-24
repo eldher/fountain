@@ -5,7 +5,7 @@ function SerialDateToJSDate(serialDate, offsetUTC) {
     return new Date(Date.UTC(0, 0, serialDate, offsetUTC));
   }
 
-function leerExcelBalanceDePotencia(ruta){
+function leerExcelBalanceDePotencia(ruta,version){
 
     return new Promise((resolve, reject) => {
         const workbook = XSLX.readFile(ruta);   
@@ -73,7 +73,7 @@ function leerExcelBalanceDePotencia(ruta){
             data[i].fecha_mes = test.getFullYear() + "-" + (test.getMonth() + 1)
 
             // cambiar este parametro a input desde formulario
-            data[i].version = 'Oficial'
+            data[i].version = version
 
             // agregar la fecha de carga
             data[i].fecha_carga = hoy.toISOString().slice(0, 19).replace('T', ' ')

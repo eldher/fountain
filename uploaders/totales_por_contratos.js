@@ -5,7 +5,7 @@ function SerialDateToJSDate(serialDate, offsetUTC) {
     return new Date(Date.UTC(0, 0, serialDate, offsetUTC));
   }
 
-function leerExcelTotalesPorContratos(ruta){
+function leerExcelTotalesPorContratos(ruta, version){
 
     return new Promise((resolve, reject) => {
         const workbook = XSLX.readFile(ruta);   

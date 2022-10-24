@@ -948,7 +948,7 @@ var data;
 
 
 
-function leerExcelLiquidacion(ruta){
+function leerExcelLiquidacion(ruta, version){
 
     // Se integra en Promise para hacerla async() y esperar el resultado.
 
@@ -1005,7 +1005,7 @@ function leerExcelLiquidacion(ruta){
 
             data[i].fecha = splitted[2] + '-' + nMes + '-' + splitted[1];
             data[i].fecha_mes = splitted[2] + '-' + nMes
-            data[i].version = 'Oficial'
+            data[i].version = version
             data[i].ajuste = 0
             //data[i].fecha_carga = Date.now().toISOString().slice(0, 9).replace('T', ' ')
             
@@ -1062,13 +1062,24 @@ app.post('/upload_liquidacion_fountain', function(req, res) {
    }
       
     
+
+
+
+
     //funcion para leer linea a linea el JSON
     (async function () 
     {
        // data = await leerExcelLiquidacion('uploads/' + archivoCargado)
         //console.log("Filas convertidas a JSON: " + data.length)
+
+
+ 
         archivoCargado = await uploadPromise(req,res)
-        let data = await leerExcelLiquidacion('uploads/'+ archivoCargado)
+       
+        let data = await leerExcelLiquidacion('uploads/'+ archivoCargado, req.body.version)
+
+        console.log(req.body.version)
+
 
         try {
             let pool = await sql.connect(dbConfig_localhost);     
@@ -1280,7 +1291,8 @@ app.post('/upload_balance_de_potencia', function(req, res){
        // data = await leerExcelLiquidacion('uploads/' + archivoCargado)
         //console.log("Filas convertidas a JSON: " + data.length)
         archivoCargado = await uploadPromise(req,res)
-        data =  await balance_de_potencia.leerExcelBalanceDePotencia('uploads/'+ archivoCargado)
+
+        data =  await balance_de_potencia.leerExcelBalanceDePotencia('uploads/'+ archivoCargado, req.body.version)
         //console.log(data)
 
         try {
@@ -1353,7 +1365,7 @@ app.post('/upload_servicios_auxiliares', function(req, res){
        // data = await leerExcelLiquidacion('uploads/' + archivoCargado)
         //console.log("Filas convertidas a JSON: " + data.length)
         archivoCargado = await uploadPromise(req,res)
-        data =  await servicios_auxiliares.leerExcelServiciosAuxiliares('uploads/'+ archivoCargado)
+        data =  await servicios_auxiliares.leerExcelServiciosAuxiliares('uploads/'+ archivoCargado, req.body.version)
 
         try {
 
@@ -1425,7 +1437,7 @@ app.post('/upload_generacion_obligada', function(req, res){
        // data = await leerExcelLiquidacion('uploads/' + archivoCargado)
         //console.log("Filas convertidas a JSON: " + data.length)
         archivoCargado = await uploadPromise(req,res)
-        data =  await generacion_obligada.leerExcelGeneracionObligada('uploads/'+ archivoCargado)
+        data =  await generacion_obligada.leerExcelGeneracionObligada('uploads/'+ archivoCargado, req.body.version)
 
         try {
 
@@ -1505,7 +1517,7 @@ app.post('/upload_resumen_generacion', function(req, res){
        // data = await leerExcelLiquidacion('uploads/' + archivoCargado)
         //console.log("Filas convertidas a JSON: " + data.length)
         archivoCargado = await uploadPromise(req,res)
-        data =  await resumen_generacion.leerExcelResumenGeneracion('uploads/'+ archivoCargado)
+        data =  await resumen_generacion.leerExcelResumenGeneracion('uploads/'+ archivoCargado, req.body.version)
         //console.log(data)
 
         
@@ -1592,7 +1604,7 @@ app.post('/upload_valores_negativos', function(req, res){
        // data = await leerExcelLiquidacion('uploads/' + archivoCargado)
         //console.log("Filas convertidas a JSON: " + data.length)
         archivoCargado = await uploadPromise(req,res)
-        data =  await valores_negativos.leerExcelValoresNegativos('uploads/'+ archivoCargado)
+        data =  await valores_negativos.leerExcelValoresNegativos('uploads/'+ archivoCargado, req.body.version)
         //console.log(data)
 
         
@@ -1665,7 +1677,7 @@ app.post('/upload_sasd', function(req, res){
        // data = await leerExcelLiquidacion('uploads/' + archivoCargado)
         //console.log("Filas convertidas a JSON: " + data.length)
         archivoCargado = await uploadPromise(req,res)
-        data =  await sasd.leerExcelSasd('uploads/'+ archivoCargado)
+        data =  await sasd.leerExcelSasd('uploads/'+ archivoCargado ,req.body.version)
         //console.log(data)
 
         
@@ -1753,7 +1765,7 @@ app.post('/upload_saerlp', function(req, res){
        // data = await leerExcelLiquidacion('uploads/' + archivoCargado)
         //console.log("Filas convertidas a JSON: " + data.length)
         archivoCargado = await uploadPromise(req,res)
-        data =  await saerlp.leerExcelSaerlp('uploads/'+ archivoCargado)
+        data =  await saerlp.leerExcelSaerlp('uploads/'+ archivoCargado, req.body.version )
         //console.log(data)
 
         

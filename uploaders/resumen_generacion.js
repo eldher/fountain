@@ -109,7 +109,7 @@ function Formatear(data){
 
 
 
-function leerExcelResumenGeneracion(ruta){
+function leerExcelResumenGeneracion(ruta, version){
 
     return new Promise((resolve, reject) => {
         const workbook = XSLX.readFile(ruta);   

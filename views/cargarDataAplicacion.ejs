@@ -5,10 +5,13 @@
 <div class="container theme-showcase" role="main">
 
 
+<h2>Archivos Oficiales</h2>
+
     <form id="uploadForm" enctype ="multipart/form-data" action= "upload_liquidacion_fountain" method="post">
     <label for="formFileSm" class="form-label" style="width: 150px; display:inline-block; margin-left:10px">Liquidacion Fountain  </label>    
     <input type="file" name="file" class="form-control form-control-sm" style="width: 500px; display:inline-block; margin-left:10px"/>   
     
+    <input type="hidden" id="version" name="version" value="Oficial">
     <input  type="submit"  class="btn btn-xs btn-success" value="Cargar" name="submit">
     </form>
 
@@ -18,6 +21,8 @@
     <form id="uploadForm" enctype ="multipart/form-data" action= "upload_totales_por_contratos" method="post">
     <label for="formFileSm" class="form-label" style="width: 150px; display:inline-block; margin-left:10px">Totales por Contratos</label>    
     <input type="file" name="file" class="form-control form-control-sm" style="width: 500px; display:inline-block;  margin-left:10px"/>           
+    
+    <input type="hidden" id="version" name="version" value="Oficial">
     <input  type="submit"  class="btn btn-xs btn-success" value="Cargar" name="submit">
     </form>
     
@@ -25,6 +30,8 @@
     <form id="uploadForm" enctype ="multipart/form-data" action= "upload_balance_de_potencia" method="post">
     <label for="formFileSm" class="form-label" style="width: 150px; display:inline-block; margin-left:10px">Balance de Potencia</label>    
     <input type="file" name="file" class="form-control form-control-sm" style="width: 500px; display:inline-block;  margin-left:10px"/>           
+    
+    <input type="hidden" id="version" name="version" value="Oficial">
     <input  type="submit"  class="btn btn-xs btn-success" value="Cargar" name="submit">
     </form>
 
@@ -32,6 +39,8 @@
     <form id="uploadForm" enctype ="multipart/form-data" action= "upload_servicios_auxiliares" method="post">
         <label for="formFileSm" class="form-label" style="width: 150px; display:inline-block; margin-left:10px">Servicios Auxiliares</label>    
         <input type="file" name="file" class="form-control form-control-sm" style="width: 500px; display:inline-block;  margin-left:10px"/>           
+
+        <input type="hidden" id="version" name="version" value="Oficial">
         <input  type="submit"  class="btn btn-xs btn-success" value="Cargar" name="submit">
     </form>
 
@@ -42,6 +51,8 @@
     <form id="uploadForm" enctype ="multipart/form-data" action= "upload_resumen_generacion" method="post">
         <label for="formFileSm" class="form-label" style="width: 150px; display:inline-block; margin-left:10px">Resumen Generación</label>    
         <input type="file" name="file" class="form-control form-control-sm" style="width: 500px; display:inline-block;  margin-left:10px"/>           
+        
+        <input type="hidden" id="version" name="version" value="Oficial">
         <input  type="submit"  class="btn btn-xs btn-success" value="Cargar" name="submit">
         </form>
 
@@ -50,6 +61,8 @@
     <form id="uploadForm" enctype ="multipart/form-data" action= "upload_generacion_obligada" method="post">
     <label for="formFileSm" class="form-label" style="width: 150px; display:inline-block; margin-left:10px">Generación Obligada</label>    
     <input type="file" name="file" class="form-control form-control-sm" style="width: 500px; display:inline-block;  margin-left:10px"/>           
+    
+    <input type="hidden" id="version" name="version" value="Oficial">
     <input  type="submit"  class="btn btn-xs btn-success" value="Cargar" name="submit">
     </form>
 
@@ -57,12 +70,16 @@
     <form id="uploadForm" enctype ="multipart/form-data" action= "upload_sasd" method="post">
         <label for="formFileSm" class="form-label" style="width: 150px; display:inline-block; margin-left:10px">SASD</label>    
         <input type="file" name="file" class="form-control form-control-sm" style="width: 500px; display:inline-block;  margin-left:10px"/>           
+
+        <input type="hidden" id="version" name="version" value="Oficial">
         <input  type="submit"  class="btn btn-xs btn-success" value="Cargar" name="submit">
     </form>
 
     <form id="uploadForm" enctype ="multipart/form-data" action= "upload_saerlp" method="post">
     <label for="formFileSm" class="form-label" style="width: 150px; display:inline-block; margin-left:10px">SAERLP</label>    
     <input type="file" name="file" class="form-control form-control-sm" style="width: 500px; display:inline-block;  margin-left:10px"/>           
+
+    <input type="hidden" id="version" name="version" value="Oficial">
     <input  type="submit"  class="btn btn-xs btn-success" value="Cargar" name="submit">
     </form>
     
@@ -73,9 +90,111 @@
     <form id="uploadForm" enctype ="multipart/form-data" action= "upload_valores_negativos" method="post">
     <label for="formFileSm" class="form-label" style="width: 150px; display:inline-block; margin-left:10px">Valores Negativos</label>    
     <input type="file" name="file" class="form-control form-control-sm" style="width: 500px; display:inline-block;  margin-left:10px"/>           
+    
+    <input type="hidden" id="version" name="version" value="Oficial">
     <input  type="submit"  class="btn btn-xs btn-success" value="Cargar" name="submit">
     </form>
     
+
+<!---------------------------------------------------------------------------
+Carga Archivos Preliminares 
+--------------------------------------------------------------------------->
+
+    <h2>Archivos Preliminares</h2>
+
+    <form id="uploadForm" enctype ="multipart/form-data" action= "upload_liquidacion_fountain" method="post">
+        <label for="formFileSm" class="form-label" style="width: 150px; display:inline-block; margin-left:10px">Liquidacion Fountain  </label>    
+        <input type="file" name="file" class="form-control form-control-sm" style="width: 500px; display:inline-block; margin-left:10px"/>   
+        
+        <input type="hidden" id="version" name="version" value="Preliminar">
+        
+        <input  type="submit"  class="btn btn-xs btn-success" value="Cargar" name="submit">
+        </form>
+    
+        
+    
+        
+        <form id="uploadForm" enctype ="multipart/form-data" action= "upload_totales_por_contratos" method="post">
+        <label for="formFileSm" class="form-label" style="width: 150px; display:inline-block; margin-left:10px">Totales por Contratos</label>    
+        <input type="file" name="file" class="form-control form-control-sm" style="width: 500px; display:inline-block;  margin-left:10px"/>           
+
+        <input type="hidden" id="version" name="version" value="Preliminar">
+        <input  type="submit"  class="btn btn-xs btn-success" value="Cargar" name="submit">
+        </form>
+        
+    
+        <form id="uploadForm" enctype ="multipart/form-data" action= "upload_balance_de_potencia" method="post">
+        <label for="formFileSm" class="form-label" style="width: 150px; display:inline-block; margin-left:10px">Balance de Potencia</label>    
+        <input type="file" name="file" class="form-control form-control-sm" style="width: 500px; display:inline-block;  margin-left:10px"/>           
+        
+        <input type="hidden" id="version" name="version" value="Preliminar">
+        <input  type="submit"  class="btn btn-xs btn-success" value="Cargar" name="submit">
+        </form>
+    
+    
+        <form id="uploadForm" enctype ="multipart/form-data" action= "upload_servicios_auxiliares" method="post">
+            <label for="formFileSm" class="form-label" style="width: 150px; display:inline-block; margin-left:10px">Servicios Auxiliares</label>    
+            <input type="file" name="file" class="form-control form-control-sm" style="width: 500px; display:inline-block;  margin-left:10px"/>          
+            
+            <input type="hidden" id="version" name="version" value="Preliminar">
+            <input  type="submit"  class="btn btn-xs btn-success" value="Cargar" name="submit">
+        </form>
+    
+    
+    
+    
+    
+        <form id="uploadForm" enctype ="multipart/form-data" action= "upload_resumen_generacion" method="post">
+            <label for="formFileSm" class="form-label" style="width: 150px; display:inline-block; margin-left:10px">Resumen Generación</label>    
+            <input type="file" name="file" class="form-control form-control-sm" style="width: 500px; display:inline-block;  margin-left:10px"/>     
+            
+            <input type="hidden" id="version" name="version" value="Preliminar">
+            <input  type="submit"  class="btn btn-xs btn-success" value="Cargar" name="submit">
+            </form>
+    
+    
+    
+        <form id="uploadForm" enctype ="multipart/form-data" action= "upload_generacion_obligada" method="post">
+        <label for="formFileSm" class="form-label" style="width: 150px; display:inline-block; margin-left:10px">Generación Obligada</label>    
+        <input type="file" name="file" class="form-control form-control-sm" style="width: 500px; display:inline-block;  margin-left:10px"/>    
+        
+        <input type="hidden" id="version" name="version" value="Preliminar">
+        <input  type="submit"  class="btn btn-xs btn-success" value="Cargar" name="submit">
+        </form>
+    
+    
+        <form id="uploadForm" enctype ="multipart/form-data" action= "upload_sasd" method="post">
+            <label for="formFileSm" class="form-label" style="width: 150px; display:inline-block; margin-left:10px">SASD</label>    
+            <input type="file" name="file" class="form-control form-control-sm" style="width: 500px; display:inline-block;  margin-left:10px"/>           
+
+            <input type="hidden" id="version" name="version" value="Preliminar">
+            <input  type="submit"  class="btn btn-xs btn-success" value="Cargar" name="submit">
+        </form>
+    
+        <form id="uploadForm" enctype ="multipart/form-data" action= "upload_saerlp" method="post">
+        <label for="formFileSm" class="form-label" style="width: 150px; display:inline-block; margin-left:10px">SAERLP</label>    
+        <input type="file" name="file" class="form-control form-control-sm" style="width: 500px; display:inline-block;  margin-left:10px"/>           
+
+        <input type="hidden" id="version" name="version" value="Preliminar">
+        <input  type="submit"  class="btn btn-xs btn-success" value="Cargar" name="submit">
+        </form>
+        
+            
+    
+                
+    
+        <form id="uploadForm" enctype ="multipart/form-data" action= "upload_valores_negativos" method="post">
+        <label for="formFileSm" class="form-label" style="width: 150px; display:inline-block; margin-left:10px">Valores Negativos</label>    
+        <input type="file" name="file" class="form-control form-control-sm" style="width: 500px; display:inline-block;  margin-left:10px"/>          
+        
+        <input type="hidden" id="version" name="version" value="Preliminar">
+        <input  type="submit"  class="btn btn-xs btn-success" value="Cargar" name="submit">
+        </form>
+
+
+
+
+
 
 
             
