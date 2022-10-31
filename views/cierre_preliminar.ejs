@@ -1,0 +1,307 @@
+
+<%- include('partials/header') %>
+
+<div class="container theme-showcase" role="main">
+
+    <form action="">
+        <!-- <label for="cars">Fecha:</label> -->
+
+        <%#console.log(fechas.length) %>
+        <%# for(var i = 0; i < fechas.length; i++) { %>
+            <h1> <%#= fechas[i].fecha + fechas[i].mes + ' ' + fechas[i].anio %> </h1> 
+
+        <%# } %>
+
+        <select name="cars" id="fecha">
+     
+        <% for(var i = 0; i < fechas.length; i++) { %>
+
+            <option value= <%= fechas[i].fecha %>   <%= fechas[i].fecha == fecha ? 'selected' : ''  %>     >  <%= fechas[i].fecha    %>   </option>
+
+        
+          <!-- <option value="2021-10-31">Octubre 2021</option>
+          <option value="2021-11-30">Noviembre 2021</option>
+          <option value="2021-12-31">Diciembre 2021</option>
+          <option value="2022-01-31" selected>Enero 2022</option>
+          <option value="2022-02-28">Febrero 2022</option>
+          <option value="2022-03-31">Marzo 2022</option> -->
+
+        <% } %>
+        </select>
+        
+
+       
+
+        <button type="button" class="btn btn-xs btn-success" onclick= " window.location='../cierre/' + getElementById('fecha').value ">Actualizar</button>
+        <!-- <button type="button" class="btn btn-xs btn-success" onclick="console.log(getElementById('cars').value)  ">Actualizar</button> -->
+        <!-- <button type="button" class="btn btn-xs btn-success">Descargar</button> -->
+    </form>
+
+
+   <h3><%#= fecha %> </h3>  
+    <table id="customers">
+        <tr>
+            <th>CMS Promedio</th>
+            <th>Energia Generada</th>
+            <th>Compras de Energía en el Mercado Ocasional</th>
+            <th>Ventas de Energía en el Mercado Ocasional</th>
+            <th>Ingresos por Contratos</th>
+            <th>SAERLP</th>
+            <th>Débito de Energía en Pérdidas de Transmisión </th>
+            <th>Crédito de Energía en Pérdidas de Transmisión</th>
+            <th>SASD</th>
+            <th>Generación Obligada</th>
+            <th>Servicios Auxiliares</th>
+            <th>Compensación de Potencia</th>
+            <th>Ingreso Total Neto</th>      
+        </tr>
+        
+        <%# console.log(data.recordsets[0]) %> 
+
+        <% if( data.recordset.length!=0 ) {
+            for ( var i=0 ; i <data.recordset.length ; i++) { %>
+                <tr>
+                    <td class="num"><%= data.recordset[i].cms_promedio.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                    <td class="num"><%= data.recordset[i].energia_generada.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                    <td class="num"><%= data.recordset[i].compras_energia_mercado_ocasional.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                    <td class="num"><%= data.recordset[i].ventas_energia_mercado_ocasional.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                    <td class="num"><%= data.recordset[i].ingresos_por_contratos.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+                    <td class="num"><%= data.recordset[i].SAERLP.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')  %></td>
+                    <td class="num"><%= data.recordset[i].debito_energia_perdida_transmision.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')  %></td>
+                    <td class="num"><%= data.recordset[i].credito_energia_perdida_transmision.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')  %></td>
+                    <td class="num"><%= data.recordset[i].sasd.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')  %></td>
+                    <td class="num"><%= data.recordset[i].generacion_obligada.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')  %></td>
+                    <td class="num"><%= data.recordset[i].servicios_auxiliares.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')  %></td>
+                    <td class="num"><%= data.recordset[i].compensacion_potencia.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')  %></td>
+                    <td class="num"><%= data.recordset[i].ingreso_total_neto.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')  %></td>                    
+                </tr>
+            <% }
+        } else { %>
+            <tr>
+                <td colspan="3">No Data</td>
+            </tr>
+            <%  } %>
+    </table>
+
+
+
+<!-- Corto Plazo I  -->
+
+    <% if(cortoPlazoI.length!=0) { %>
+    
+    <h2>Corto Plazo I</h2>
+    <table id="customers">
+        <tr>
+            <th style="width:8%">Fecha</th>
+            <th>Empresa Distribuidora</th>
+            <th>Nombre Contrato</th>            
+            <th>Categoria Precio</th>    
+            <th>Precio Base</th>
+            <th>Cargo Transmisión</th>
+            <th>Precio</th>
+            <th>Potencia Equivalente Comprometida (MW)</th>
+            <th>DMG-RC (MW)</th>
+            <th>E (MWh)</th>
+            <th>EAR</th>
+            <th>Ingreso a Precio de Contado</th>             
+        </tr>     
+    
+        <%# console.log(cortoPlazoI) %> 
+        <% for(var i=0 ; i < cortoPlazoI.length ; i++) { %>
+
+        <tr>
+            <td><%= cortoPlazoI[i].fecha %></td>
+            <td><%= cortoPlazoI[i].EMPRESA %></td>
+            <td><%= cortoPlazoI[i].nombre_contrato %></td>
+            <td><%= cortoPlazoI[i].categoria_precio %></td>                       
+            <td class="num"><%= cortoPlazoI[i].precio_base_usd_mwh.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td class="num"><%= cortoPlazoI[i].cargo_transmicion_seguimiento_electrico.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td class="num"><%= cortoPlazoI[i].precio.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td class="num"><%= cortoPlazoI[i].potencia_contratada.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td class="num"><%= cortoPlazoI[i].dmm_s.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td class="num"><%= cortoPlazoI[i].energia.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td class="num"><%= cortoPlazoI[i].EAR.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td class="num"><%= cortoPlazoI[i].ingreso_precio_contado.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+        </tr>
+        <% } %>
+                  
+    </table>
+    <% } %> 
+
+
+
+<!-- Corto Plazo II  -->
+
+    <% if(cortoPlazoII.length!=0) { %>
+    <h2>Corto Plazo II</h2>
+    <table id="customers">
+        <tr>
+            <th style="width:8%">Fecha</th>
+            <th>Empresa Distribuidora</th>
+            <th>Nombre Contrato</th>            
+            <th>Categoria Precio</th>    
+            <th>Precio Base</th>
+            <th>Cargo Transmisión</th>
+            <th>Precio</th>
+            <th>Potencia Equivalente Comprometida (MW)</th>
+            <th>DMG-RC (MW)</th>
+            <th>E (MWh)</th>
+            <th>EAR</th>
+            <th>Ingreso a Precio de Contado</th>             
+        </tr>     
+    
+        <%# console.log(cortoPlazoII) %>  
+        <% for(var i=0 ; i < cortoPlazoII.length ; i++) { %>
+
+        <tr>
+            <td><%= cortoPlazoII[i].fecha %></td>
+            <td><%= cortoPlazoII[i].EMPRESA %></td>
+            <td><%= cortoPlazoII[i].nombre_contrato %></td>
+            <td><%= cortoPlazoII[i].categoria_precio %></td>                       
+            <td class="num"><%= cortoPlazoII[i].precio_base_usd_mwh.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td class="num"><%= cortoPlazoII[i].cargo_transmicion_seguimiento_electrico.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td class="num"><%= cortoPlazoII[i].precio.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td class="num"><%= cortoPlazoII[i].potencia_contratada.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td class="num"><%= cortoPlazoII[i].dmm_s.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td class="num"><%= cortoPlazoII[i].energia.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td class="num"><%= cortoPlazoII[i].EAR.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td class="num"><%= cortoPlazoII[i].ingreso_precio_contado.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+        </tr>
+        <% } %>
+                  
+    </table>
+    <% } %> 
+
+
+<!-- Largo Plazo   -->
+    <% if(largoPlazo.length!=0) { %>
+    <h2>Largo Plazo </h2>
+    <table id="customers">
+        <tr>
+            <th style="width:8%">Fecha</th>
+            <th>Empresa Distribuidora</th>
+            <th>Nombre Contrato</th>            
+            <th>Categoria Precio</th>    
+            <th>Precio Base</th>
+            <th>Cargo Transmisión</th>
+            <th>Precio</th>
+            <th>Potencia Equivalente Comprometida (MW)</th>
+            <th>DMG-RC (MW)</th>
+            <th>E (MWh)</th>
+            <th>EAR</th>l
+            <th>Ingreso a Precio de Contado</th>             
+        </tr>     
+    
+        <%# console.log(largoPlazo) %> 
+        <% for(var i=0 ; i < largoPlazo.length ; i++) { %>
+
+        <tr>
+            <td><%= largoPlazo[i].fecha %></td>
+            <td><%= largoPlazo[i].EMPRESA %></td>
+            <td><%= largoPlazo[i].nombre_contrato %></td>
+            <td><%= largoPlazo[i].categoria_precio %></td>                       
+            <td class="num"><%= largoPlazo[i].precio_base_usd_mwh.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td class="num"><%= largoPlazo[i].cargo_transmicion_seguimiento_electrico.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td class="num"><%= largoPlazo[i].precio.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td class="num"><%= largoPlazo[i].potencia_contratada.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td class="num"><%= largoPlazo[i].dmm_s.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td class="num"><%= largoPlazo[i].energia.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td class="num"><%= largoPlazo[i].EAR.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td class="num"><%= largoPlazo[i].ingreso_precio_contado.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+        </tr>
+        <% } %>
+                  
+    </table>
+    <% } %> 
+
+
+<!-- Potencia I   -->
+    <% if(potenciaI.length!=0) { %>
+    <h2>Potencia I</h2>
+    <table id="customers">
+        <tr>
+            <th style="width:8%">Fecha</th>
+            <th>Empresa Distribuidora</th>
+            <th>Nombre Contrato</th>            
+            <th>Categoria Precio</th>    
+            <th>Precio Base</th>
+            <th>Cargo Transmisión</th>
+            <th>Precio</th>
+            <th>Potencia Equivalente Comprometida (MW)</th>            
+            <th>Ingreso a Precio de Contado</th>             
+        </tr>     
+    
+        <%# console.log(potenciaI) %> 
+        <% for(var i=0 ; i < potenciaI.length ; i++) { %>
+
+        <tr>
+            <td><%= potenciaI[i].fecha %></td>
+            <td><%= potenciaI[i].EMPRESA %></td>
+            <td><%= potenciaI[i].nombre_contrato %></td>
+            <td><%= potenciaI[i].categoria_precio %></td>                       
+            <td class="num"><%= potenciaI[i].precio_base_usd_mwh.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td class="num"><%= potenciaI[i].cargo_transmicion_seguimiento_electrico.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td class="num"><%= potenciaI[i].precio.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td class="num"><%= potenciaI[i].potencia_contratada.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td class="num"><%= potenciaI[i].ingreso_precio_contado.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+        </tr>
+        <% } %>
+                  
+    </table>
+    <% } %> 
+
+
+<!-- Potencia II   -->
+    <% if(potenciaII.length!=0) { %>
+    <h2>Potencia II</h2>
+    <table id="customers">
+        <tr>
+            <th style="width:8%">Fecha</th>
+            <th>Empresa Distribuidora</th>
+            <th>Nombre Contrato</th>            
+            <th>Categoria Precio</th>    
+            <th>Precio Base</th>
+            <th>Cargo Transmisión</th>
+            <th>Precio</th>
+            <th>Potencia Equivalente Comprometida (MW)</th>
+            <th>Ingreso a Precio de Contado</th>             
+        </tr>     
+    
+        <%# console.log(potenciaII) %>  
+        <% for(var i=0 ; i < potenciaII.length ; i++) { %>
+
+        <tr>
+            <td><%= potenciaII[i].fecha %></td>
+            <td><%= potenciaII[i].EMPRESA %></td>
+            <td><%= potenciaII[i].nombre_contrato %></td>
+            <td><%= potenciaII[i].categoria_precio %></td>                       
+            <td class="num"><%= potenciaII[i].precio_base_usd_mwh.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td class="num"><%= potenciaII[i].cargo_transmicion_seguimiento_electrico.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td class="num"><%= potenciaII[i].precio.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td class="num"><%= potenciaII[i].potencia_contratada.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td class="num"><%= potenciaII[i].ingreso_precio_contado.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+        </tr>
+        <% } %>
+                  
+    </table>
+    <% } %> 
+
+</div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

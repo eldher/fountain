@@ -5,8 +5,8 @@
 <div class="container theme-showcase" role="main">
 
     <input type="text" id="txtFiltrarFecha" onkeyup="filtrarFecha()" placeholder="Buscar por fecha">
-    <input type="text" id="txtFiltrarContrato" onkeyup="filtrarContrato()" placeholder="Buscar por contrato">
-
+    <input style="width: 300px" type="text" id="txtFiltrarContrato" onkeyup="filtrarContrato()" placeholder="Buscar por contrato">
+    <button class="btn btn-xs btn-info"  onclick="Resetear()"> Volver </button>
 
 
     <table id="customers">
@@ -34,8 +34,10 @@
                     <td class="num"><%= contratos[i].precio_base_usd_mwh %></td>
                     <td class="num"><%= contratos[i].cargo_transmicion_seguimiento_electrico %></td>
                     <td class="num"><%= contratos[i].precio  %></td>
+                    <td><button class="btn btn-xs btn-info"  onclick="filtrarContratoPorBoton('<%=contratos[i].nombre_contrato%>')">Seleccionar</button></td> 
                     <td><button class="btn btn-xs btn-success"  onclick= " window.location = '../modificarContratos/<%= contratos[i].id %>'" > Modificar Contrato  </button></td>
                     <td><button class="btn btn-xs btn-warning"  onclick= " window.location = '../eliminarContratos/<%= contratos[i].id %>'" >Eliminar Contrato</button></td> 
+  
 
                 
                 </tr>
@@ -97,6 +99,32 @@ function filtrarContrato() {
 }
 </script>
 
+
+
+<script>
+ function filtrarContratoPorBoton(nombre_contrato){
+  var input, filter, table, tr, id
+
+  input = document.getElementById("txtFiltrarContrato");
+  input.value = nombre_contrato;
+  filtrarContrato();
+
+ } 
+ 
+ </script>
+
+
+ <script>
+  
+  function Resetear(){
+  var input
+
+  input = document.getElementById("txtFiltrarContrato");
+  input.value = '';
+  filtrarContrato();
+  }
+
+  </script>
 
 </body>
 

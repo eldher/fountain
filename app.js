@@ -215,6 +215,94 @@ router.get('/cierre/:fecha', function(req, res, next){
 });
 
 
+
+
+
+router.get('/cierre_preliminar', function(req, res, next){
+    //console.log("executiing");
+    //console.log(req.params.fecha);
+
+    (async function () 
+    {
+        try {
+            let pool = await sql.connect(dbConfig_localhost)
+
+            let result1 = await pool.request()                
+           // .input('fecha_cierre', sql.Date, req.params.fecha )
+            .execute('sp_EjecutarCierre_Preliminar')
+            firstQuery = result1;    
+            //console.dir(result1);
+
+
+
+
+            let result2 = await pool.request()                
+            //.input('fecha', sql.Date, req.params.fecha )             // 2021-12-31
+            .execute('sp_ObtenerContratoCategoriaConTotal_Preliminar')
+            //firstQuery = result1;    
+            //console.dir(result2);
+            cortoPlazoI     = result2.recordsets[0];
+            cortoPlazoII    = result2.recordsets[1];
+            largoPlazo      = result2.recordsets[2];
+            potenciaI       = result2.recordsets[3];
+            potenciaII      = result2.recordsets[4];
+
+
+            let result3 = await pool.request()
+
+            // .query('SET LANGUAGE Spanish; ' +
+            // 'select distinct ' +
+            // 'cast(EOMONTH(fecha) as varchar) as fecha ' +
+            // ",concat( DATENAME(MONTH, EOMONTH(fecha)) ,\' \', cast(YEAR(EOMONTH(fecha)) as varchar)) as  mes_y_anio  " +
+            // 'from [dbo].[LiquidacionFountain] where version=\'Preliminar\' order by 1 ') 
+
+
+            .query("select cast( cast(max(fecha) as date) as nvarchar) as fecha from [dbo].[LiquidacionFountain] where version='Preliminar' group by EOMONTH(fecha) order by 1 ") 
+
+            //.query('SET LANGUAGE Spanish; select distinct cast(fecha as varchar) as fecha ,DATENAME(MONTH, fecha) as mes ,YEAR(fecha) as anio from INGRESOS_CONTRATOS')
+            //.query('SET LANGUAGE Spanish; select distinct cast(fecha_cierre as varchar) as fecha ,DATENAME(MONTH, fecha_cierre) as mes ,YEAR(fecha_cierre) as anio from tipo_precio')
+
+
+            fechas = result3.recordsets[0];
+
+
+
+        } catch (err) {
+            // ... error checks
+        }
+
+       // cambiar el render 
+    })().then(() => res.render('cierre_preliminar', {
+        title: 'Ingreso Mensual',
+        fecha:  req.params.fecha,
+        data: firstQuery, 
+        fechas,
+        cortoPlazoI, 
+        cortoPlazoII,
+        largoPlazo,  
+        potenciaI,   
+        potenciaII  
+    }))
+    
+    sql.on('error', err => {
+        console.log(err);
+        // ... error handler
+    })   
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 var contratos;  
 
 router.get('/contratos', function(req, res, next){
