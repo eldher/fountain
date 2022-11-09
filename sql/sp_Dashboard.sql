@@ -31,6 +31,7 @@ cast(fecha as varchar) as fecha
 ,avg(cms) as cms
 from [dbo].[LiquidacionFountain]
 where EOMONTH(fecha) = @fecha
+and version = 'Oficial'
 group by fecha
 
 
@@ -47,7 +48,7 @@ sum(fountain_a_saliendo) as fountain_a_saliendo
 ,format(sum(ocasional_debito)/1000, 'c','en-US') as ocasional_debito
 from [dbo].[LiquidacionFountain]
 where EOMONTH(fecha) = @fecha
-
+and version = 'Oficial'
 
 -- se solicito cambio de EAR a Energia Asignada desde liquidacion
 
@@ -60,6 +61,7 @@ cast(EOMONTH(fecha) as varchar) as fecha
 into #temp
 from [dbo].[LiquidacionFountain]
 where EOMONTH(fecha)  = @fecha
+and version = 'Oficial'
 group by EOMONTH(fecha) 
 
 

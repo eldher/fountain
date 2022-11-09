@@ -218,7 +218,7 @@ router.get('/cierre/:fecha', function(req, res, next){
 
 
 
-router.get('/cierre_preliminar', function(req, res, next){
+router.get('/cierre_preliminar/:fecha_preliminar', function(req, res, next){
     //console.log("executiing");
     //console.log(req.params.fecha);
 
@@ -228,7 +228,7 @@ router.get('/cierre_preliminar', function(req, res, next){
             let pool = await sql.connect(dbConfig_localhost)
 
             let result1 = await pool.request()                
-           // .input('fecha_cierre', sql.Date, req.params.fecha )
+            .input('fecha_preliminar', sql.Date, req.params.fecha_preliminar )
             .execute('sp_EjecutarCierre_Preliminar')
             firstQuery = result1;    
             //console.dir(result1);
@@ -257,7 +257,8 @@ router.get('/cierre_preliminar', function(req, res, next){
             // 'from [dbo].[LiquidacionFountain] where version=\'Preliminar\' order by 1 ') 
 
 
-            .query("select cast( cast(max(fecha) as date) as nvarchar) as fecha from [dbo].[LiquidacionFountain] where version='Preliminar' group by EOMONTH(fecha) order by 1 ") 
+            //.query("select cast( cast(max(fecha) as date) as nvarchar) as fecha from [dbo].[LiquidacionFountain] where version='Preliminar' group by EOMONTH(fecha) order by 1 ") 
+            .query("select cast(max(fecha) as varchar) as fecha from LiquidacionFountain where version = 'Preliminar' group by fecha_mes, fecha_carga, version")
 
             //.query('SET LANGUAGE Spanish; select distinct cast(fecha as varchar) as fecha ,DATENAME(MONTH, fecha) as mes ,YEAR(fecha) as anio from INGRESOS_CONTRATOS')
             //.query('SET LANGUAGE Spanish; select distinct cast(fecha_cierre as varchar) as fecha ,DATENAME(MONTH, fecha_cierre) as mes ,YEAR(fecha_cierre) as anio from tipo_precio')
@@ -274,7 +275,7 @@ router.get('/cierre_preliminar', function(req, res, next){
        // cambiar el render 
     })().then(() => res.render('cierre_preliminar', {
         title: 'Ingreso Mensual',
-        fecha:  req.params.fecha,
+        fecha:  req.params.fecha_preliminar,
         data: firstQuery, 
         fechas,
         cortoPlazoI, 

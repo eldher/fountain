@@ -11,7 +11,7 @@ GO
 -- Author:		Eldher
 -- =============================================
 ALTER PROCEDURE [dbo].[sp_EjecutarCierre_Preliminar]
-	--@fecha_preliminar date
+	@fecha_preliminar date
 	--@fecha_mes varchar
 AS
 BEGIN
@@ -21,9 +21,35 @@ BEGIN
 
 --Select @fecha_mes = CONCAT(YEAR(@fecha_preliminar),'-',MONTH(@fecha_preliminar))
 
-declare @fecha_preliminar as date;
+--declare @fecha_preliminar as date;
+--select @fecha_preliminar = '2022-10-30'
 
-select @fecha_preliminar = max(fecha) from LiquidacionFountain where version = 'Preliminar'
+
+declare @fecha_mes_seleccionada as nvarchar(7);
+declare @fecha_carga_seleccionada as datetime;
+
+
+
+with preliminares as (
+	select 
+	max(fecha) as max_fecha
+	,fecha_mes
+	,fecha_carga
+	,version
+	from LiquidacionFountain
+	where version = 'Preliminar'
+	group by fecha_mes, fecha_carga, version 
+)
+
+select 
+@fecha_mes_seleccionada = fecha_mes
+,@fecha_carga_seleccionada = fecha_carga
+from preliminares
+where max_fecha = @fecha_preliminar
+
+--select @fecha_mes_seleccionada, @fecha_carga_seleccionada
+
+
 
 --select @fecha_preliminar
 
@@ -100,8 +126,10 @@ fecha
 ,sum(prog_exp					 ) as prog_exp					
 ,version
 into #temp_dia
-from (select distinct * from LiquidacionFountain) a
+from LiquidacionFountain a
 where a.version = 'Preliminar'
+and fecha_mes = @fecha_mes_seleccionada 
+and fecha_carga = @fecha_carga_seleccionada
 group by a.fecha, a.version
 
 -- select * from #temp_dia
