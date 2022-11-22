@@ -1,9 +1,10 @@
-/****** Object:  StoredProcedure [dbo].[sp_EjecutarCierre_Preliminar]    Script Date: 11/17/2022 1:23:49 PM ******/
+/****** Object:  StoredProcedure [dbo].[sp_EjecutarCierre_Preliminar]    Script Date: 11/22/2022 7:41:59 AM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 
@@ -351,12 +352,29 @@ select  @precio_perdida = (
 --set @fecha_cierre = '2022-05-31'
 
 
---declare @fecha_preliminar  as date = '2022-10-25';
 
 
-declare @fecha_max_BalancesPotencia as date;
-select @fecha_max_BalancesPotencia = max(fecha) from BalancesPotencia where fecha <= @fecha_preliminar
+--declare @fecha_preliminar  as date = '2022-11-20';
+
+
+declare @fecha_max_BalancesPotencia  as nvarchar(7);
+declare @fecha_max_BalancesPotencia_carga as datetime;
+
+select  @fecha_max_BalancesPotencia = max(fecha_mes) 
+from BalancesPotencia
+where DATEFROMPARTS(SUBSTRING(fecha_mes,1,4), SUBSTRING(fecha_mes,6,7), 1 ) <= @fecha_preliminar
+and version = 'Preliminar'
+
+
+select @fecha_max_BalancesPotencia_carga = max(fecha_carga) from BalancesPotencia
+where fecha_mes = @fecha_max_BalancesPotencia
+and version = 'Preliminar'
+
+
+
+
 --select @fecha_max_BalancesPotencia
+--select @fecha_max_BalancesPotencia_carga
 
 
 declare @compensacion_potencia decimal(20,4);
@@ -364,8 +382,9 @@ select @compensacion_potencia = (
 	select sum(credito_en_usd) 
 	from BalancesPotencia
 	where codigo_de_empresa = 'FOUNTAIN'
-	AND eomontH(fecha) = EOMONTH(@fecha_max_BalancesPotencia)
+	AND fecha_mes = @fecha_max_BalancesPotencia
 	and version = 'Preliminar'
+	and fecha_carga = @fecha_max_BalancesPotencia_carga
 	)
 
 --select @compensacion_potencia
