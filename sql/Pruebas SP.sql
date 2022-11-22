@@ -7,7 +7,17 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 
-USE FOUNTAIN8
+
+
+
+--select max(fecha) as fecha from LiquidacionFountain where version = 'Preliminar' group by fecha_mes, fecha_carga, version
+USE FOUNTAIN9
+
+select max(fecha), fecha_mes, fecha_carga, version 
+from LiquidacionFountain
+where version = 'Preliminar'
+group by fecha_mes, fecha_carga, version 
+
 
 -- Preliminares
 EXECUTE [dbo].[sp_EjecutarCierre_Preliminar]
@@ -18,7 +28,7 @@ EXECUTE [dbo].[sp_ObtenerContratoCategoriaConTotal_Preliminar]
 
 EXECUTE [dbo].[insertarContratos2_INSERT_INTO_CONTRATOS]
 EXECUTE [dbo].[sp_EjecutarCierre] N'2022-07-31'
-EXECUTE [dbo].[sp_EjecutarCierre_Preliminar] N'2022-10-25'
+EXECUTE [dbo].[sp_EjecutarCierre_Preliminar] N'2022-10-30'
 EXECUTE [dbo].[sp_ObtenerContratoCategoria] N'2022-05-31'
 
 EXECUTE [dbo].[sp_ObtenerContratoCategoriaConTotal] N'2022-04-30'
@@ -29,7 +39,7 @@ EXECUTE [dbo].[sp_ObtenerContratos]
 EXECUTE [dbo].[sp_ObtenerContratosPorFecha] N'2022-04-30'
 EXECUTE [dbo].[sp_EnergyBalance]
 
-EXEC [dbo].[sp_Dashboard] @anio=2022, @mes=6;
+EXEC [dbo].[sp_Dashboard] @anio=2022, @mes=10;
 
 EXECUTE [dbo].[sp_EnergyBalancePorFecha]  N'2022'
 

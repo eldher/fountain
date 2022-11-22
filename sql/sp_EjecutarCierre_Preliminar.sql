@@ -1,9 +1,10 @@
-/****** Object:  StoredProcedure [dbo].[sp_EjecutarCierre]    Script Date: 10/8/2022 4:23:32 PM ******/
+/****** Object:  StoredProcedure [dbo].[sp_EjecutarCierre_Preliminar]    Script Date: 11/17/2022 1:23:49 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 
@@ -376,32 +377,59 @@ select @compensacion_potencia = (
 
 
 
---declare @fecha_preliminar  as date = '2022-08-23';
 
-declare @fecha_max_ServiciosAuxiliares as nvarchar(6);
+--declare @fecha_preliminar  as date = '2022-10-31';
 
-select @fecha_max_ServiciosAuxiliares = max(fecha_mes) from ServiciosAuxiliares
+declare @fecha_max_ServiciosAuxiliares as nvarchar(7);
+declare @fecha_max_carga as datetime;
+
+select  @fecha_max_ServiciosAuxiliares = max(fecha_mes) 
+from ServiciosAuxiliares
 where DATEFROMPARTS(SUBSTRING(fecha_mes,1,4), SUBSTRING(fecha_mes,6,7), 1 ) <= @fecha_preliminar
+and version = 'Preliminar'
 
+
+select @fecha_max_carga = max(fecha_carga) from ServiciosAuxiliares
+where fecha_mes = @fecha_max_ServiciosAuxiliares
+and version = 'Preliminar'
+
+
+--select @fecha_max_carga
 --select @fecha_max_ServiciosAuxiliares
+
 
 declare @servicios_auxiliares decimal(20,4);
 select @servicios_auxiliares  = (
 	select total_usd from ServiciosAuxiliares
 	where lower(empresas_acreedoras) like  '%fountain%'
-	AND fecha_mes = @fecha_max_ServiciosAuxiliares
+	AND fecha_mes = @fecha_max_ServiciosAuxiliares 
+	AND fecha_carga = @fecha_max_carga
+	AND version = 'Preliminar'
 )
 
 
+--select @servicios_auxiliares
 
 
---declare @fecha_preliminar  as date = '2022-10-23';
 
-declare @fecha_max_GeneracionObligada as nvarchar(6);
+--declare @fecha_preliminar  as date = '2022-10-31';
 
-select @fecha_max_GeneracionObligada = max(fecha_mes) from [GeneracionObligada]
+declare @fecha_max_GeneracionObligada as nvarchar(7);
+declare @fecha_carga_GeneracionObligada as datetime;
+
+select @fecha_max_GeneracionObligada = max(fecha_mes) 
+from [GeneracionObligada]
 where DATEFROMPARTS(SUBSTRING(fecha_mes,1,4), cast(SUBSTRING(fecha_mes,6,7) as int), 1 ) <= @fecha_preliminar
+and version = 'Preliminar'
+
+
+select @fecha_carga_GeneracionObligada = max(fecha_carga)
+from [GeneracionObligada]
+where fecha_mes = @fecha_max_GeneracionObligada
+and version= 'Preliminar'
+
 --select @fecha_max_GeneracionObligada
+--select @fecha_carga_GeneracionObligada
 
 
 declare @generacion_obligada decimal(20,4)
@@ -411,9 +439,12 @@ select @generacion_obligada =
 	from [dbo].[GeneracionObligada] 
 	where  lower(agente) like  '%fountain%'
 	AND fecha_mes = @fecha_max_GeneracionObligada
+	AND fecha_carga = @fecha_carga_GeneracionObligada
+	and version = 'Preliminar'
 )
 
 --SELECT @generacion_obligada
+
 
 --update ServiciosAuxiliares set fecha_mes = '2022-2' where fecha_mes = '2022-02'
 --update ServiciosAuxiliares set fecha_mes = '2022-2' where fecha_mes = '2022-02'
@@ -566,32 +597,4 @@ select * from resumen
 END;
 GO
 
-
---EXEC sp_EjecutarCierre N'2021-12-31'
-
-
-
---USE FOUNTAIN8
---select * from [dbo].[LiquidacionFountain] where version = 'Preliminar'
-
---select * from [dbo].BalancesPotencia where version = 'Preliminar'
-
-
----- Es con fecha_mes al final del mes
---select * from [dbo].[ServiciosAuxiliares] where version = 'Preliminar'
-
---select * from [dbo].[GeneracionObligada] where version = 'Preliminar'
-
-----delete from [dbo].[GeneracionObligada] where version = 'Preliminar' and fecha_carga is not null
-
-
---select * from [dbo].[GeneracionObligada] where version = 'Preliminar'
-
--- SASD y SAERLP son a final de mes las fechas preliminars
-
---select * from [dbo].SASD where version = 'Preliminar'
-
-----delete from [dbo].SASD where version = 'Preliminar'
-
---select *  from [dbo].SAERLP where version = 'Preliminar'
 

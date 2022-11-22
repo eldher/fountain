@@ -4,6 +4,13 @@ function SerialDateToJSDate(serialDate, offsetUTC) {
     return new Date(Date.UTC(0, 0, serialDate, offsetUTC));
   }
 
+
+function pad(num, size) {
+    num = num.toString();
+    while (num.length < size) num = "0" + num;
+    return num;
+}
+
 function leerExcelServiciosAuxiliares(ruta, version){
 
     return new Promise((resolve, reject) => {
@@ -47,7 +54,7 @@ function leerExcelServiciosAuxiliares(ruta, version){
             console.log(data[i].fecha)
             let test = new Date(data[i].fecha)
             console.log(test)
-            data[i].fecha_mes = test.getFullYear() + "-" + (test.getMonth() + 1)
+            data[i].fecha_mes = test.getFullYear() + "-" +  pad((test.getMonth() + 1), 2)
             data[i].version = version
 
             data[i].fecha_carga = hoy.toISOString().slice(0, 19).replace('T', ' ')
