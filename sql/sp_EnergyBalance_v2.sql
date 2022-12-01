@@ -1,10 +1,10 @@
-/****** Object:  StoredProcedure [dbo].[sp_EnergyBalance]    Script Date: 12/1/2022 11:22:33 AM ******/
+
+/****** Object:  StoredProcedure [dbo].[sp_EnergyBalance]  ***/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
-
 
 --USE FOUNTAIN5
 
@@ -185,45 +185,16 @@ GROUP BY ROLLUP(fecha)
 
 
 
-declare @fecha_max_cierre as date;
-declare @fecha_max_carga as datetime;
-
-select @fecha_max_cierre = max(fecha_cierre) from [resumenes_generacion]
-select @fecha_max_carga = max(fecha_carga) from [resumenes_generacion] where fecha_cierre = @fecha_max_cierre
-
-
-
-------------------------------
---Fix para traer la ultima fecha de carga para todos los meses
-------------------------------------------
-
-drop table if exists #date_log;
-select fecha_carga, fecha_cierre
-into #date_log
-from (
-	select fecha, fecha_carga, fecha_cierre, 
-	ROW_NUMBER() OVER(PARTITION BY fecha_cierre ORDER BY fecha_carga) as rn
-	from [resumenes_generacion]
-) a where a.rn = 1
-
-
-
---select distinct fecha, fecha_carga, fecha_cierre from [resumenes_generacion] order by 3,2
-
 -- tabla 4
-
-
 
 drop table if exists #resumen
 select 
- a.fecha_cierre
-,sum(a.LAP_BRUTA_TOTAL) + sum(a.SAL_BRUTA_TOTAL) as BRUTA_TOTAL
-,sum(a.LAP_NETA_TOTAL) +  sum(a.SAL_NETA_TOTAL) as NETA_TOTAL
+ fecha_cierre
+,sum(LAP_BRUTA_TOTAL) + sum(SAL_BRUTA_TOTAL) as BRUTA_TOTAL
+,sum(LAP_NETA_TOTAL) + sum(SAL_NETA_TOTAL) as NETA_TOTAL
 into #resumen
-from [dbo].[resumenes_generacion] a
-inner join #date_log b on a.fecha_carga = b.fecha_carga and a.fecha_cierre = b.fecha_cierre
---where a.fecha_cierre = @fecha_max_cierre and fecha_carga = @fecha_max_carga
-group by a.fecha_cierre
+from [dbo].[resumenes_generacion]
+group by fecha_cierre
 
 
 drop table if exists #tabla4
@@ -259,7 +230,4 @@ GROUP BY ROLLUP(fecha_cierre)
 
 
 END
-
-GO
-
 

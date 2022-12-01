@@ -1,9 +1,10 @@
-/****** Object:  StoredProcedure [dbo].[sp_EjecutarCierre_Preliminar]    Script Date: 11/22/2022 7:41:59 AM ******/
+/****** Object:  StoredProcedure [dbo].[sp_EjecutarCierre_Preliminar]    Script Date: 12/1/2022 9:13:30 AM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 
@@ -266,6 +267,8 @@ UNPIVOT
 --                       CREACION TABLA DE INGRESOS POR CONTRATOS 
 --------------------------------------------------------------------------
 
+--declare @fecha_preliminar  as date = '2022-11-23';
+
 declare @fecha_max_TotalesContratos as date;
 declare @fecha_max_TotalEnergia as date;
 declare @fecha_max_tipo_precio as date;
@@ -274,7 +277,7 @@ declare @fecha_max_CONTRATOS as date;
 --declare @fecha_preliminar  as date = '2022-10-23';
 
 
-select @fecha_max_CONTRATOS = max(fecha) from CONTRATOS where fecha <= @fecha_preliminar
+select @fecha_max_CONTRATOS = max(fecha) from CONTRATOS where fecha <= eomonth(@fecha_preliminar)
 --select @fecha_max_CONTRATOS
 
 select @fecha_max_TotalesContratos = max(fecha) from TotalesContratos where fecha <= @fecha_preliminar
@@ -283,15 +286,17 @@ select @fecha_max_TotalesContratos = max(fecha) from TotalesContratos where fech
 select @fecha_max_TotalEnergia = max(fecha) from TotalEnergia_Preliminar where fecha <= EOMONTH(@fecha_preliminar)
 --select @fecha_max_TotalEnergia
 
-select @fecha_max_tipo_precio = max(fecha_cierre) from tipo_precio where fecha_cierre <= @fecha_preliminar
+select @fecha_max_tipo_precio = max(fecha_cierre) from tipo_precio where fecha_cierre <= EOMONTH(@fecha_preliminar)
 --select @fecha_max_tipo_precio
 
+
+--select * from tipo_precio
 
 
 
 drop table if exists INGRESOS_CONTRATOS_PRELIMINAR
 select 
-a.fecha
+EOMONTH(@fecha_preliminar) as fecha
 ,a.nombre_contrato
 ,a.empresa
 ,a.potencia_contratada*1.0 as potencia_contratada
@@ -310,16 +315,16 @@ a.fecha
 	potencia_contratada*(d.precio_base_usd_mwh +  d.cargo_transmicion_seguimiento_electrico)*1000  )
 into INGRESOS_CONTRATOS_PRELIMINAR 
 from CONTRATOS a
-left join TotalesContratos b on a.empresa = b.Distribuidores		and b.fecha = @fecha_max_TotalesContratos
+left join TotalesContratos b on a.empresa = b.Distribuidores		and eomonth(b.fecha) = EOMONTH(@fecha_preliminar)
 left join TotalEnergia_Preliminar c on a.empresa = c.empresa					and c.fecha =  @fecha_max_TotalEnergia
 left join tipo_precio d on  a.categoria_precio = d.categoria_precio and d.fecha_cierre = @fecha_max_tipo_precio
 where a.fecha = @fecha_max_CONTRATOS
 
 order by 1,2
 
---select * from INGRESOS_CONTRATOS_PRELIMINAR
+--select * from TotalesContratos order by fecha
 
-
+--select * from TotalEnergia_Preliminar order by fecha
 
 
 --declare @fecha_preliminar  as date = '2022-10-25';
@@ -480,8 +485,8 @@ declare @ingresos_contratos decimal(20,4)
 select @ingresos_contratos = 
 (
 	select sum(cast(ingreso_precio_contado as  decimal(20,4)) )  as ingreso
-	from INGRESOS_CONTRATOS
-	where fecha = @fecha_max_CONTRATOS
+	from INGRESOS_CONTRATOS_PRELIMINAR
+	where fecha = EOMONTH(@fecha_preliminar)
 	and ingreso_precio_contado IS NOT NULL
 ) 
 --select @ingresos_contratos

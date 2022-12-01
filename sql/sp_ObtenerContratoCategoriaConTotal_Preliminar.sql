@@ -1,4 +1,4 @@
-/****** Object:  StoredProcedure [dbo].[sp_ObtenerContratoCategoriaConTotal]    Script Date: 9/23/2022 2:10:33 PM ******/
+/****** Object:  StoredProcedure [dbo].[sp_ObtenerContratoCategoriaConTotal_Preliminar]    Script Date: 12/1/2022 9:13:40 AM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -6,10 +6,13 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 
+exec sp_ObtenerContratoCategoriaConTotal_Preliminar
 
 
 
+--select * from INGRESOS_CONTRATOS ORDER by 1
 
+--select * from INGRESOS_CONTRATOS_PRELIMINAR
 
 -- =============================================
 -- Author:		Eldher
@@ -18,6 +21,8 @@ ALTER PROCEDURE [dbo].[sp_ObtenerContratoCategoriaConTotal_Preliminar]
 	--@fecha date
 AS
 BEGIN
+
+
 
 
 
@@ -45,7 +50,7 @@ EMPRESA, nombre_contrato, categoria_precio, precio_base_usd_mwh, cargo_transmici
 potencia_contratada , dmm_s, energia, EAR, 
 ingreso_precio_contado
 into #corto_plazo_1
-from INGRESOS_CONTRATOS
+from INGRESOS_CONTRATOS_PRELIMINAR
 where lower(categoria_precio) in  ('energia corto plazo i', 'energía corto plazo i')
 and ingreso_precio_contado IS NOT NULL
 and fecha = @fecha;
@@ -84,7 +89,7 @@ EMPRESA, nombre_contrato, categoria_precio, precio_base_usd_mwh, cargo_transmici
 potencia_contratada , dmm_s, energia, EAR, 
 ingreso_precio_contado
 into #corto_plazo_2
-from INGRESOS_CONTRATOS
+from INGRESOS_CONTRATOS_PRELIMINAR
 where lower(categoria_precio) in  ('energia corto plazo ii', 'energía corto plazo ii')
 and ingreso_precio_contado IS NOT NULL
 and fecha = @fecha;
@@ -125,7 +130,7 @@ EMPRESA, nombre_contrato, categoria_precio, precio_base_usd_mwh, cargo_transmici
 potencia_contratada , dmm_s, energia, EAR, 
 ingreso_precio_contado
 into #largo_plazo
-from INGRESOS_CONTRATOS
+from INGRESOS_CONTRATOS_PRELIMINAR
 where lower(categoria_precio) in  ('energia largo plazo', 'energía largo plazo')
 and ingreso_precio_contado IS NOT NULL
 and fecha = @fecha;
@@ -166,7 +171,7 @@ BEGIN
 	potencia_contratada 
 	,ingreso_precio_contado
 	into #potencia_1
-	from INGRESOS_CONTRATOS
+	from INGRESOS_CONTRATOS_PRELIMINAR
 	where categoria_precio = 'Potencia I'
 	and ingreso_precio_contado IS NOT NULL
 	and fecha = @fecha;
@@ -208,7 +213,7 @@ EMPRESA, nombre_contrato, categoria_precio, precio_base_usd_mwh, cargo_transmici
 potencia_contratada
 ,ingreso_precio_contado
 into #potencia_2
-from INGRESOS_CONTRATOS
+from INGRESOS_CONTRATOS_PRELIMINAR
 where categoria_precio = 'Potencia II'
 and ingreso_precio_contado IS NOT NULL
 and fecha = @fecha;
