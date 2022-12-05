@@ -6,7 +6,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 
-exec sp_ObtenerContratoCategoriaConTotal_Preliminar
+--exec sp_ObtenerContratoCategoriaConTotal_Preliminar
 
 
 

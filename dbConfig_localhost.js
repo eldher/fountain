@@ -20,11 +20,11 @@ var dbConfig_localhost ={
     server: 'fountaincorp.database.windows.net',
     database: 'FOUNTAIN5',
     port : 1433,
-    requestTimeout: 300000 ,
+    requestTimeout: 800000 ,
     pool: {
         max:10,
         min: 0,
-        idleTimeoutMillis: 300000
+        idleTimeoutMillis: 800000
     },
     options:{
         encrypt: true,
