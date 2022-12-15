@@ -1616,34 +1616,40 @@ app.post('/upload_resumen_generacion', function(req, res){
             let pool = await sql.connect(dbConfig_localhost);     
             
             // insertar info por Distribuidores
-
+           // console.log('***********');
+  
             for ( i = 0; i < data.length; i++) {
-                let result = await pool.request()
+                for( j = 0; j < data[i].length; j++){
+                    
+                 //   console.log(data[i][j])
+                 //   console.log(i , j)
+        
+                    let result = await pool.request()
 
-                .input('fecha', sql.Date, data[i].fecha)
-                .input('LAP_GB_G1', sql.Float, data[i].LAP_GB_G1)
-                .input('LAP_GB_G2', sql.Float, data[i].LAP_GB_G2)
-                .input('LAP_GB_G3', sql.Float, data[i].LAP_GB_G3)
-                .input('LAP_GB_G4', sql.Float, data[i].LAP_GB_G4)
-                .input('LAP_BRUTA_TOTAL', sql.Float, data[i].LAP_BRUTA_TOTAL)
-                .input('LAP_CONSUMO_TOTAL', sql.Float, data[i].LAP_CONSUMO_TOTAL)
-                .input('LAP_NETA_TOTAL', sql.Float, data[i].LAP_NETA_TOTAL)
-                .input('spacer1', sql.NVarChar, data[i].spacer1)
-                .input('SAL_GB_G1', sql.Float, data[i].SAL_GB_G1)
-                .input('SAL_GB_G2', sql.Float, data[i].SAL_GB_G2)
-                .input('SAL_GB_G3', sql.Float, data[i].SAL_GB_G3)
-                .input('SAL_BRUTA_TOTAL', sql.Float, data[i].SAL_BRUTA_TOTAL)
-                .input('SAL_CONSUMO_TOTAL', sql.Float, data[i].SAL_CONSUMO_TOTAL)
-                .input('SAL_NETA_TOTAL', sql.Float, data[i].SAL_NETA_TOTAL)
-                .input('DAILY_NET', sql.Float, data[i].DAILY_NET)
-                .input('fecha_cierre', sql.Date, data[i].fecha_cierre)
-                .input('fecha_carga', sql.DateTime, data[i].fecha_carga)
-                
-                
 
-                .execute('insertarResumenesGeneracion')
+                    .input('fecha', sql.Date, data[i][j].fecha)
+                    .input('LAP_GB_G1', sql.Float, data[i][j].LAP_GB_G1)
+                    .input('LAP_GB_G2', sql.Float, data[i][j].LAP_GB_G2)
+                    .input('LAP_GB_G3', sql.Float, data[i][j].LAP_GB_G3)
+                    .input('LAP_GB_G4', sql.Float, data[i][j].LAP_GB_G4)
+                    .input('LAP_BRUTA_TOTAL', sql.Float, data[i][j].LAP_BRUTA_TOTAL)
+                    .input('LAP_CONSUMO_TOTAL', sql.Float, data[i][j].LAP_CONSUMO_TOTAL)
+                    .input('LAP_NETA_TOTAL', sql.Float, data[i][j].LAP_NETA_TOTAL)
+                    .input('spacer1', sql.NVarChar, data[i][j].spacer1)
+                    .input('SAL_GB_G1', sql.Float, data[i][j].SAL_GB_G1)
+                    .input('SAL_GB_G2', sql.Float, data[i][j].SAL_GB_G2)
+                    .input('SAL_GB_G3', sql.Float, data[i][j].SAL_GB_G3)
+                    .input('SAL_BRUTA_TOTAL', sql.Float, data[i][j].SAL_BRUTA_TOTAL)
+                    .input('SAL_CONSUMO_TOTAL', sql.Float, data[i][j].SAL_CONSUMO_TOTAL)
+                    .input('SAL_NETA_TOTAL', sql.Float, data[i][j].SAL_NETA_TOTAL)
+                    .input('DAILY_NET', sql.Float, data[i][j].DAILY_NET)
+                    .input('fecha_cierre', sql.Date, data[i][j].fecha_cierre)
+                    .input('fecha_carga', sql.DateTime, data[i][j].fecha_carga)
+                                
 
-                
+                    .execute('insertarResumenesGeneracion')
+
+                }
             }
 
             //insertar info en SQL por Contratos
@@ -1655,7 +1661,29 @@ app.post('/upload_resumen_generacion', function(req, res){
         
    })().then(() => res.send('<script type="text/javascript"> alert("Archivo de Resumen Generación!"); window.location="./cargarDataAplicacion";</script>') )
         
-  //})().then(() => res.json((data)))
+//   })().then(() => 
+  
+  
+//     {
+    
+//         res.status(200);
+
+//         // Set the response headers
+//         res.set({
+//             'Content-Type': 'application/json',
+//             'X-Custom-Header': 'Custom Value'
+//         });
+
+//         console.log("el size es:" + data[0].length)
+//         // Convert the JSON object to a string using JSON.stringify()
+//         var jsonString = JSON.stringify(data[0][31].fecha, { space: 2 });
+
+//         // Send the response
+//         res.send(jsonString);
+//         //res.send(JSON.stringify(data, { space: '\t' }))
+//     } 
+  
+//   )
 
 });
 

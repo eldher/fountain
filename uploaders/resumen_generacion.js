@@ -1,75 +1,42 @@
 const XSLX = require('xlsx')
 
+
+
 function SerialDateToJSDate(serialDate, offsetUTC) {
     return new Date(Date.UTC(0, 0, serialDate, offsetUTC));
   }
 
 
 
+
+
 function LimpiarUltimasFilas(data){
 
-    var index = data.length;
-
+    let index = data.length;
     while (index--) {
-        if (data[index].fecha == "Average") { data.splice(index, 1); }
+        if (data[index].fecha === "Average") {
+        data.splice(index, 1);
+        } else if (data[index].fecha === "P50 (daily average)") {
+        data.splice(index, 1);
+        } else if (data[index].fecha === "P50 (Net)") {
+        data.splice(index, 1);
+        } else if (data[index].fecha === "TOTAL") {
+        data.splice(index, 1);
+        } else if (data[index].fecha === "P50 (Budget)") {
+        data.splice(index, 1);
+        } else if (data[index].fecha === "Days") {
+        data.splice(index, 1);
+        } else if (data[index].fecha === "") {
+        data.splice(index, 1);
+        } else if (data[index].fecha === "0") {
+        data.splice(index, 1);
+        } else if (data[index].LAP_BRUTA_TOTAL === 0) {
+        data.splice(index, 1);
+        } else if (typeof data[index].LAP_BRUTA_TOTAL === "undefined") {
+        data.splice(index, 1);
+        } 
     }
-
-    var index = data.length;
-    while (index--) {
-        if (data[index].fecha == "P50 (daily average)") { data.splice(index, 1); }
-    }
-
-    var index = data.length;
-    while (index--) {
-        if (data[index].fecha == "P50 (Net)") { data.splice(index, 1); }
-    }
-
-    var index = data.length;
-    while (index--) {
-        if (data[index].fecha == "TOTAL") { data.splice(index, 1); }
-    }
-
-
-    var index = data.length;
-    while (index--) {
-        if (data[index].fecha == "P50 (Budget)") { data.splice(index, 1); }
-    }
-
-    var index = data.length;
-    while (index--) {
-        if (data[index].fecha == "Days") { data.splice(index, 1); }
-    }
-
-    var index = data.length;
-    while (index--) {
-        if (data[index].fecha == "") { data.splice(index, 1); }
-    }
-
-    var index = data.length;
-    while (index--) {
-        if (data[index].fecha == "0") { data.splice(index, 1); }
-    }
-
-    
-
-
-
-    // eliminar entradas vacias del excel
-    var index = data.length;
-    while (index--) {
-        if (data[index].LAP_BRUTA_TOTAL == 0) { data.splice(index, 1); }
-    }
-
-    var index = data.length;
-    while (index--) {
-       
-        if(  typeof data[index]?.LAP_BRUTA_TOTAL == 'undefined')  { data.splice(index, 1); }
-    }
-
-
-
-    return(data)
-
+    return data;
 }
 
 
@@ -77,17 +44,15 @@ function Formatear(data){
 
     let fecha_ts = Date.now()
     let hoy = new Date(fecha_ts)
+    let _hoy = hoy.toISOString().slice(0, 19).replace('T', ' ')
+
 
     
     for (let i = 0; i < data.length; i++) {      
         // convertir fechas de formato Excel a JS
         data[i].fecha = SerialDateToJSDate(data[i].fecha, -24).toISOString().slice(0, 19).replace('T', ' ')  
         // agregar la fecha de carga
-
-       
-    
-
-        data[i].fecha_carga = hoy.toISOString().slice(0, 19).replace('T', ' ')
+        data[i].fecha_carga = _hoy
         data[i].spacer1 = 'NA'
 
 
@@ -100,6 +65,7 @@ function Formatear(data){
         data[i].fecha_cierre = new Date(lastDate.getFullYear(), lastDate.getMonth()+1, 0);
 
     }
+    
     return(data)
 
 }
@@ -134,8 +100,6 @@ function leerExcelResumenGeneracion(ruta, version){
         var Diciembre = XSLX.utils.sheet_to_json(workbook.Sheets['Diciembre'], {header: ResumenHeaders, range:4 });
          
     
-        console.log(Mayo)
-
 
 
         Enero     = LimpiarUltimasFilas(Enero      ); 
@@ -153,9 +117,6 @@ function leerExcelResumenGeneracion(ruta, version){
 
 
 
-        console.log(Mayo)
-
-
         Enero     = Formatear(Enero      ); 
         Febrero   = Formatear(Febrero    );
         Marzo     = Formatear(Marzo      );
@@ -170,73 +131,51 @@ function leerExcelResumenGeneracion(ruta, version){
         Diciembre = Formatear(Diciembre  );
 
 
-        console.log(Mayo)
+
 
 
         let UnionMensual = []
 
-        if (Enero.length > 0) { for (let i = 0; i < Enero.length; i++) {UnionMensual.push( Enero[i] ); } }
-        if (Febrero.length > 0) { for (let i = 0; i < Febrero.length; i++) {UnionMensual.push( Febrero[i] ); } }
-        if (Marzo.length > 0) { for (let i = 0; i < Marzo.length; i++) {UnionMensual.push( Marzo[i] ); } }
-        if (Abril.length > 0) { for (let i = 0; i < Abril.length; i++) {UnionMensual.push( Abril[i] ); } }
-        if (Mayo.length > 0) { for (let i = 0; i < Mayo.length; i++) {UnionMensual.push( Mayo[i] ); } }
-        if (Junio.length > 0) { for (let i = 0; i < Junio.length; i++) {UnionMensual.push( Junio[i] ); } }
-        if (Julio.length > 0) { for (let i = 0; i < Julio.length; i++) {UnionMensual.push( Julio[i] ); } }
-        if (Agosto.length > 0) { for (let i = 0; i < Agosto.length; i++) {UnionMensual.push( Agosto[i] ); } }
-        if (Septiembre.length > 0) { for (let i = 0; i < Septiembre.length; i++) {UnionMensual.push( Septiembre[i] ); } }
-        if (Octubre.length > 0) { for (let i = 0; i < Octubre.length; i++) {UnionMensual.push( Octubre[i] ); } }
-        if (Noviembre.length > 0) { for (let i = 0; i < Noviembre.length; i++) {Noviembre.push( Enero[i] ); } }
-        if (Diciembre.length > 0) { for (let i = 0; i < Diciembre.length; i++) {Diciembre.push( Enero[i] ); } }
+
+        console.log(Enero.length );
+        console.log(Febrero.length );
+        console.log(Marzo.length );
+        console.log(Abril.length );
+        console.log(Mayo.length );
+        console.log(Junio.length );
+        console.log(Julio.length );
+        console.log(Agosto.length );
+        console.log(Septiembre.length );
+        console.log(Octubre.length );
+        console.log(Noviembre.length);
+        console.log(Diciembre.length );
+
+        for(var json of [Enero,Febrero,Marzo,Abril,Mayo,Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre]){
+            if(json.length > 0){
+                UnionMensual.push(json)
+            }
+        }
+
+
+        // if (Enero.length > 0) { for (let i = 0; i < Enero.length; i++) {UnionMensual.push( Enero[i] ); } }
+        // if (Febrero.length > 0) { for (let i = 0; i < Febrero.length; i++) {UnionMensual.push( Febrero[i] ); } }
+        // if (Marzo.length > 0) { for (let i = 0; i < Marzo.length; i++) {UnionMensual.push( Marzo[i] ); } }
+        // if (Abril.length > 0) { for (let i = 0; i < Abril.length; i++) {UnionMensual.push( Abril[i] ); } }
+        // if (Mayo.length > 0) { for (let i = 0; i < Mayo.length; i++) {UnionMensual.push( Mayo[i] ); } }
+        // if (Junio.length > 0) { for (let i = 0; i < Junio.length; i++) {UnionMensual.push( Junio[i] ); } }
+        // if (Julio.length > 0) { for (let i = 0; i < Julio.length; i++) {UnionMensual.push( Julio[i] ); } }
+        // if (Agosto.length > 0) { for (let i = 0; i < Agosto.length; i++) {UnionMensual.push( Agosto[i] ); } }
+        // if (Septiembre.length > 0) { for (let i = 0; i < Septiembre.length; i++) {UnionMensual.push( Septiembre[i] ); } }
+        // if (Octubre.length > 0) { for (let i = 0; i < Octubre.length; i++) {UnionMensual.push( Octubre[i] ); } }
+        // if (Noviembre.length > 0) { for (let i = 0; i < Noviembre.length; i++) {Noviembre.push( Noviembre[i] ); } }
+        // if (Diciembre.length > 0) { for (let i = 0; i < Diciembre.length; i++) {Diciembre.push( Diciembre[i] ); } }
     
 
 
-        //console.log(UnionMensual)
-
-
-
-
-        //var todosLosMeses = Object.assign(Enero,Febrero,Marzo,Abril,Mayo,Junio,Julio,Agosto,Septiembre,Octubre,Noviembre,Diciembre);
-
-        //console.log(Enero)
-        //console.log(Agosto)
-        //console.log(todosLosMeses); 
-        // console.log(Febrero    );
-        // console.log(Marzo      );
-        // console.log(Abril      );
-        // console.log(Mayo       );
-        // console.log(Junio      ); 
-        // console.log(Julio      ); 
-        // console.log(Agosto     ); 
-        // console.log(Septiembre );  
-        // console.log(Octubre    );   
-        // console.log(Noviembre  );
-        // console.log(Diciembre  );
-
-
-
-      //  var extraccionFecha = XSLX.utils.sheet_to_json( workbook.Sheets['Resumen'], range = 'A1:A1');
-
-        //console.log('Cantidad de Registros a Transformar: '+ data.length)
-
-  
-
-
-
-        // let fecha_ts = Date.now()
-        // let hoy = new Date(fecha_ts)
-
-        
-        // for (let i = 0; i < data.length; i++) {      
-        //     // convertir fechas de formato Excel a JS
-        //     data[i].fecha = SerialDateToJSDate(extraccionFecha, 19) //.toISOString().slice(0, 19).replace('T', ' ')  
-        //     // agregar la fecha de carga
-        //     data[i].fecha_carga = hoy.toISOString().slice(0, 19).replace('T', ' ')
-        // }
-
-
-
         if(UnionMensual.length>0){
+            //console.log(UnionMensual);
             resolve(UnionMensual);
+            
         }
         else{
             reject('Error en la definicion del JSON para carga Liquidacion')           
@@ -244,6 +183,7 @@ function leerExcelResumenGeneracion(ruta, version){
 
     });
 };
+
 
 
 module.exports.leerExcelResumenGeneracion = leerExcelResumenGeneracion
