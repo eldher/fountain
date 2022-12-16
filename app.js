@@ -237,7 +237,7 @@ router.get('/cierre_preliminar/:fecha_preliminar', function(req, res, next){
 
 
             let result2 = await pool.request()                
-            //.input('fecha', sql.Date, req.params.fecha )             // 2021-12-31
+            .input('fecha_preliminar', sql.Date, req.params.fecha_preliminar )             // 2021-12-31
             .execute('sp_ObtenerContratoCategoriaConTotal_Preliminar')
             //firstQuery = result1;    
             //console.dir(result2);

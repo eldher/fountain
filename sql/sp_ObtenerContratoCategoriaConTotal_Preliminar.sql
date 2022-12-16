@@ -1,9 +1,10 @@
-/****** Object:  StoredProcedure [dbo].[sp_ObtenerContratoCategoriaConTotal_Preliminar]    Script Date: 12/1/2022 9:13:40 AM ******/
+/****** Object:  StoredProcedure [dbo].[sp_ObtenerContratoCategoriaConTotal_Preliminar]    Script Date: 12/16/2022 11:02:56 AM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 --exec sp_ObtenerContratoCategoriaConTotal_Preliminar
@@ -18,12 +19,9 @@ GO
 -- Author:		Eldher
 -- =============================================
 ALTER PROCEDURE [dbo].[sp_ObtenerContratoCategoriaConTotal_Preliminar]
-	--@fecha date
+	@fecha_preliminar date
 AS
 BEGIN
-
-
-
 
 
 
@@ -33,7 +31,7 @@ DECLARE @CONT INT;
 SET @CONT = 0;
 
 declare @fecha as date;
-select @fecha = max(fecha) from INGRESOS_CONTRATOS_PRELIMINAR
+select @fecha = EOMONTH(@fecha_preliminar)
 --select @fecha
 
 -------------------- Corto Plazo I
@@ -266,4 +264,6 @@ END;
 
 GO
 
+
+--EXEC  [dbo].[sp_ObtenerContratoCategoriaConTotal_Preliminar] N'2022-12-08'
 

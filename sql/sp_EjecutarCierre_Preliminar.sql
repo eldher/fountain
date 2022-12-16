@@ -1,9 +1,10 @@
-/****** Object:  StoredProcedure [dbo].[sp_EjecutarCierre_Preliminar]    Script Date: 12/1/2022 9:13:30 AM ******/
+/****** Object:  StoredProcedure [dbo].[sp_EjecutarCierre_Preliminar]    Script Date: 12/16/2022 11:03:30 AM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 
@@ -276,14 +277,16 @@ declare @fecha_max_CONTRATOS as date;
 
 --declare @fecha_preliminar  as date = '2022-10-23';
 
+-- @ modificado porque estaba cargando contratos de Noviembre con el 8 de diciembre 2022
 
-select @fecha_max_CONTRATOS = max(fecha) from CONTRATOS where fecha <= eomonth(@fecha_preliminar)
+
+select @fecha_max_CONTRATOS = max(fecha) from CONTRATOS where fecha = eomonth(@fecha_preliminar)
 --select @fecha_max_CONTRATOS
 
-select @fecha_max_TotalesContratos = max(fecha) from TotalesContratos where fecha <= @fecha_preliminar
+select @fecha_max_TotalesContratos = fecha from TotalesContratos where  EOMONTH(fecha) =  EOMONTH(@fecha_preliminar)
 --select @fecha_max_TotalesContratos
 
-select @fecha_max_TotalEnergia = max(fecha) from TotalEnergia_Preliminar where fecha <= EOMONTH(@fecha_preliminar)
+select @fecha_max_TotalEnergia = max(fecha) from TotalEnergia_Preliminar where fecha = EOMONTH(@fecha_preliminar)
 --select @fecha_max_TotalEnergia
 
 select @fecha_max_tipo_precio = max(fecha_cierre) from tipo_precio where fecha_cierre <= EOMONTH(@fecha_preliminar)
@@ -322,7 +325,7 @@ where a.fecha = @fecha_max_CONTRATOS
 
 order by 1,2
 
---select * from TotalesContratos order by fecha
+--select * from TotalesContratos order by 1 
 
 --select * from TotalEnergia_Preliminar order by fecha
 

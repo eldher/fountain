@@ -137,18 +137,18 @@ function leerExcelResumenGeneracion(ruta, version){
         let UnionMensual = []
 
 
-        console.log(Enero.length );
-        console.log(Febrero.length );
-        console.log(Marzo.length );
-        console.log(Abril.length );
-        console.log(Mayo.length );
-        console.log(Junio.length );
-        console.log(Julio.length );
-        console.log(Agosto.length );
-        console.log(Septiembre.length );
-        console.log(Octubre.length );
-        console.log(Noviembre.length);
-        console.log(Diciembre.length );
+        // console.log(Enero.length );
+        // console.log(Febrero.length );
+        // console.log(Marzo.length );
+        // console.log(Abril.length );
+        // console.log(Mayo.length );
+        // console.log(Junio.length );
+        // console.log(Julio.length );
+        // console.log(Agosto.length );
+        // console.log(Septiembre.length );
+        // console.log(Octubre.length );
+        // console.log(Noviembre.length);
+        // console.log(Diciembre.length );
 
         for(var json of [Enero,Febrero,Marzo,Abril,Mayo,Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre]){
             if(json.length > 0){
