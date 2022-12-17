@@ -333,8 +333,10 @@ order by 1,2
 --declare @fecha_preliminar  as date = '2022-10-25';
 
 
+--select * from DetallePerdidas order by fecha_fin
+
 declare @fecha_max_DetallePerdidas as date;
-select @fecha_max_DetallePerdidas = max(fecha_fin) from DetallePerdidas where fecha_fin <= @fecha_preliminar
+select @fecha_max_DetallePerdidas = max(fecha_fin) from DetallePerdidas where fecha_fin <= EOMONTH(@fecha_preliminar)
 --select @fecha_max_DetallePerdidas
 
 declare @precio_perdida decimal(20,4);
@@ -518,14 +520,17 @@ select @sasd =
 --select @sasd
 
 
---declare @fecha_preliminar  as date = '2022-10-25';
+--declare @fecha_preliminar  as date = '2022-12-13';
 
 declare @fecha_max_SAERLP as date;
 
 select @fecha_max_SAERLP = max(fecha) from SAERLP
-where fecha <= @fecha_preliminar
+where fecha <= EOMONTH(@fecha_preliminar)
+and version = 'Preliminar'
 --select @fecha_max_SAERLP
 
+
+--delete from SAERLP where DEUDORES = 'TOTALES'
 
 
 declare @saerlp decimal(20,4)
@@ -534,10 +539,11 @@ select @saerlp =
 	select sum(FOUNTAIN) 
 	from SAERLP
 	where EOMONTH(fecha) = EOMONTH(@fecha_max_SAERLP)
+	and version = 'Preliminar'
 ) 
 
 --select @saerlp
-
+-- select * from  SAERLP order by fecha
 
 --declare @fecha_preliminar  as date = '2022-10-25';
 
