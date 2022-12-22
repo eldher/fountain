@@ -1570,12 +1570,6 @@ app.post('/upload_generacion_obligada', function(req, res){
 
 
 
-
-
-
-
-
-
 app.post('/upload_resumen_generacion', function(req, res){
     let data;   
     let archivoCargado;
@@ -1849,9 +1843,6 @@ app.post('/upload_sasd', function(req, res){
 
 
 
-
-
-
 app.post('/upload_saerlp', function(req, res){
     let data;   
     let archivoCargado;
@@ -1947,22 +1938,6 @@ app.post('/upload_saerlp', function(req, res){
   //})().then(() => res.json((data)))
 
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -2097,20 +2072,6 @@ router.post('/agregarDetallePerdida/:fecha/:precio', function(req, res){
 
     
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

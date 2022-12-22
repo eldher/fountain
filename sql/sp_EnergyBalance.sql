@@ -1,9 +1,10 @@
-/****** Object:  StoredProcedure [dbo].[sp_EnergyBalance]    Script Date: 12/1/2022 11:22:33 AM ******/
+/****** Object:  StoredProcedure [dbo].[sp_EnergyBalance]    Script Date: 12/22/2022 12:56:42 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 --USE FOUNTAIN5
@@ -77,13 +78,29 @@ cast(a.fecha as varchar) as fecha
 ,fhpc_generation_smec
 into #tabla1
 from #energy_balance a 
-left join 	(select fecha, sum(EAR) as EAR from INGRESOS_CONTRATOS group by fecha) b  on a.fecha = b.fecha
+left join 	(
+
+-- @eldher 12/22/2022
+-- select fecha, sum(EAR) as EAR from INGRESOS_CONTRATOS group by fecha
+-- Esta parte se modifico para agregar los contratos de la tabla INGRESOS_CONTRATOS_PRELIMINAR
+-- Haciendo un Join de tablas y sumando se mantiene el efecto
+-- Hay que validar si no hay data oficial en INGRESOS_CONTRATOS
+-- Si hay data preliminar y oficial del mismo mes en ambas tablas podrían generar montos adicionales
+
+
+	select fecha as fecha, sum(EAR) as EAR from 
+	(
+		select * from INGRESOS_CONTRATOS
+		UNION ALL 
+		select * from INGRESOS_CONTRATOS_PRELIMINAR 
+	)
+	a group by fecha
+) b  on a.fecha = b.fecha
 where YEAR(a.fecha) = 2022
 order by a.fecha
 
 --select * from #tabla1 order by fecha
-
---select * from INGRESOS_CONTRATOS
+--select fecha, sum(EAR) as EAR from INGRESOS_CONTRATOS_PRELIMINAR group by fecha
 
 
 -- tabla1 con totales
@@ -119,7 +136,25 @@ cast(a.fecha as varchar) as fecha
 ,(ISNULL(b.EAR,0) + ISNULL(a.ocasional_venta,0) + ISNULL(a.transmission_losses,0))/1000 as total_gwh_2
 into #tabla2
 from #energy_balance a 
-left join 	(select fecha, sum(EAR) as EAR from INGRESOS_CONTRATOS group by fecha) b  on a.fecha = b.fecha
+left join 	(
+
+-- @eldher 12/22/2022
+-- select fecha, sum(EAR) as EAR from INGRESOS_CONTRATOS group by fecha
+-- Esta parte se modifico para agregar los contratos de la tabla INGRESOS_CONTRATOS_PRELIMINAR
+-- Haciendo un Join de tablas y sumando se mantiene el efecto
+-- Hay que validar si no hay data oficial en INGRESOS_CONTRATOS
+-- Si hay data preliminar y oficial del mismo mes en ambas tablas podrían generar montos adicionales
+
+
+	select fecha as fecha, sum(EAR) as EAR from 
+	(
+		select * from INGRESOS_CONTRATOS
+		UNION ALL 
+		select * from INGRESOS_CONTRATOS_PRELIMINAR 
+	)
+	a group by fecha
+
+) b  on a.fecha = b.fecha
 where YEAR(a.fecha) = 2022
 order by a.fecha
 
@@ -162,7 +197,24 @@ cast(a.fecha as varchar) as fecha
 ,(ISNULL(b.EAR,0) + ISNULL(a.ocasional_venta,0) + ISNULL(a.transmission_losses,0))/1000 as total_gwh_2
 into #tabla3
 from #energy_balance a 
-left join 	(select fecha, sum(EAR) as EAR from INGRESOS_CONTRATOS group by fecha) b  on a.fecha = b.fecha
+left join 	(
+
+-- @eldher 12/22/2022
+-- select fecha, sum(EAR) as EAR from INGRESOS_CONTRATOS group by fecha
+-- Esta parte se modifico para agregar los contratos de la tabla INGRESOS_CONTRATOS_PRELIMINAR
+-- Haciendo un Join de tablas y sumando se mantiene el efecto
+-- Hay que validar si no hay data oficial en INGRESOS_CONTRATOS
+-- Si hay data preliminar y oficial del mismo mes en ambas tablas podrían generar montos adicionales
+
+
+	select fecha as fecha, sum(EAR) as EAR from 
+	(
+		select * from INGRESOS_CONTRATOS
+		UNION ALL 
+		select * from INGRESOS_CONTRATOS_PRELIMINAR 
+	)
+	a group by fecha
+) b  on a.fecha = b.fecha
 where YEAR(a.fecha) = 2022
 order by a.fecha
 
