@@ -1,4 +1,4 @@
-/****** Object:  StoredProcedure [dbo].[sp_EjecutarCierre]    Script Date: 10/8/2022 4:23:32 PM ******/
+/****** Object:  StoredProcedure [dbo].[sp_EjecutarCierre]    Script Date: 12/22/2022 3:57:28 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -7,10 +7,7 @@ GO
 
 
 
-
-
-
-
+--exec [dbo].[sp_EjecutarCierre] N'2022-06-30'
 
 
 -- =============================================
@@ -25,7 +22,7 @@ BEGIN
 DECLARE @fecha_mes varchar(20);
 
 
-Select @fecha_mes = CONCAT(YEAR(@fecha_cierre),'-',MONTH(@fecha_cierre))
+Select @fecha_mes = CONCAT(YEAR(@fecha_cierre),'-', FORMAT(MONTH(@fecha_cierre),'00'))
 
 --DECLARE @fecha_cierre as date;
 --SET @fecha_cierre = '2021-12-31';
@@ -310,10 +307,11 @@ declare @servicios_auxiliares decimal(20,4);
 select @servicios_auxiliares  = (
 	select total_usd from ServiciosAuxiliares
 	where lower(empresas_acreedoras) like  '%fountain%'
-	AND fecha_mes = CONCAT(YEAR(@fecha_cierre),'-',MONTH(@fecha_cierre))
+	AND fecha_mes = @fecha_mes -- CONCAT(YEAR(@fecha_cierre),'-', FORMAT( MONTH(@fecha_cierre),'00'))
 	and version = 'Oficial'
 )
 
+--select * from ServiciosAuxiliares order by fecha_mes
 
 
 --declare @fecha_cierre as date = '2021-10-31'
@@ -325,7 +323,7 @@ select @generacion_obligada =
 	select sum(sobre_costo_real) as sobre_costo_real 
 	from [dbo].[GeneracionObligada] 
 	where  lower(agente) like  '%fountain%'
-	AND fecha_mes = CONCAT(YEAR(@fecha_cierre),'-',MONTH(@fecha_cierre))
+	AND fecha_mes = @fecha_mes -- CONCAT(YEAR(@fecha_cierre),'-',MONTH(@fecha_cierre))
 	and version = 'Oficial'
 )
 
@@ -461,9 +459,5 @@ select * from resumen
 
 END;
 GO
-
-
---EXEC sp_EjecutarCierre N'2021-12-31'
-
 
 

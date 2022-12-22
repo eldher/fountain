@@ -1,4 +1,4 @@
-/****** Object:  StoredProcedure [dbo].[insertarSAERLP]    Script Date: 12/16/2022 3:33:24 PM ******/
+/****** Object:  StoredProcedure [dbo].[insertarSAERLP]    Script Date: 12/22/2022 3:06:33 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -122,8 +122,8 @@ EOMONTH(@fecha)
 ,@fecha_carga
 )
 
+delete from [dbo].[SAERLP] where DEUDORES LIKE '%TOTA%'
 
-delete from SAERLP where DEUDORES = 'TOTALES'
 
 END
 GO
