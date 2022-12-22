@@ -62,15 +62,15 @@ function leerExcelSaerlp(ruta, version){
 
         // splitted[0] es el mes
         switch(splitted[0]){
-            case 'enero':       nMes ='1'; break;
-            case 'febrero':     nMes ='2'; break;
-            case 'marzo':       nMes ='3'; break;
-            case 'abril':       nMes ='4'; break;
-            case 'mayo':        nMes ='5'; break;
-            case 'junio':       nMes ='6'; break;
-            case 'julio':       nMes ='7'; break;s
-            case 'agosto':      nMes ='8'; break;
-            case 'septiembre':  nMes ='9'; break;
+            case 'enero':       nMes ='01'; break;
+            case 'febrero':     nMes ='02'; break;
+            case 'marzo':       nMes ='03'; break;
+            case 'abril':       nMes ='04'; break;
+            case 'mayo':        nMes ='05'; break;
+            case 'junio':       nMes ='06'; break;
+            case 'julio':       nMes ='07'; break;s
+            case 'agosto':      nMes ='08'; break;
+            case 'septiembre':  nMes ='09'; break;
             case 'octubre':     nMes ='10'; break;
             case 'noviembre':   nMes ='11'; break;
             case 'diciembre':   nMes ='12'; break;
@@ -78,8 +78,6 @@ function leerExcelSaerlp(ruta, version){
 
         let fecha = splitted[1] + '-' + nMes + '-' + '1';
         let fecha_mes = splitted[1] + '-' + nMes
-
-        console.log(fecha);
 
         console.log(fecha_mes);
 

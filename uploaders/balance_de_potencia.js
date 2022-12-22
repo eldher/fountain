@@ -70,7 +70,7 @@ function leerExcelBalanceDePotencia(ruta,version){
             
             //agregar fecha_mes
             let test = new Date(data[i].fecha)
-            data[i].fecha_mes = test.getFullYear() + "-" + (test.getMonth() + 1)
+            data[i].fecha_mes = test.getFullYear() + "-" + pad((test.getMonth() + 1),2)
 
             // cambiar este parametro a input desde formulario
             data[i].version = version
