@@ -1,9 +1,10 @@
-/****** Object:  StoredProcedure [dbo].[sp_EnergyBalance]    Script Date: 12/22/2022 12:56:42 PM ******/
+/****** Object:  StoredProcedure [dbo].[sp_EnergyBalance]    Script Date: 12/22/2022 2:02:24 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 
@@ -190,7 +191,7 @@ cast(a.fecha as varchar) as fecha
 ,a.ocasional_compra/1000 as spot_energy_purchases
 --,(b.EAR + a.ocasional_venta + a.transmission_losses)/1000 as total_gwh_1
 ,(ISNULL(b.EAR,0) + ISNULL(a.ocasional_venta,0) + ISNULL(a.transmission_losses,0))/1000 as total_gwh_1
-,ISNULL(b.EAR,0) as ppa_sales
+,ISNULL(b.EAR,0)/1000 as ppa_sales
 ,a.ocasional_venta/1000 as spot_energy_sales
 ,a.transmission_losses/1000 as transmission_losses
 ,0 as exports
