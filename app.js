@@ -1966,6 +1966,9 @@ router.get('/agregarDetallePerdida/:fecha', function(req, res){
             'from [dbo].[LiquidacionFountain]'+ 
             'where EOMONTH(fecha) NOT IN (select fecha_fin from DetallePerdidas) order by 1') 
 
+
+
+            
             fechas = result2.recordset;           
 
             //console.log(fechas)

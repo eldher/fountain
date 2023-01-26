@@ -5,6 +5,14 @@ function SerialDateToJSDate(serialDate, offsetUTC) {
     return new Date(Date.UTC(0, 0, serialDate, offsetUTC));
   }
 
+
+function pad(num, size) {
+    num = num.toString();
+    while (num.length < size) num = "0" + num;
+    return num;
+}
+
+
 function leerExcelBalanceDePotencia(ruta,version){
 
     return new Promise((resolve, reject) => {

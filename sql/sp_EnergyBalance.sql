@@ -1,9 +1,10 @@
-/****** Object:  StoredProcedure [dbo].[sp_EnergyBalance]    Script Date: 12/22/2022 2:02:24 PM ******/
+/****** Object:  StoredProcedure [dbo].[sp_EnergyBalance]    Script Date: 1/20/2023 9:22:03 AM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 
@@ -250,16 +251,22 @@ select @fecha_max_carga = max(fecha_carga) from [resumenes_generacion] where fec
 --Fix para traer la ultima fecha de carga para todos los meses
 ------------------------------------------
 
+
+
 drop table if exists #date_log;
 select fecha_carga, fecha_cierre
 into #date_log
 from (
 	select fecha, fecha_carga, fecha_cierre, 
-	ROW_NUMBER() OVER(PARTITION BY fecha_cierre ORDER BY fecha_carga) as rn
+	--@eldher 1/20/2023: changed to DESC to get the lastest update
+	ROW_NUMBER() OVER(PARTITION BY fecha_cierre ORDER BY fecha_carga DESC) as rn
 	from [resumenes_generacion]
 ) a where a.rn = 1
 
 
+
+
+--select * from #date_log
 
 --select distinct fecha, fecha_carga, fecha_cierre from [resumenes_generacion] order by 3,2
 

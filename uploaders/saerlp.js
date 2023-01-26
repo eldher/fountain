@@ -25,6 +25,7 @@ function leerExcelSaerlp(ruta, version){
                 "ALTOVALLE",
                 "CALDERA",
                 "CELSIACENT",
+                "CELSIAALT",
                 "CELSIABLM",
                 "CELSIABON",
                 "DESHIDCORP",
