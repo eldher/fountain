@@ -34,7 +34,9 @@ format(energia, '#,0.00') as energia,
 format(EAR, '#,0.00') as EAR,
 format(ingreso_precio_contado, 'c', 'en-US') as ingreso_precio_contado
 from [dbo].[INGRESOS_CONTRATOS]
-order by 1
+order by 
+cast(fecha as varchar) ,
+categoria_precio
 
 
 END

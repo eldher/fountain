@@ -35,7 +35,11 @@ select @fecha_mes_max_liquidacion_preliminar = max(fecha_mes) from [LiquidacionF
 
 select @fecha_carga_max_liquidacion_carga = max(fecha_carga) from [LiquidacionFountain] where fecha_mes = @fecha_mes_max_liquidacion_preliminar
 
---select @fecha_max_liquidacion
+--select @fecha_mes_max_liquidacion_oficial
+--select @fecha_mes_max_liquidacion_preliminar
+--select @fecha_carga_max_liquidacion_carga
+
+
 --select @fecha_max_liquidacion_carga
 
 
@@ -98,7 +102,7 @@ left join 	(
 	)
 	a group by fecha
 ) b  on a.fecha = b.fecha
-where YEAR(a.fecha) = 2022
+where YEAR(a.fecha) > 2021
 order by a.fecha
 
 --select * from #tabla1 order by fecha
@@ -157,7 +161,7 @@ left join 	(
 	a group by fecha
 
 ) b  on a.fecha = b.fecha
-where YEAR(a.fecha) = 2022
+where YEAR(a.fecha) > 2021
 order by a.fecha
 
 
@@ -217,7 +221,7 @@ left join 	(
 	)
 	a group by fecha
 ) b  on a.fecha = b.fecha
-where YEAR(a.fecha) = 2022
+where YEAR(a.fecha) > 2021
 order by a.fecha
 
 
@@ -299,7 +303,7 @@ cast(a.fecha_cierre as varchar) as fecha_cierre
 into #tabla4
 from #resumen a 
 left join #energy_balance b on a.fecha_cierre = b.fecha
-where YEAR(a.fecha_cierre) = 2022
+where YEAR(a.fecha_cierre) > 2021
 
 
 

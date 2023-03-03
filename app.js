@@ -380,7 +380,7 @@ router.get('/modificarContratos', function(req, res, next){
                    'format(b.precio,  \'c\', \'en-US\')  as precio ' +
                    'from CONTRATOS a ' +
                    'left join tipo_precio b on a.fecha = b.fecha_cierre and a.categoria_precio = b.categoria_precio ' +
-                   ' order by fecha ASC'
+                   ' order by fecha ASC, a.categoria_precio '
                    )
             contratos = result.recordsets[0];
             // console.log(contratos.length);
@@ -849,10 +849,11 @@ app.get('/energyBalance/', function(req, res){
 
             let pool = await sql.connect(dbConfig_localhost)  
             let query_anios = await pool.request()
-            .query('select distinct anio from tb1')
-            anios = query_anios.recordsets[0];
+            //.query('select distinct anio from tb1')
+            query('select distinct anio from (select distinct anio from tb1 union all select  distinct substring(fecha_mes,1,4) from [dbo].[LiquidacionFountain]) a');
+             anios = query_anios.recordsets[0];
 
-
+            console.log(anions)
 
             //let pool = await sql.connect(dbConfig_localhost)     
             let result = await pool.request()
@@ -893,7 +894,8 @@ app.get('/energyBalance/:anio', function(req, res){
         try {
             let pool = await sql.connect(dbConfig_localhost)  
             let query_anios = await pool.request()
-            .query('select distinct anio from tb1')
+            //.query('select distinct anio from tb1')
+            .query('select distinct anio from (select distinct anio from tb1 union all select distinct substring(fecha_mes,1,4) from [dbo].[LiquidacionFountain]) a');
             anios = query_anios.recordsets[0];   
 
             if (req.params.anio < '2022') {
@@ -977,6 +979,7 @@ router.get('/cargarDataPowerBi', function(req, res){
 
 var multer = require('multer');
 const { leerExcelSaerlp } = require("./uploaders/saerlp");
+const { query } = require("express");
  
 var storage = multer.diskStorage({ //multers disk storage settings
     destination: function (req, file, cb) {
