@@ -258,7 +258,7 @@ router.get('/cierre_preliminar/:fecha_preliminar', function(req, res, next){
 
 
             //.query("select cast( cast(max(fecha) as date) as nvarchar) as fecha from [dbo].[LiquidacionFountain] where version='Preliminar' group by EOMONTH(fecha) order by 1 ") 
-            .query("select cast(max(fecha) as varchar) as fecha from LiquidacionFountain where version = 'Preliminar' group by fecha_mes, fecha_carga, version")
+            .query("select cast(max(fecha) as varchar) as fecha from LiquidacionFountain where version = 'Preliminar' group by fecha_mes, fecha_carga, version order by 1")
 
             //.query('SET LANGUAGE Spanish; select distinct cast(fecha as varchar) as fecha ,DATENAME(MONTH, fecha) as mes ,YEAR(fecha) as anio from INGRESOS_CONTRATOS')
             //.query('SET LANGUAGE Spanish; select distinct cast(fecha_cierre as varchar) as fecha ,DATENAME(MONTH, fecha_cierre) as mes ,YEAR(fecha_cierre) as anio from tipo_precio')
