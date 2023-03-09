@@ -905,6 +905,7 @@ app.get('/energyBalance/:anio', function(req, res){
             }
             else{
                 result = await pool.request()
+                .input('anio', req.params.anio)
                 .execute('sp_EnergyBalance')
             }
 

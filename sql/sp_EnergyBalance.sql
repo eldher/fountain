@@ -6,7 +6,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 
-
+--EXEC [sp_EnergyBalance]N'2023' 
 
 
 --USE FOUNTAIN5
@@ -14,7 +14,8 @@ GO
 -- =============================================
 -- Author:		Eldher
 -- =============================================
-ALTER PROCEDURE [dbo].[sp_EnergyBalance]
+ALTER PROCEDURE [dbo].[sp_EnergyBalance] @anio as nvarchar(4) 
+
 
 AS
 BEGIN
@@ -40,7 +41,7 @@ select @fecha_carga_max_liquidacion_carga = max(fecha_carga) from [LiquidacionFo
 --select @fecha_carga_max_liquidacion_carga
 
 
---select @fecha_max_liquidacion_carga
+
 
 
 drop table if exists #energy_balance 
@@ -102,8 +103,10 @@ left join 	(
 	)
 	a group by fecha
 ) b  on a.fecha = b.fecha
-where YEAR(a.fecha) > 2021
+where YEAR(a.fecha) = @anio
 order by a.fecha
+
+
 
 --select * from #tabla1 order by fecha
 --select fecha, sum(EAR) as EAR from INGRESOS_CONTRATOS_PRELIMINAR group by fecha
@@ -125,7 +128,6 @@ fecha = ISNULL(fecha,'Total')
 ,fhpc_generation_smec = SUM(fhpc_generation_smec)
 from #tabla1
 GROUP BY ROLLUP(fecha)
-
 
 
 -- tabla 2
@@ -161,7 +163,7 @@ left join 	(
 	a group by fecha
 
 ) b  on a.fecha = b.fecha
-where YEAR(a.fecha) > 2021
+where YEAR(a.fecha) = cast(@anio as int)
 order by a.fecha
 
 
@@ -221,7 +223,7 @@ left join 	(
 	)
 	a group by fecha
 ) b  on a.fecha = b.fecha
-where YEAR(a.fecha) > 2021
+where YEAR(a.fecha) = cast(@anio as int)
 order by a.fecha
 
 
@@ -303,7 +305,7 @@ cast(a.fecha_cierre as varchar) as fecha_cierre
 into #tabla4
 from #resumen a 
 left join #energy_balance b on a.fecha_cierre = b.fecha
-where YEAR(a.fecha_cierre) > 2021
+where YEAR(a.fecha_cierre) = cast(@anio as int)
 
 
 
