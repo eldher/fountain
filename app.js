@@ -53,8 +53,8 @@ router.get('/',function(req,res){
 
 
             let result = await pool.request()
-            .input('anio', 2022)
-            .input('mes', 05)
+            .input('anio', 2023)
+            .input('mes', 01)
             .execute('sp_Dashboard')              
             graficos  = result.recordsets[0];
             cards  = result.recordsets[1];
@@ -149,6 +149,25 @@ var fechas;
 router.get('/cierre/:fecha', function(req, res, next){
     //console.log("executiing");
     //console.log(req.params.fecha);
+
+
+    
+    if(!req.params)
+    return res.send("NO PARAMS PASSED")
+
+    if(!req.params.fecha)
+    return res.send("NO address_line PASSED")
+
+    if(req.params.fecha === ""){
+    res.send("ADDRESS LINE EMPTY.")
+    } else {
+    res.send("ADDRESS LINE > ",req.params.fecha)
+    }
+
+
+
+
+
 
     (async function () 
     {
