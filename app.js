@@ -22,6 +22,9 @@ const valores_negativos = require('./uploaders/valores_negativos.js')
 const sasd = require('./uploaders/sasd.js')
 const saerlp = require('./uploaders/saerlp.js')
 
+const users = require('./uploaders/users.js')
+
+
 var bodyParser = require('body-parser');
 
 
@@ -57,14 +60,7 @@ function requireAuth(req, res, next) {
 //     //__dirname : It will resolve to your project folder.
 //   });
 
-// Example users
-const users = [
-    { email: 'eldher02@gmail.com', password: '3ldh3r$fount@in' },
-    { email: 'cibar.vasquez@fountain.com.pa', password: 'cib@r$fount@in' },
-    { email: 'eyleen.espinales@fountain.com.pa', password: '3yl33n$fount@in' },
-    { email: 'ian.dillon@fountain.com.pa', password: 'i@n$fount@in' }
-  ];
-  
+
 
 app.get('/login', (req, res) => {
     res.render('login', { errorMessage: null });
@@ -207,21 +203,17 @@ router.get('/cierre/:fecha', requireAuth, function(req, res, next){
 
 
     
-    if(!req.params)
-    return res.send("NO PARAMS PASSED")
+    // if(!req.params)
+    // return res.send("NO PARAMS PASSED")
 
-    if(!req.params.fecha)
-    return res.send("NO address_line PASSED")
+    // if(!req.params.fecha)
+    // return res.send("NO address_line PASSED")
 
-    if(req.params.fecha === ""){
-    res.send("ADDRESS LINE EMPTY.")
-    } else {
-    res.send("ADDRESS LINE > ",req.params.fecha)
-    }
-
-
-
-
+    // if(req.params.fecha === ""){
+    // res.send("ADDRESS LINE EMPTY.")
+    // } else {
+    // res.send("ADDRESS LINE > ",req.params.fecha)
+    // }
 
 
     (async function () 
