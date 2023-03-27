@@ -1,4 +1,6 @@
 
+
+const cookieParser = require('cookie-parser');
 const express = require("express");
 const app = express();
 const path = require('path');
@@ -8,6 +10,8 @@ const dbConfig_localhost = require("./dbConfig_localhost");
 const sql = require('mssql');
 const port = process.env.PORT || 3000
 const XSLX = require('xlsx')
+
+
 
 const totales_por_contratos = require('./uploaders/totales_por_contratos.js')
 const balance_de_potencia = require('./uploaders/balance_de_potencia.js')
@@ -21,7 +25,7 @@ const saerlp = require('./uploaders/saerlp.js')
 var bodyParser = require('body-parser');
 
 
-
+app.use(cookieParser());
 app.use(bodyParser.json());
 
 //support parsing of application/x-www-form-urlencoded post data
@@ -35,13 +39,64 @@ app.use(express.static(path.join(__dirname , '/public/')));
 
 
 
+// middleware to auto by cookie
+function requireAuth(req, res, next) {
+    console.log('Running Middleware')
+    console.log(req.cookies)
+    if(req.cookies.email) {      
+      next();
+    } else {
+      res.redirect('/login');
+    }
+  }
+  
+
 
 // router.get('/',function(req,res){    
 //     res.sendFile(__dirname + "/index.html");
 //     //__dirname : It will resolve to your project folder.
 //   });
 
-router.get('/',function(req,res){    
+// Example users
+const users = [
+    { email: 'eldher02@gmail.com', password: '3ldh3r$fount@in' },
+    { email: 'cibar.vasquez@fountain.com.pa', password: 'cib@r$fount@in' },
+    { email: 'eyleen.espinales@fountain.com.pa', password: '3yl33n$fount@in' },
+    { email: 'ian.dillon@fountain.com.pa', password: 'i@n$fount@in' }
+  ];
+  
+
+app.get('/login', (req, res) => {
+    res.render('login', { errorMessage: null });
+});
+
+
+app.post('/login', (req, res) => {
+    const { email, password } = req.body;
+    // Check if user exists
+    const user = users.find(u => u.email === email && u.password === password);
+    if (user) {
+        // Set a cookie with the user's email
+        console.log("login found")
+        res.cookie('email', user.email, { maxAge: 900000, httpOnly: true })        
+        res.redirect('/');  
+    } else {
+        console.log("login not found")
+        res.status(401).send('Invalid credentials');
+    }
+});
+
+// Logout route
+app.get('/logout', (req, res) => {
+    // Clear the email cookie to log the user out
+    res.clearCookie('email');
+    res.redirect('/');
+});
+
+
+
+router.get('/', requireAuth, function(req,res){    
+    //const email = req.cookies.email;
     (async function () 
     {
         try {
@@ -73,7 +128,7 @@ router.get('/',function(req,res){
 
 
 
-router.get('/:anio&:mes',function(req,res){    
+router.get('/:anio&:mes', requireAuth, function(req,res){    
     (async function () 
     {
         try {
@@ -146,7 +201,7 @@ var fechas;
 
 
 
-router.get('/cierre/:fecha', function(req, res, next){
+router.get('/cierre/:fecha', requireAuth, function(req, res, next){
     //console.log("executiing");
     //console.log(req.params.fecha);
 
@@ -237,7 +292,7 @@ router.get('/cierre/:fecha', function(req, res, next){
 
 
 
-router.get('/cierre_preliminar/:fecha_preliminar', function(req, res, next){
+router.get('/cierre_preliminar/:fecha_preliminar', requireAuth, function(req, res, next){
     //console.log("executiing");
     //console.log(req.params.fecha);
 
@@ -325,7 +380,7 @@ router.get('/cierre_preliminar/:fecha_preliminar', function(req, res, next){
 
 var contratos;  
 
-router.get('/contratos', function(req, res, next){
+router.get('/contratos', requireAuth, function(req, res, next){
     //console.log('contratos');
     (async function () 
     {
@@ -355,7 +410,7 @@ router.get('/contratos', function(req, res, next){
 
 
 
-router.get('/contratos/:fecha', function(req, res, next){
+router.get('/contratos/:fecha', requireAuth, function(req, res, next){
     //console.log('contratos con fecha');
     (async function () 
     {
@@ -387,7 +442,7 @@ router.get('/contratos/:fecha', function(req, res, next){
 
 
 
-router.get('/modificarContratos', function(req, res, next){
+router.get('/modificarContratos', requireAuth, function(req, res, next){
     //console.log('modificar contratos');
     (async function () 
     {
@@ -424,7 +479,7 @@ router.get('/modificarContratos', function(req, res, next){
 
 
 
-router.get('/modificarContratos/:id', function(req, res, next){
+router.get('/modificarContratos/:id', requireAuth ,function(req, res, next){
     //console.log('modificar contratos');
     (async function () 
     {
@@ -474,7 +529,7 @@ router.get('/modificarContratos/:id', function(req, res, next){
 
 
 
-router.get('/eliminarContratos/:id', function(req, res, next){
+router.get('/eliminarContratos/:id', requireAuth, function(req, res, next){
 
     let contratoBorrar 
 
@@ -516,7 +571,7 @@ router.get('/eliminarContratos/:id', function(req, res, next){
 
 
 
-router.get('/modificarPrecios', function(req, res, next){
+router.get('/modificarPrecios', requireAuth, function(req, res, next){
     console.log('modificar precios');
     (async function () 
     {
@@ -555,7 +610,7 @@ router.get('/modificarPrecios', function(req, res, next){
 
 var precios;
 
-router.get('/modificarPrecios/:id', function(req, res, next){
+router.get('/modificarPrecios/:id', requireAuth, function(req, res, next){
     console.log('modificar precios');
     (async function () 
     {
@@ -586,7 +641,7 @@ router.get('/modificarPrecios/:id', function(req, res, next){
 
 
 
-router.get('/eliminarPrecios/:id', function(req, res, next){
+router.get('/eliminarPrecios/:id', requireAuth, function(req, res, next){
 
     let precioBorrar 
 
@@ -632,7 +687,7 @@ var id;
 var tiposPrecio;
 
 
-router.get('/agregarContrato/', function(req, res, next){
+router.get('/agregarContrato/', requireAuth, function(req, res, next){
     //console.log('modificar contratos');
     (async function () 
     {
@@ -676,7 +731,7 @@ router.get('/agregarContrato/', function(req, res, next){
 
 
 
-router.get('/agregarPrecio/', function(req, res, next){
+router.get('/agregarPrecio/', requireAuth, function(req, res, next){
     //console.log('modificar contratos');
     (async function () 
     {
@@ -715,7 +770,7 @@ router.get('/agregarPrecio/', function(req, res, next){
 
 
 
-app.post('/guardarContrato', function(req, res){
+app.post('/guardarContrato',  function(req, res){
     console.log(req.body);
 
     const accion = req.body.accion
@@ -782,7 +837,7 @@ app.post('/guardarContrato', function(req, res){
 );
 
 
-app.post('/guardarPrecio', function(req, res){
+app.post('/guardarPrecio',  function(req, res){
     console.log(req.body);
     console.log(JSON.stringify(req.body));
 
@@ -860,7 +915,7 @@ var result
 
 
 
-app.get('/energyBalance/', function(req, res){
+app.get('/energyBalance/', requireAuth, function(req, res){
     //console.log('modificar contratos');
     (async function () 
     {
@@ -902,7 +957,7 @@ app.get('/energyBalance/', function(req, res){
 
 
 
-app.get('/energyBalance/:anio', function(req, res){
+app.get('/energyBalance/:anio', requireAuth, function(req, res){
     //console.log('modificar contratos');
     
     let result;
@@ -985,11 +1040,11 @@ app.get('/chart-test', function(req, res){
 
 
 
-router.get('/cargarDataAplicacion', function(req, res){
+router.get('/cargarDataAplicacion', requireAuth, function(req, res){
     res.render('cargarDataAplicacion')}
 );
 
-router.get('/cargarDataPowerBi', function(req, res){
+router.get('/cargarDataPowerBi', requireAuth, function(req, res){
     res.render('cargarDataPowerBi')}
 );
 
@@ -1965,7 +2020,7 @@ app.post('/upload_saerlp', function(req, res){
 
 
 
-router.get('/agregarDetallePerdida/:fecha', function(req, res){
+router.get('/agregarDetallePerdida/:fecha', requireAuth, function(req, res){
 
 
     let DetallePerdidas;
