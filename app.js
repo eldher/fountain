@@ -1159,6 +1159,20 @@ function leerExcelLiquidacion(ruta, version){
                 case 'oct': nMes ='10'; break;
                 case 'nov': nMes ='11'; break;
                 case 'dic': nMes ='12'; break;
+
+                case '1': nMes ='01'; break;
+                case '2': nMes ='02'; break;
+                case '3': nMes ='03'; break;
+                case '4': nMes ='04'; break;
+                case '5': nMes ='05'; break;
+                case '6': nMes ='06'; break;
+                case '7': nMes ='07'; break;
+                case '8': nMes ='08'; break;
+                case '9': nMes ='09'; break;
+                case '10': nMes ='10'; break;
+                case '11': nMes ='11'; break;
+                case '12': nMes ='12'; break;
+
             };
 
 
