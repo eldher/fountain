@@ -1,9 +1,11 @@
 
+var sql = require('mssql');
+
 // var dbConfig_localhost ={
 //     user: 'admin_fountain',
 //     password: 'Panama04',
 //     server: 'localhost',
-//     database: 'FOUNTAIN9',    
+//     database: 'FOUNTAIN10',    
 //     options: {
 //         "enableArithAbort": true,
 //         "encrypt":false
@@ -12,7 +14,7 @@
 // };
 
 
-var sql = require('mssql');
+
 
 var dbConfig_localhost ={
     user: 'admin_fountain',

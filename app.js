@@ -1104,7 +1104,16 @@ var data;
 // };
   
 
+function SerialDateToJSDate(serialDate, offsetUTC) {
+    return new Date(Date.UTC(0, 0, serialDate, offsetUTC));
+  }
 
+
+function pad(num, size) {
+    num = num.toString();
+    while (num.length < size) num = "0" + num;
+    return num;
+}
 
 
 function leerExcelLiquidacion(ruta, version){
@@ -1142,42 +1151,59 @@ function leerExcelLiquidacion(ruta, version){
             //console.log(data[i].Fecha);
             //console.log(i)
             var nMes = ''
-            splitted = data[i].fecha.split("/")
-            //console.log(splitted)
-
-            // splitted[0] es el mes
-            switch(splitted[0]){
-                case 'ene': nMes ='01'; break;
-                case 'feb': nMes ='02'; break;
-                case 'mar': nMes ='03'; break;
-                case 'abr': nMes ='04'; break;
-                case 'may': nMes ='05'; break;
-                case 'jun': nMes ='06'; break;
-                case 'jul': nMes ='07'; break;
-                case 'ago': nMes ='08'; break;
-                case 'sep': nMes ='09'; break;
-                case 'oct': nMes ='10'; break;
-                case 'nov': nMes ='11'; break;
-                case 'dic': nMes ='12'; break;
-
-                case '1': nMes ='01'; break;
-                case '2': nMes ='02'; break;
-                case '3': nMes ='03'; break;
-                case '4': nMes ='04'; break;
-                case '5': nMes ='05'; break;
-                case '6': nMes ='06'; break;
-                case '7': nMes ='07'; break;
-                case '8': nMes ='08'; break;
-                case '9': nMes ='09'; break;
-                case '10': nMes ='10'; break;
-                case '11': nMes ='11'; break;
-                case '12': nMes ='12'; break;
-
-            };
 
 
-            data[i].fecha = splitted[2] + '-' + nMes + '-' + splitted[1];
-            data[i].fecha_mes = splitted[2] + '-' + nMes
+            //@eldher changed to Date Format from Original FIle
+
+            console.log(typeof data[i].fecha);   
+
+            if (typeof data[i].fecha === 'string') { // Check if fecha is a string
+                const splitted = data[i].fecha.split("/");
+
+                switch(splitted[0]){
+                    case 'ene': nMes ='01'; break;
+                    case 'feb': nMes ='02'; break;
+                    case 'mar': nMes ='03'; break;
+                    case 'abr': nMes ='04'; break;
+                    case 'may': nMes ='05'; break;
+                    case 'jun': nMes ='06'; break;
+                    case 'jul': nMes ='07'; break;
+                    case 'ago': nMes ='08'; break;
+                    case 'sep': nMes ='09'; break;
+                    case 'oct': nMes ='10'; break;
+                    case 'nov': nMes ='11'; break;
+                    case 'dic': nMes ='12'; break;
+    
+                    case '1': nMes ='01'; break;
+                    case '2': nMes ='02'; break;
+                    case '3': nMes ='03'; break;
+                    case '4': nMes ='04'; break;
+                    case '5': nMes ='05'; break;
+                    case '6': nMes ='06'; break;
+                    case '7': nMes ='07'; break;
+                    case '8': nMes ='08'; break;
+                    case '9': nMes ='09'; break;
+                    case '10': nMes ='10'; break;
+                    case '11': nMes ='11'; break;
+                    case '12': nMes ='12'; break;
+    
+                };
+    
+    
+                data[i].fecha = splitted[2] + '-' + nMes + '-' + splitted[1];
+                data[i].fecha_mes = splitted[2] + '-' + nMes
+
+            } else {
+
+                data[i].fecha = SerialDateToJSDate(data[i].fecha, -24).toISOString().slice(0, 19).replace('T', ' ')  
+
+                //agregar fecha_mes
+                let test = new Date(data[i].fecha)
+                data[i].fecha_mes = test.getFullYear() + "-" + pad((test.getMonth() + 1),2) //+ "-" + pad(test.getDate(),2) ;
+  
+            }
+
+            
             data[i].version = version
             data[i].ajuste = 0
             //data[i].fecha_carga = Date.now().toISOString().slice(0, 9).replace('T', ' ')
