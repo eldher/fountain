@@ -38,7 +38,6 @@
 </head>
 
 
-
 <body>
 
   <!-- Fixed navbar -->
@@ -50,15 +49,19 @@
       </div>
       <div id="navbar" class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
-          <li><a href="/cierre/2023-02-28">Ingresos Mensuales </a></li>
-          <li><a href="/cierre_preliminar/2023-02-28">Ingresos Preliminares </a></li>
+          <!--<li><a href="/cierre/2023-02-28">Ingresos Mensuales </a></li> -->
+          <!-- <li><a href="/cierre/<%#= latestYear + '-' + latestMonth + '-' + latestDay %>">Ingresos Mensuales </a></li> -->
+          <li><a href="/cierre/<%= latestDate%>">Ingresos Mensuales </a></li>
+          <li><a href="/cierre_preliminar/<%= FechaIngresosPreliminares %>">Ingresos Preliminares</a></li> 
+          <!--<li><a href="/cierre_preliminar/<%#= YearIngresosPreliminares + '-' + MonthIngresosPreliminares + '-' + DayIngresosPreliminares %>">Ingresos Preliminares</a></li> -- >
+          <li><a href="/cierre_preliminar/2023-02-28">Ingresos Preliminares </a></li> >-->
           <li><a href="/contratos">Ingresos por Contratos</a></li>
 
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
               aria-expanded="false">Energy Balance <span class="caret"></span></a>
             <ul class="dropdown-menu">
-              <li><a href="/energyBalance/2022">Ver Reporte</a></li>
+              <li><a href="/energyBalance/<%= latestDate.substring(0, 4) %>">Ver Reporte</a></li>
             </ul>
           </li>
 

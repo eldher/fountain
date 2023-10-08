@@ -27,6 +27,70 @@ const users = require('./uploaders/users.js')
 
 var bodyParser = require('body-parser');
 
+// middleware to extract latest data 
+async function getLatestDateFromTable() {
+    try {
+        let pool = await sql.connect(dbConfig_localhost);
+
+        let result = await pool.request()
+            // its only possible to extract Oficial dates
+            .query("SELECT cast(MAX(fecha) as nvarchar) AS latestDate FROM LiquidacionFountain where version = 'Oficial'" );
+
+        return result.recordset[0].latestDate;
+    } catch (err) {
+        console.log(err);
+        return null;
+    }
+}
+
+
+async function getLastestIngresosPreliminaresDate() {
+    try {
+        let pool = await sql.connect(dbConfig_localhost);
+
+        let result = await pool.request()            
+            .query("SELECT cast(MAX(fecha) as nvarchar)  AS latestDate FROM LiquidacionFountain where version = 'Preliminar'" );
+        return result.recordset[0].latestDate;
+    } catch (err) {
+        console.log(err);
+        return null;
+    }
+}
+
+
+
+app.use(async (req, res, next) => {
+    try {
+        const latestDate = await getLatestDateFromTable();
+        if (latestDate) {
+            res.locals.latestDate  = latestDate;
+            // res.locals.latestYear  = latestDate.getFullYear();
+            // res.locals.latestMonth = String(latestDate.getMonth() + 1).padStart(2, '0'); // Adding 1 to month since getMonth() returns 0-11
+            // res.locals.latestDay   = String(latestDate.getDate()).padStart(2, '0');
+        }
+        next();
+    } catch (err) {
+        console.log(err);
+        next();
+    }
+});
+
+
+app.use(async (req, res, next) => {
+    try {
+        const ingresosPreliminaresDate = await getLastestIngresosPreliminaresDate();
+        if (ingresosPreliminaresDate) {
+            res.locals.FechaIngresosPreliminares  = ingresosPreliminaresDate;
+        }
+        next();
+    } catch (err) {
+        console.log(err);
+        next();
+    }
+});
+
+
+
 
 app.use(cookieParser());
 app.use(bodyParser.json());
@@ -37,8 +101,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/', router);
 app.set("view engine", "ejs");
 console.log(path.join(__dirname , '/public/'));
-app.use(express.static(path.join(__dirname , '/public/')));
-
+app.use(express.static(path.join(__dirname , '/public/'))); 
 
 
 
@@ -74,7 +137,7 @@ app.post('/login', (req, res) => {
     if (user) {
         // Set a cookie with the user's email
         console.log("login found")
-        res.cookie('email', user.email, { maxAge: 900000, httpOnly: true })        
+        res.cookie('email', user.email, { maxAge: 1000000, httpOnly: true })        
         res.redirect('/');  
     } else {
         console.log("login not found")
@@ -91,35 +154,71 @@ app.get('/logout', (req, res) => {
 
 
 
-router.get('/', requireAuth, function(req,res){    
-    //const email = req.cookies.email;
-    (async function () 
-    {
+// router.get('/', requireAuth, async function(req,res){    
+//     //const email = req.cookies.email;
+//     (async function () 
+//     {
+//         try {
+//             let pool = await sql.connect(dbConfig_localhost)     
+
+//             let query_anios = await pool.request()
+//             .query('select distinct YEAR(fecha) as anio from LiquidacionFountain')
+//             anios = query_anios.recordsets[0];
+
+
+//             let result = await pool.request()
+//             .input('anio', 2023)
+//             .input('mes', 01)
+//             .execute('sp_Dashboard')              
+//             graficos  = result.recordsets[0];
+//             cards  = result.recordsets[1];
+//             EAR  = result.recordsets[2];
+
+//             //console.log(EAR);    
+//         } catch (err) {            
+//             console.log(err);
+//         }
+       
+//     })().then(() => res.render('index', { anios, anio: 2022 , mes: 05 ,graficos, cards, EAR} ))
+//     sql.on('error', err => {
+//         console.log(err);        
+//     })   
+// });
+
+router.get('/', requireAuth, async function (req, res) {
+    // Retrieve the latest date from res.locals.latestDate
+    const latestDate = res.locals.latestDate;
+
+    if (latestDate) {
+        // Extract the year and month from the latest date
+        const latestYear = latestDate.substring(0, 4);
+        const latestMonth = latestDate.substring(5, 7);
+       
         try {
-            let pool = await sql.connect(dbConfig_localhost)     
+            let pool = await sql.connect(dbConfig_localhost);
 
             let query_anios = await pool.request()
-            .query('select distinct YEAR(fecha) as anio from LiquidacionFountain')
+                .query('select distinct YEAR(fecha) as anio from LiquidacionFountain');
             anios = query_anios.recordsets[0];
 
-
             let result = await pool.request()
-            .input('anio', 2023)
-            .input('mes', 01)
-            .execute('sp_Dashboard')              
-            graficos  = result.recordsets[0];
-            cards  = result.recordsets[1];
-            EAR  = result.recordsets[2];
+                .input('anio', latestYear)
+                .input('mes', latestMonth)
+                .execute('sp_Dashboard');
+            graficos = result.recordsets[0];
+            cards = result.recordsets[1];
+            EAR = result.recordsets[2];
 
-            //console.log(EAR);    
-        } catch (err) {            
+            // Render the index page with the latest year and month
+            res.render('index', { anios, anio: latestYear, mes: latestMonth, graficos, cards, EAR  });
+        } catch (err) {
             console.log(err);
+            res.status(500).send('An error occurred.');
         }
-       
-    })().then(() => res.render('index', { anios, anio: 2022 , mes: 05 ,graficos, cards, EAR} ))
-    sql.on('error', err => {
-        console.log(err);        
-    })   
+    } else {
+        // Handle the case where latestDate is not available
+        res.status(500).send('Latest date not available.');
+    }
 });
 
 
@@ -923,11 +1022,7 @@ app.get('/energyBalance/', requireAuth, function(req, res){
 
             //let pool = await sql.connect(dbConfig_localhost)     
             let result = await pool.request()
-            .execute('sp_EnergyBalance')      
-
-
-
-            
+            .execute('sp_EnergyBalance')                
             energyBalance = result.recordsets;
             tabla_eb1  = result.recordsets[0];
             tabla_eb2  = result.recordsets[1];
