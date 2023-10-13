@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Perfil de Usuario</title>
+    <!-- Include your CSS and other headers here -->
+</head>
+<body>
+    <%- include('partials/header', { title: "Perfil de Usuario" }) %>
+
+
+    <div class="profile-container">
+        <h1>Perfil de Usuario</h1>
+        <div class="profile-card">
+            <div class="profile-info">
+                <p><strong>Email:</strong> <%= user.email %></p>
+                <p><strong>Password:</strong> <%= user.pass %></p>
+                <p><strong>Grupo de Usuario:</strong> <%= user.user_group %></p>
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+</html>
+
+
+
+
+
+
+<body>
+
+</body>
+
+</html>

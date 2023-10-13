@@ -29,6 +29,7 @@ var bodyParser = require('body-parser');
 
 // middleware to extract latest data 
 async function getLatestDateFromTable() {
+    // Extract latest date from LiquidacionFountain Oficial version
     try {
         let pool = await sql.connect(dbConfig_localhost);
 
@@ -45,6 +46,7 @@ async function getLatestDateFromTable() {
 
 
 async function getLastestIngresosPreliminaresDate() {
+    // Extract latest date from LiquidacionFountain Preliminar version
     try {
         let pool = await sql.connect(dbConfig_localhost);
 
@@ -130,20 +132,51 @@ app.get('/login', (req, res) => {
 });
 
 
-app.post('/login', (req, res) => {
+// app.post('/login', (req, res) => {
+//     const { email, password } = req.body;
+//     // Check if user exists
+//     const user = users.find(u => u.email === email && u.password === password);
+//     if (user) {
+//         // Set a cookie with the user's email
+//         console.log("login found")
+//         res.cookie('email', user.email, { maxAge: 1000000, httpOnly: true })        
+//         res.redirect('/');  
+//     } else {
+//         console.log("login not found")
+//         res.status(401).send('Invalid credentials');
+//     }
+// });
+
+
+app.post('/login', async (req, res) => {
+    // login implementation to a SQL database
     const { email, password } = req.body;
-    // Check if user exists
-    const user = users.find(u => u.email === email && u.password === password);
-    if (user) {
-        // Set a cookie with the user's email
-        console.log("login found")
-        res.cookie('email', user.email, { maxAge: 1000000, httpOnly: true })        
-        res.redirect('/');  
-    } else {
-        console.log("login not found")
-        res.status(401).send('Invalid credentials');
+
+    try {
+        const pool = await sql.connect(dbConfig_localhost);
+        const result = await pool.request()
+            .input('email', sql.NVarChar, email)
+            .input('pass', sql.NVarChar, password)
+            .query('SELECT * FROM Users WHERE email = @email AND pass = @pass');
+
+        if (result.recordset.length > 0) {
+            // User exists in the database, set a cookie or session for authentication
+            res.cookie('email', email, { maxAge: 1000000, httpOnly: true });
+                    // Set a flag to indicate that the user is authenticated
+            //res.locals.isAuthenticated = true;
+            console.log(res.locals.isAuthenticated )
+            res.redirect('/');  
+        } else {
+            console.log("Invalid credentials");
+            res.status(401).send('Invalid credentials');
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
     }
 });
+
+
 
 // Logout route
 app.get('/logout', (req, res) => {
@@ -2280,6 +2313,110 @@ router.post('/agregarDetallePerdida/:fecha/:precio', function(req, res){
 
     
 });
+
+
+
+
+app.get('/change-password', requireAuth, (req, res) => {
+    res.render('password-change', { errorMessage: null });
+});
+
+
+// app.post('/change-password', requireAuth, (req, res) => {
+//     const { currentPassword, newPassword } = req.body;
+//     const email = req.cookies.email; // Assuming you store the user's email in a cookie
+
+//     // Find the user by email (you may need to modify this depending on your data structure)
+//     const user = users.find(u => u.email === email);
+
+//     if (!user) {
+//         return res.status(404).send('User not found');
+//     }
+
+//     // Check if the current password matches
+//     if (currentPassword !== user.password) {
+//         return res.status(401).send('Current password is incorrect');
+//     }
+
+//     // Validate the new password (e.g., length, complexity, etc.)
+//     if (newPassword.length < 8) {
+//         return res.status(400).send('New password is too short');
+//     }
+
+//     // Update the user's password in your data (e.g., replace the old password with the new one)
+//     user.password = newPassword;
+
+//     // Optionally, save the updated user data to your database
+
+//     // Redirect to a success page or back to the profile page
+//     res.redirect('/profile');
+// });
+
+
+app.post('/change-password', requireAuth, async (req, res) => {
+    const { currentPassword, newPassword } = req.body;
+    const email = req.cookies.email; // Assuming you store the user's email in a cookie
+
+    try {
+        const pool = await sql.connect(dbConfig_localhost);
+        const userResult = await pool.request()
+            .input('email', sql.NVarChar, email)
+            .query('SELECT * FROM Users WHERE email = @email');
+
+        if (userResult.recordset.length === 0) {
+            return res.status(404).send('User not found');
+        }
+
+        const user = userResult.recordset[0];
+
+        // Check if the current password matches
+        if (currentPassword !== user.pass) {
+            return res.status(401).send('Current password is incorrect');
+        }
+
+        // Validate the new password (e.g., length, complexity, etc.)
+        if (newPassword.length < 3) {
+            return res.status(400).send('New password is too short');
+        }
+
+        // Update the user's password in the database
+        await pool.request()
+            .input('email', sql.NVarChar, email)
+            .input('newPassword', sql.NVarChar, newPassword)
+            .query('UPDATE Users SET pass = @newPassword WHERE email = @email');
+
+        // Render a success message
+        res.send('<script type="text/javascript"> alert("Password cambiado con éxito"); window.location="./";</script>');
+        //res.render('password-change-success', { message: 'Password Change Successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
+app.get('/profile', requireAuth, async (req, res) => {
+    const email = req.cookies.email; // Assuming you store the user's email in a cookie
+
+    try {
+        const pool = await sql.connect(dbConfig_localhost);
+        const userResult = await pool.request()
+            .input('email', sql.NVarChar, email)
+            .query('SELECT * FROM Users WHERE email = @email');
+
+        if (userResult.recordset.length === 0) {
+            return res.status(404).send('User not found');
+        }
+
+        const user = userResult.recordset[0];
+
+        res.render('profile', { user });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 
 
 
