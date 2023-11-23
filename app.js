@@ -97,8 +97,21 @@ app.use(async (req, res, next) => {
 app.use(cookieParser());
 app.use(bodyParser.json());
 
+
+
+
 //support parsing of application/x-www-form-urlencoded post data
 app.use(bodyParser.urlencoded({ extended: true }));
+
+
+// Middleware to make user_group available in all EJS templates
+app.use((req, res, next) => {
+    if (req.cookies && req.cookies.user_group) {
+        // Set user_group in res.locals to make it accessible in EJS templates
+        res.locals.user_group = req.cookies.user_group;
+    }
+    next();
+}); 
 
 app.use('/', router);
 app.set("view engine", "ejs");
@@ -160,10 +173,16 @@ app.post('/login', async (req, res) => {
             .query('SELECT * FROM Users WHERE email = @email AND pass = @pass');
 
         if (result.recordset.length > 0) {
-            // User exists in the database, set a cookie or session for authentication
+
+            const user = result.recordset[0];
+
+            // Set a cookie with the user's email
             res.cookie('email', email, { maxAge: 1000000, httpOnly: true });
-                    // Set a flag to indicate that the user is authenticated
-            //res.locals.isAuthenticated = true;
+
+            if (user.user_group) {
+                res.cookie('user_group', user.user_group, { maxAge: 1000000, httpOnly: true });
+            }
+
             console.log(res.locals.isAuthenticated )
             res.redirect('/');  
         } else {
@@ -2414,6 +2433,37 @@ app.get('/profile', requireAuth, async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');
+    }
+});
+
+
+
+
+app.get('/addUser', (req, res) => {
+    res.render('addUser', { errorMessage: null });
+});
+
+
+
+
+
+app.post('/addUser', requireAuth, async (req, res) => {   
+
+    const { email, password, userGroup } = req.body;
+    try {
+        let pool = await sql.connect(dbConfig_localhost);
+        let result = await pool.request()
+            .input('email', sql.NVarChar, email)
+            .input('password', sql.NVarChar, password)
+            .input('userGroup', sql.NVarChar, userGroup) // Assuming userGroup is a string
+            .query('INSERT INTO users (email, pass, user_group) VALUES (@email, @password, @userGroup)');
+
+        console.log('Usuario Agregado Correctamente');
+        res.send('<script type="text/javascript"> alert("Password cambiado con éxito"); window.location="./";</script>');
+        return result;
+    } catch (err) {
+        res.send('<script type="text/javascript"> alert("Error agregando usuario"); window.location="./";</script>');
+        throw err;
     }
 });
 

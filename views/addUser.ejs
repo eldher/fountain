@@ -1,0 +1,35 @@
+
+<%- include('partials/header', { title: "Agregar Usuario" } )%>
+
+
+<!DOCTYPE html>
+<html>
+   <head>
+    <title>Register</title>
+    <link rel="stylesheet" type="text/css" href="/login.css">  
+  </head>
+  <body>
+    <h1>Crear Usuario</h1>
+    <% if (errorMessage) { %>
+      <p><%= errorMessage %></p>
+    <% } %>
+    
+    <form method="POST" action="/addUser">
+        <label for="email">Email:</label>
+        <input type="email" name="email" id="email" required>
+        <br>
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="password" required>
+        <br>
+        <label for="userGroup">User Group:</label>
+        <select name="userGroup" id="userGroup" required>
+          <option value="admin">Admin</option>
+          <option value="internal">Interno Fountain</option>
+          <option value="external">Usuario Externo</option>
+        </select>
+        <br>
+        <button type="submit">Crear Usuario</button>
+    </form>
+  </body>
+</html>
+

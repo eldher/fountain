@@ -1,18 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
+  <!DOCTYPE html>
+  <html lang="en">
 
-<head>
-  <title>
-    <%= title %>
-  </title>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/styles.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-
+  <head>
+    <title>
+      <%= title %>
+    </title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
 
@@ -20,105 +18,118 @@
 
 
 
-  <meta http-equiv='cache-control' content='no-cache'>
-  <meta http-equiv='expires' content='0'>
-  <meta http-equiv='pragma' content='no-cache'>
+
+
+    <meta http-equiv='cache-control' content='no-cache'>
+    <meta http-equiv='expires' content='0'>
+    <meta http-equiv='pragma' content='no-cache'>
 
 
 
 
 
-  <style>
-    body {
-      padding-top: 65px;
-    }
-  </style>
+    <style>
+      body {
+        padding-top: 65px;
+      }
+    </style>
 
 
-</head>
+  </head>
 
 
-<body>
+  <body>
 
-  <!-- Fixed navbar -->
-  <nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-      <div class="navbar-header">
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
 
-        <a class="navbar-brand" href="/">Dashboard</a>
+          <a class="navbar-brand" href="/">Dashboard</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <!--<li><a href="/cierre/2023-02-28">Ingresos Mensuales </a></li> -->
+            <!-- <li><a href="/cierre/<%#= latestYear + '-' + latestMonth + '-' + latestDay %>">Ingresos Mensuales </a></li> -->
+            <li><a href="/cierre/<%= latestDate%>">Ingresos Mensuales </a></li>
+            <li><a href="/cierre_preliminar/<%= FechaIngresosPreliminares %>">Ingresos Preliminares</a></li> 
+            <!--<li><a href="/cierre_preliminar/<%#= YearIngresosPreliminares + '-' + MonthIngresosPreliminares + '-' + DayIngresosPreliminares %>">Ingresos Preliminares</a></li> -- >
+            <li><a href="/cierre_preliminar/2023-02-28">Ingresos Preliminares </a></li> >-->
+            <li><a href="/contratos">Ingresos por Contratos</a></li>
+
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                aria-expanded="false">Energy Balance <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="/energyBalance/<%= latestDate.substring(0, 4) %>">Ver Reporte</a></li>
+              </ul>
+            </li>
+
+
+            <% if (user_group === 'admin') { %>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                aria-expanded="false">Contratos<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="/agregarContrato">Agregar</a></li>
+                <li><a href="/modificarContratos">Modificar</a></li>
+              </ul>
+            </li>
+            <% } %> 
+
+
+
+            <% if (user_group === 'admin') { %>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                aria-expanded="false">Precios <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="/agregarPrecio">Agregar</a></li>
+                <li><a href="/modificarPrecios">Modificar</a></li>
+              </ul>
+            </li>
+            <% } %> 
+
+
+            <% if (user_group === 'admin') { %>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                aria-expanded="false">Cargar Data <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="/cargarDataAplicacion">Para Aplicación</a></li>
+                <li><a href="/agregarDetallePerdida/0">Detalle de Pérdidas</a></li>
+                <li><a href="/cargarDataPowerBi">Para Dashboard PowerBi</a></li>
+
+              </ul>
+            </li>
+            <% } %> 
+
+            
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                aria-expanded="false">Perfil <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+
+                <% if (user_group === 'admin') { %>
+                <li><a href="/addUser">Crear Usuario</a></li>
+                <% } %>  
+
+
+                <li><a href="/profile">Ver Perfil</a></li>
+                <li><a href="/change-password">Cambiar Contraseña</a></li>
+                <li><a href="/logout">Logout</a></li>
+              </ul>
+            </li>
+
+
+            <%# if (isAuthenticated) { %>
+            <!-- <li><a href="/profile">Profile</a></li> -->
+            <%# } %>
+
+
+
+          </ul>
+        </div>
+        <!--/.nav-collapse -->
       </div>
-      <div id="navbar" class="navbar-collapse collapse">
-        <ul class="nav navbar-nav">
-          <!--<li><a href="/cierre/2023-02-28">Ingresos Mensuales </a></li> -->
-          <!-- <li><a href="/cierre/<%#= latestYear + '-' + latestMonth + '-' + latestDay %>">Ingresos Mensuales </a></li> -->
-          <li><a href="/cierre/<%= latestDate%>">Ingresos Mensuales </a></li>
-          <li><a href="/cierre_preliminar/<%= FechaIngresosPreliminares %>">Ingresos Preliminares</a></li> 
-          <!--<li><a href="/cierre_preliminar/<%#= YearIngresosPreliminares + '-' + MonthIngresosPreliminares + '-' + DayIngresosPreliminares %>">Ingresos Preliminares</a></li> -- >
-          <li><a href="/cierre_preliminar/2023-02-28">Ingresos Preliminares </a></li> >-->
-          <li><a href="/contratos">Ingresos por Contratos</a></li>
-
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-              aria-expanded="false">Energy Balance <span class="caret"></span></a>
-            <ul class="dropdown-menu">
-              <li><a href="/energyBalance/<%= latestDate.substring(0, 4) %>">Ver Reporte</a></li>
-            </ul>
-          </li>
-
-
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-              aria-expanded="false">Contratos<span class="caret"></span></a>
-            <ul class="dropdown-menu">
-              <li><a href="/agregarContrato">Agregar</a></li>
-              <li><a href="/modificarContratos">Modificar</a></li>
-            </ul>
-          </li>
-
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-              aria-expanded="false">Precios <span class="caret"></span></a>
-            <ul class="dropdown-menu">
-              <li><a href="/agregarPrecio">Agregar</a></li>
-              <li><a href="/modificarPrecios">Modificar</a></li>
-            </ul>
-          </li>
-
-
-
-
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-              aria-expanded="false">Cargar Data <span class="caret"></span></a>
-            <ul class="dropdown-menu">
-              <li><a href="/cargarDataAplicacion">Para Aplicación</a></li>
-              <li><a href="/agregarDetallePerdida/0">Detalle de Pérdidas</a></li>
-              <li><a href="/cargarDataPowerBi">Para Dashboard PowerBi</a></li>
-
-            </ul>
-          </li>
-
-
-          
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-              aria-expanded="false">Perfil <span class="caret"></span></a>
-            <ul class="dropdown-menu">
-              <li><a href="/profile">Ver Perfil</a></li>
-              <li><a href="/change-password">Cambiar Contraseña</a></li>
-              <li><a href="/logout">Logout</a></li>
-            </ul>
-          </li>
-
-
-          <%# if (isAuthenticated) { %>
-          <!-- <li><a href="/profile">Profile</a></li> -->
-          <%# } %>
-
-
-
-        </ul>
-      </div>
-      <!--/.nav-collapse -->
-    </div>
-  </nav>
+    </nav>
