@@ -916,19 +916,34 @@ router.get('/agregarPrecio/', requireAuth, function(req, res, next){
 app.post('/guardarContrato',  function(req, res){
     console.log(req.body);
 
-    const accion = req.body.accion
-    const fecha = req.body.fecha;
-    const nombre_contrato = req.body.nombre_contrato;
-    const empresa = req.body.empresa;
-    const potencia_contratada = req.body.potencia_contratada;
-    const categoria_precio = req.body.categoria_precio;
-    const precio = req.body.precio_base_usd_mwh*1 + req.body.cargo_transmicion_seguimiento_electrico*1
-    const id = req.body.id;
+    // const accion = req.body.accion
+    // const fecha = req.body.fecha;
+    // const nombre_contrato = req.body.nombre_contrato;
+    // const tipo_contrato = req.body.tipo_contrato;
+    // const empresa = req.body.empresa;
+    // const potencia_contratada = req.body.potencia_contratada;
+    // const categoria_precio = req.body.categoria_precio;
+    // const precio = req.body.precio_base_usd_mwh*1 + req.body.cargo_transmicion_seguimiento_electrico*1
+    // const ingreso_total_contrato = req.body.ingreso_total_contrato*1
+    // const id = req.body.id;
+
     
+
+    let { accion, fecha, nombre_contrato, tipo_contrato, empresa, potencia_contratada, categoria_precio, ingreso_total_contrato, precio, id } = req.body;
+
+
+
+
 
     if(accion =="agregar"){
 
-        var queryString = "INSERT INTO CONTRATOS (fecha, nombre_contrato, empresa, potencia_contratada, categoria_precio ) VALUES ('"+ fecha + "','"+ nombre_contrato + "','"+ empresa + "','"+potencia_contratada+"', '"+categoria_precio +"')";
+
+
+        potencia_contratada = (potencia_contratada && potencia_contratada !== '') ? potencia_contratada : 0.0;
+        categoria_precio = (categoria_precio && categoria_precio !== '') ? categoria_precio : '';
+
+
+        var queryString = "INSERT INTO CONTRATOS (fecha, nombre_contrato, tipo_contrato, empresa, potencia_contratada, categoria_precio, ingreso_total_contrato ) VALUES ('"+ fecha + "','"+ nombre_contrato + "','"+ tipo_contrato + "','"+ empresa + "','"+potencia_contratada+"', '"+categoria_precio +"', '"+ ingreso_total_contrato + "')";
 
         console.log(queryString);
         console.log(JSON.stringify(req.body));

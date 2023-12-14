@@ -257,7 +257,32 @@ from CONTRATOS a
 left join TotalesContratos b on a.fecha = EOMONTH(b.fecha) and a.empresa = b.Distribuidores
 left join TotalEnergia c on a.fecha = c.fecha and a.empresa = c.empresa
 left join tipo_precio d on a.fecha = d.fecha_cierre and a.categoria_precio = d.categoria_precio
+where a.tipo_contrato = 'suministro'
 order by 1,2
+
+
+
+
+insert into INGRESOS_CONTRATOS
+select 
+a.fecha
+,a.nombre_contrato
+,a.empresa
+,0 potencia_contratada
+,'' as categoria_precio
+,0 as precio_base_usd_mwh
+,0 as cargo_transmicion_seguimiento_electrico
+,0 as precio
+,dmg     = 0
+,dmg_s   = 0
+,dmm_s   = 0
+,energia = 0
+,EAR     = 0
+,a.ingreso_total_contrato as ingreso_precio_contado 
+
+from CONTRATOS a
+where a.tipo_contrato = 'reserva'
+	
 
 --select * from preliminar_fountain_dia
 --select * from #temp_dia
