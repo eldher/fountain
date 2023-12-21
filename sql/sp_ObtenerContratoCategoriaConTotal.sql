@@ -81,6 +81,9 @@ and ingreso_precio_contado IS NOT NULL
 and fecha = @fecha;
 
 
+
+
+-- Seccion para insertar el total como una fila adicional
 select @CONT = count(*) from #corto_plazo_2;
 
 
@@ -121,7 +124,7 @@ where lower(categoria_precio) in  ('energia largo plazo', 'energía largo plazo')
 and ingreso_precio_contado IS NOT NULL
 and fecha = @fecha;
 
-
+-- Seccion para insertar el total como una fila adicional
 select @CONT = count(*) from #largo_plazo;
 
 
@@ -162,7 +165,7 @@ BEGIN
 	and ingreso_precio_contado IS NOT NULL
 	and fecha = @fecha;
 
-
+	-- Seccion para insertar el total como una fila adicional
 	select @CONT = count(*) from #potencia_1;
 
 	--select @CONT
@@ -204,7 +207,7 @@ where categoria_precio = 'Potencia II'
 and ingreso_precio_contado IS NOT NULL
 and fecha = @fecha;
 
-
+-- Seccion para insertar el total como una fila adicional
 select @CONT = count(*) from #potencia_2;
 
 
@@ -226,8 +229,48 @@ END
 	
 
 
+-- @2023-12-18
+---- Contratos de Reserva --------
+
+declare @CONT as INT
+select @CONT = 0;
+
+drop table if exists #reserva;
+
+select cast(fecha as nvarchar) as fecha, 
+EMPRESA, nombre_contrato, categoria_precio, precio_base_usd_mwh, cargo_transmicion_seguimiento_electrico, precio,
+potencia_contratada
+,ingreso_precio_contado
+into #reserva
+from INGRESOS_CONTRATOS
+where empresa = ''
+and fecha = @fecha; 
 
 
+
+
+select @CONT = count(*) from #reserva;
+
+
+IF @CONT > 0
+BEGIN 
+	insert into #reserva (fecha, empresa, nombre_contrato, categoria_precio, precio_base_usd_mwh, cargo_transmicion_seguimiento_electrico, precio, potencia_contratada, ingreso_precio_contado)
+	select 
+	fecha = ''
+	,empresa = ''
+	,nombre_contrato = ''
+	,categoria_precio = ''
+	,precio_base_usd_mwh = max(precio_base_usd_mwh)
+	,cargo_transmicion_seguimiento_electrico = max(cargo_transmicion_seguimiento_electrico)
+	,precio = max(precio)
+	,potencia_contratada = SUM(potencia_contratada)
+	,ingreso_precio_contado = SUM(ingreso_precio_contado)
+	from #reserva;
+END
+	
+
+
+	   	  
 
 
 select * from #corto_plazo_1 order by empresa desc ;
@@ -235,13 +278,14 @@ select * from #corto_plazo_2 order by empresa desc ;
 select * from #largo_plazo order by empresa desc ;
 select * from #potencia_1 order by empresa desc ;
 select * from #potencia_2 order by empresa desc ;
-
+select * from #reserva ;
 
 drop table #corto_plazo_1;
 drop table #corto_plazo_2;
 drop table #largo_plazo;
 drop table #potencia_1;
 drop table #potencia_2;
+drop table #reserva;
 
 
 

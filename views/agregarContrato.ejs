@@ -200,7 +200,7 @@
         var tipoContrato = document.getElementById('tipo_contrato').value;
         var isReservaSelected = tipoContrato === 'reserva';
 
-        
+        document.getElementById('empresa').disabled = isReservaSelected;
         document.getElementById('potencia_contratada').disabled = isReservaSelected;
         document.getElementById('categoria_precio').disabled = isReservaSelected;
         document.getElementById('cargo_transmicion_seguimiento_electrico').disabled = isReservaSelected;

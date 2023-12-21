@@ -286,7 +286,57 @@
     </table>
     <% } %> 
 
+
+
+<!-- Reserva   -->
+    <% if(reserva.length!=0) { %>
+    <h2>Reserva</h2>
+    <table id="customers">
+        <tr>
+            <th style="width:8%">Fecha</th>
+            <th>Empresa Distribuidora</th>
+            <th>Nombre Contrato</th>            
+            <th>Categoria Precio</th>    
+            <th>Precio Base</th>
+            <th>Cargo Transmisión</th>
+            <th>Precio</th>
+            <th>Potencia Equivalente Comprometida (MW)</th>
+            <th>Ingreso a Precio de Contado</th>             
+        </tr>     
+    
+        <%# console.log(potenciaII) %>  
+        <% for(var i=0 ; i < reserva.length ; i++) { %>
+
+        <tr>
+            <td><%= reserva[i].fecha %></td>
+            <td><%= reserva[i].EMPRESA %></td>
+            <td><%= reserva[i].nombre_contrato %></td>
+            <td><%= reserva[i].categoria_precio %></td>                       
+            <td class="num"><%= reserva[i].precio_base_usd_mwh.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td class="num"><%= reserva[i].cargo_transmicion_seguimiento_electrico.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td class="num"><%= reserva[i].precio.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td class="num"><%= reserva[i].potencia_contratada.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+            <td class="num"><%= reserva[i].ingreso_precio_contado.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') %></td>
+        </tr>
+        <% } %>
+                  
+    </table>
+    <% } %> 
+
+
+
+
+
+
+
+
+
+
 </div>
+
+
+
+
 </body>
 </html>
 

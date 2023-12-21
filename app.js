@@ -22,8 +22,6 @@ const valores_negativos = require('./uploaders/valores_negativos.js')
 const sasd = require('./uploaders/sasd.js')
 const saerlp = require('./uploaders/saerlp.js')
 
-const users = require('./uploaders/users.js')
-
 
 var bodyParser = require('body-parser');
 
@@ -390,6 +388,7 @@ router.get('/cierre/:fecha', requireAuth, function(req, res, next){
             largoPlazo      = result2.recordsets[2];
             potenciaI       = result2.recordsets[3];
             potenciaII      = result2.recordsets[4];
+            reserva         = result2.recordsets[5];
 
 
             let result3 = await pool.request()
@@ -422,7 +421,8 @@ router.get('/cierre/:fecha', requireAuth, function(req, res, next){
         cortoPlazoII,
         largoPlazo,  
         potenciaI,   
-        potenciaII  
+        potenciaII,
+        reserva
     }))
     
     sql.on('error', err => {
@@ -941,7 +941,7 @@ app.post('/guardarContrato',  function(req, res){
 
         potencia_contratada = (potencia_contratada && potencia_contratada !== '') ? potencia_contratada : 0.0;
         categoria_precio = (categoria_precio && categoria_precio !== '') ? categoria_precio : '';
-
+        empresa = (empresa && empresa !== '') ? empresa : '';
 
         var queryString = "INSERT INTO CONTRATOS (fecha, nombre_contrato, tipo_contrato, empresa, potencia_contratada, categoria_precio, ingreso_total_contrato ) VALUES ('"+ fecha + "','"+ nombre_contrato + "','"+ tipo_contrato + "','"+ empresa + "','"+potencia_contratada+"', '"+categoria_precio +"', '"+ ingreso_total_contrato + "')";
 
